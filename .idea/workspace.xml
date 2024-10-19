@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="205243bb-5370-4a27-97f6-d25408fdfede" name="Changes" comment="entitie producto">
-      <change afterPath="$PROJECT_DIR$/lib/features/comparacion_productos/comparacion_producto.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/shared/data_entities/product.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/shared/data_entities/product.dart" afterDir="false" />
+    <list default="true" id="205243bb-5370-4a27-97f6-d25408fdfede" name="Changes" comment="cambio de producto a español">
+      <change beforePath="$PROJECT_DIR$/lib/features/comparacion_productos/comparacion_producto.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/comparacion_productos/comparacion_producto.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/shared/data_entities/product.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/shared/data_entities/producto.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,12 +45,12 @@
       </pane>
     </panes>
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "Comparador-de-productos"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Comparador-de-productos&quot;
   }
-}]]></component>
+}</component>
   <component name="TaskManager">
     <task id="LOCAL-00001" summary="entitie producto">
       <option name="closed" value="true" />
@@ -72,6 +71,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="entitie producto" />
-    <option name="LAST_COMMIT_MESSAGE" value="entitie producto" />
+    <MESSAGE value="cambio de producto a español" />
+    <option name="LAST_COMMIT_MESSAGE" value="cambio de producto a español" />
   </component>
 </project>
