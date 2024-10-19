@@ -1,4 +1,4 @@
-class Product
+class Producto
 {
   final String id;
   final String nombre;
@@ -7,7 +7,7 @@ class Product
   final double precio;
   final String tienda;
   
-  Product({
+  Producto({
     required this.id,
     required this.nombre,
     required this.foto,
