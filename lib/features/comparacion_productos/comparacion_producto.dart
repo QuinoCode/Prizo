@@ -1,4 +1,4 @@
-import '/shared/data_entities/product.dart';
+import '/shared/data_entities/producto.dart';
 
 Producto? obtenerProductoMasBarato(List<Producto> productos) {
   if (productos.isEmpty) return null;
