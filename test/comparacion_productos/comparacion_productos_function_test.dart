@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../lib/features/comparacion_productos/comparacion_producto.dart';  // Import the file with the function
-import '../../lib/shared/data_entities/producto.dart';  // Import the file with the function
+import 'package:prizo/features/comparacion_productos/application/comparacion_producto.dart';  // Import the file with the function
+import 'package:prizo/shared/data_entities/producto.dart';  // Import the file with the function
 
 void main() {
   test('My function should return correct output', () {
