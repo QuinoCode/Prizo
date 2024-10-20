@@ -1,1 +1,0 @@
- /home/ayuda106/Desktop/personal/files/PIN/prizo/.dart_tool/flutter_build/de8d3dc5998370c06c38f18fb07021c1/native_assets.yaml: 

@@ -32,6 +32,7 @@ android/app/build/
 local.properties
 .DS_Store
 android/local.properties
+prizo.iml
 
 # Android specific
 # Built application files
