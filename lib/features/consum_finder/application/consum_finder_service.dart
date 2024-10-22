@@ -46,7 +46,7 @@ class ConsumFinderService {
           alergenos: [false, false, false]);
 
       productList.add(product);
-      return productList;
     }
+    return productList;
   }
 }
