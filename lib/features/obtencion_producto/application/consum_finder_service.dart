@@ -30,7 +30,7 @@ class ConsumFinderService {
 
   Future<List<Producto>> _parseProductList(Map<String, dynamic> json) async {
     final List<Producto> productList = [];
-    final List productsJsonList = json["search_items"];
+    final List productsJsonList = json["products"];
 
     //crear lista de productos
     for (var productJson in productsJsonList) {
