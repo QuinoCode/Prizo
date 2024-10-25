@@ -37,19 +37,16 @@ class ConsumFinderService {
       final currProduct = productJson["productData"];
       final marca = currProduct["brand"];
       final priceMap = productJson["priceData"];
-      final pricesObj = priceMap["prices"];
-      final priceVal = pricesObj[0];
-      final priceCent = priceVal["value"];
+      final priceObj = priceMap["prices"][0]["value"];
 
 //crear producto
       final product = Producto(
           id: currProduct["id"] ?? "",
           tienda: Tienda.CONSUM,
           marca: marca["name"] ?? "-",
-          precio: priceCent["centAmount"],
+          precio: priceObj["centAmount"],
           nombre: currProduct["name"],
-          foto: currProduct["imageURL"].isNotEmpty ? imageHost +
-              currProduct["imageURL"] : "",
+          foto: currProduct["imageURL"],
           alergenos: [false, false, false]);
 
       productList.add(product);
