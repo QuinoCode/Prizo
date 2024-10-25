@@ -16,7 +16,7 @@ class Producto
   final String tienda;
   final String marca;
   bool oferta = false;
-  int? precioOferta = null;
+  double? precioOferta = null;
   
   Producto({
     required this.id,

@@ -45,14 +45,17 @@ class DiaFinderService {
             id: productJson["object_id"] ?? "",
             tienda: "DIA",
             marca: productJson["brand"] ?? "-",
-            precio: pricesObj["price"].toDouble(),
+            precio: pricesObj["strikethrough_price"].toDouble(),
             nombre: productJson["display_name"],
             foto: productJson["image"].isNotEmpty
                 ? imageHost + productJson["image"]
                 : "",
             alergenos: [glutenFree, lactoseFree, nutsFree],
           );
-
+          if (pricesObj["is_promo_price"] == true) {
+            product.oferta = true;
+          }
+          product.precioOferta = pricesObj["price"].toDouble();
           productList.add(product);
         }
       } else {

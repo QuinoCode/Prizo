@@ -8,7 +8,7 @@ void main() async {
     test('should fetch products and map them correctly', () async {
       // Arrange
       DiaFinderService finder = DiaFinderService();
-      String query = "chocolate";
+      String query = "fabada";
 
       // Act
       List<Producto> products = await finder.getProductList(query);
@@ -21,6 +21,8 @@ void main() async {
         print("Price: ${product.precio}");
         print("Brand: ${product.marca}");
         print("Image: ${product.foto}");
+        print("Oferta: ${product.oferta}");
+        print("Precio oferta: ${product.precioOferta}");
         print("Alergenos: Gluten-Free: ${product.alergenos[0]}, Lactose-Free: ${product.alergenos[1]}, Nuts-Free: ${product.alergenos[2]}");
         print("------------------------------------------------------------");
 
@@ -29,6 +31,8 @@ void main() async {
         expect(product.nombre, isNotNull);
         expect(product.precio, isA<double>());
         expect(product.alergenos, hasLength(3)); // Expect exactly three values for alergenos
+        expect(product.precioOferta, isA<double>());
+        expect(product.oferta, isA<bool>());
       }
     });
   });
