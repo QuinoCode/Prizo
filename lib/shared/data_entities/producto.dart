@@ -11,12 +11,12 @@ class Producto
   - Posición 0: booleano para el GLUTEN
   - Posición 1: booleano para la LACTOSA
   - Posición 2: booleano para los FRUTOS SECOS
-  En caso de ser 0 no contendrá este alérgeno el producto, en caso de ser uno si lo contendrá
   */
   final double precio;
   final String tienda;
   final String marca;
   final bool oferta = false;
+  final int? precioOferta = null;
   
   Producto({
     required this.id,
