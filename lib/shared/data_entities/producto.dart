@@ -12,11 +12,11 @@ class Producto
   - Posición 1: booleano para la LACTOSA
   - Posición 2: booleano para los FRUTOS SECOS
   */
-  final double precio;
+  double precio;
   final String tienda;
   final String marca;
-  final bool oferta = false;
-  final int? precioOferta = null;
+  bool oferta = false;
+  int? precioOferta = null;
   
   Producto({
     required this.id,
