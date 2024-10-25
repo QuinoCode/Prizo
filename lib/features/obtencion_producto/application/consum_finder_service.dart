@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../shared/data_entities/producto.dart';
-import '../../../shared/data_entities/tienda.dart';
 
 class ConsumFinderService {
   final String marketUri = "https://tienda.consum.es/api/rest/V1.0/catalog/searcher/products?q=%s&limit=20&showRecommendations=false";
@@ -37,17 +36,26 @@ class ConsumFinderService {
       final currProduct = productJson["productData"];
       final marca = currProduct["brand"];
       final priceMap = productJson["priceData"];
-      final priceObj = priceMap["prices"][0]["value"];
+      final priceObj = priceMap["prices"];
+      final priceVal = priceObj[0]["value"];
+
 
 //crear producto
       final product = Producto(
           id: currProduct["id"] ?? "",
           tienda: "CONSUM",
           marca: marca["name"] ?? "-",
-          precio: priceObj["centAmount"],
+          precio: priceVal["centAmount"],
           nombre: currProduct["name"],
           foto: currProduct["imageURL"],
-          alergenos: [false, false, false]);
+          alergenos: [false, false, false],
+      );
+
+      if (priceObj.length > 1){
+        product.oferta = true;
+        product.precioOferta = priceObj[1]["value"]["centAmount"];
+      }
+
 
       productList.add(product);
     }
