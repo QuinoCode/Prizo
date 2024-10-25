@@ -7,7 +7,7 @@ void main() async {
     test('should fetch products and map them correctly', () async {
 // Arrange
       ConsumFinderService finder = ConsumFinderService();
-      String query = "pizza";
+      String query = "kiwi";
 
 // Act
       List<Producto> products = await finder.fetchProductsFromApi(query);
@@ -21,6 +21,8 @@ void main() async {
         print("Brand: ${product.marca}");
         print("Image: ${product.foto}");
         print("Alergenos: Gluten-Free: ${product.alergenos[0]}, Lactose-Free: ${product.alergenos[1]}, Nuts-Free: ${product.alergenos[2]}");
+        print("Hay oferta: ${product.oferta}");
+        print("Precio oferta: ${product.precioOferta}");
         print("------------------------------------------------------------");
 
 // Checks to validate the basic structure
