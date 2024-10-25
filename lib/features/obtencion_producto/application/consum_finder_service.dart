@@ -42,7 +42,7 @@ class ConsumFinderService {
 //crear producto
       final product = Producto(
           id: currProduct["id"] ?? "",
-          tienda: Tienda.CONSUM,
+          tienda: "CONSUM",
           marca: marca["name"] ?? "-",
           precio: priceObj["centAmount"],
           nombre: currProduct["name"],

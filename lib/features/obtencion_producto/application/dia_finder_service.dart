@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../shared/data_entities/producto.dart';
-import '../../../shared/data_entities/tienda.dart';
 
 class DiaFinderService {
   final String marketUri = "https://www.dia.es/api/v1/search-back/search/reduced?q=%s&page=1";
@@ -44,7 +43,7 @@ class DiaFinderService {
           final pricesObj = productJson["prices"];
           final product = Producto(
             id: productJson["object_id"] ?? "",
-            tienda: Tienda.DIA,
+            tienda: "DIA",
             marca: productJson["brand"] ?? "-",
             precio: pricesObj["price"].toDouble(),
             nombre: productJson["display_name"],

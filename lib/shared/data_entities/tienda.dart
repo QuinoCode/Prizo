@@ -1,6 +1,13 @@
 class Tienda
 {
-  static const String DIA = "DIA";
-  static const String MERCADONA = "Mercadona";
-  static const String CONSUM = "Consum";
+  final String nombre;
+  final String id;
+  final String ubicacion;
+  final bool oferta = false;
+
+  Tienda({
+    required this.nombre,
+    required this.id,
+    required this.ubicacion,
+  });
 }
