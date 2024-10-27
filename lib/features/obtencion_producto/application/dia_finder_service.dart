@@ -46,6 +46,7 @@ class DiaFinderService {
             tienda: "DIA",
             marca: productJson["brand"] ?? "-",
             precio: pricesObj["strikethrough_price"].toDouble(),
+            precioMedida: pricesObj["price_per_unit"].toDouble(),
             nombre: productJson["display_name"],
             foto: productJson["image"].isNotEmpty
                 ? imageHost + productJson["image"]
