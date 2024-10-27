@@ -13,6 +13,7 @@ class Producto
   - Posición 2: booleano para los FRUTOS SECOS
   */
   double precio;
+  double precioMedida;
   final String tienda;
   final String marca;
   bool oferta = false;
@@ -24,6 +25,7 @@ class Producto
     this.foto = "",
     required this.alergenos,
     required this.precio,
+    required this.precioMedida,
     required this.tienda,
     required this.marca,
   });
