@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="205243bb-5370-4a27-97f6-d25408fdfede" name="Changes" comment="cambio de producto a español">
-      <change beforePath="$PROJECT_DIR$/lib/features/comparacion_productos/comparacion_producto.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/comparacion_productos/comparacion_producto.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/shared/data_entities/product.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/shared/data_entities/producto.dart" afterDir="false" />
+    <list default="true" id="205243bb-5370-4a27-97f6-d25408fdfede" name="Changes" comment="producto preciomedida">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/obtencion_producto/application/consum_finder_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/obtencion_producto/application/consum_finder_service.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +36,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="Obtencion-productos" />
+  </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" />
@@ -45,12 +48,12 @@
       </pane>
     </panes>
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Comparador-de-productos&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "develop"
   }
-}</component>
+}]]></component>
   <component name="TaskManager">
     <task id="LOCAL-00001" summary="entitie producto">
       <option name="closed" value="true" />
@@ -72,6 +75,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="entitie producto" />
     <MESSAGE value="cambio de producto a español" />
-    <option name="LAST_COMMIT_MESSAGE" value="cambio de producto a español" />
+    <MESSAGE value="producto preciomedida" />
+    <option name="LAST_COMMIT_MESSAGE" value="producto preciomedida" />
   </component>
 </project>
