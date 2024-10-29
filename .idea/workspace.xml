@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="205243bb-5370-4a27-97f6-d25408fdfede" name="Changes" comment="producto preciomedida">
+      <change afterPath="$PROJECT_DIR$/test/comparacion_productos/ordenar_lista_productos_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config_subset" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config_subset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/obtencion_producto/application/consum_finder_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/obtencion_producto/application/consum_finder_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/comparacion_productos/application/comparacion_producto.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/comparacion_productos/application/comparacion_producto.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/comparacion_productos/comparacion_productos_function_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/test/comparacion_productos/comparacion_productos_function_test.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +43,30 @@
   <component name="Git.Merge.Settings">
     <option name="BRANCH" value="Obtencion-productos" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "nalbmor1"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/QuinoCode/Prizo.git",
+    "accountId": "d44dca97-a3c7-4595-91e5-3c005a9ee6e3"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="2o7TqMQyFuJVWApt99ShEt2Fydr" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" />
@@ -48,12 +76,30 @@
       </pane>
     </panes>
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Flutter Test.tests in ordenar_lista_productos_test.dart.executor": "Run",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "develop"
+    "git-widget-placeholder": "Comparador-de-productos"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="tests in ordenar_lista_productos_test.dart" type="FlutterTestConfigType" factoryName="Flutter Test" temporary="true" nameIsGenerated="true">
+      <option name="testFile" value="$PROJECT_DIR$/test/comparacion_productos/ordenar_lista_productos_test.dart" />
+      <option name="useRegexp" value="false" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Flutter Test.tests in ordenar_lista_productos_test.dart" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task id="LOCAL-00001" summary="entitie producto">
       <option name="closed" value="true" />

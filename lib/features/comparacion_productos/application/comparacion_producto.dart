@@ -15,4 +15,9 @@ class Comparacion_producto
 
     return productoMasBarato;
   }
+
+  //ordena una lista de productos en base a su precio de menor a mayor
+  static void ordenarProductosPorPrecio(List<Producto> productos) {
+    productos.sort((a, b) => a.precio.compareTo(b.precio));
+  }
 }

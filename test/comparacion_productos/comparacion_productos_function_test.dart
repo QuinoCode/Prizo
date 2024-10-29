@@ -10,27 +10,33 @@ void main() {
     id: '001',
     nombre: 'Leche',
     foto: 'leche.png',
-    alergeno: 'Lactosa',
     precio: 1.50,
     tienda: 'Supermercado A',
+    alergenos: [false, true, false],
+    precioMedida: 0.5,
+    marca: "hacendado",
   );
 
   Producto producto2 = Producto(
     id: '002',
     nombre: 'Pan',
     foto: 'pan.png',
-    alergeno: 'Gluten',
     precio: 0.80,
     tienda: 'Panadería B',
+    alergenos: [false, true, false],
+    precioMedida: 0.5,
+    marca: "hacendado",
   );
 
   Producto producto3 = Producto(
     id: '003',
     nombre: 'Jugo de Naranja',
     foto: 'jugo_naranja.png',
-    alergeno: 'Ninguno',
     precio: 2.00,
     tienda: 'Tienda de Jugos C',
+    alergenos: [false, true, false],
+    precioMedida: 0.5,
+    marca: "hacendado",
   );
 
     List<Producto> product_list = [producto1, producto2, producto3];
