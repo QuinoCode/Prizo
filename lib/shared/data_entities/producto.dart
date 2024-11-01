@@ -27,7 +27,7 @@ class Producto
     required this.precio,
     required this.precioMedida,
     required this.tienda,
-    required this.marca,
+    required this.marca, 
   });
 
   @override
