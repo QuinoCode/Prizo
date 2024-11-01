@@ -46,7 +46,7 @@ class ConsumFinderService {
           tienda: "CONSUM",
           marca: marca["name"] ?? "-",
           precio: priceVal["centAmount"],
-          precioKilo: priceVal["centUnitAmount"],
+          precioMedida: priceVal["centUnitAmount"],
           nombre: currProduct["name"],
           foto: currProduct["imageURL"],
           alergenos: [false, false, false],
