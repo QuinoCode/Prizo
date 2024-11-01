@@ -43,7 +43,7 @@ void main() {
     var expectedOutput = 0.8;
 
     // Act
-    var result = Comparacion_producto.obtenerProductoMasBarato(product_list)?.precio;
+    var result = obtenerProductoMasBarato(product_list)?.precio;
 
     // Assert
     expect(result, expectedOutput);
