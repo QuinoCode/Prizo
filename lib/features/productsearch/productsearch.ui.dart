@@ -4,7 +4,7 @@ import '../../../shared/data_entities/producto.dart';
 import '../../features/obtencion_producto/application/consum_finder_service.dart';
 import '../../features/obtencion_producto/application/dia_finder_service.dart';
 import '../../features/comparacion_productos/application/comparacion_producto.dart';
-
+import '../../features/obtencion_producto/application/carrefour_finder_service.dart';
 abstract class ProductSearcher {
   Future<List<Producto>> searchProducts(String query);
 }
