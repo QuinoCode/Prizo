@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './features/lista_compra/presentation/lista_compra_interfaz.dart';
 import './features/productsearch/productsearch.ui.dart'; // Asegúrate de que la ruta sea correcta
 
 void main() {
