@@ -124,10 +124,11 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                 itemCount: _productos.length,
                 itemBuilder: (context, index) {
                   final producto = _productos[index];
-                  final imageUrl = producto.foto.replaceAll('.jpg', '_001.jpg');
+                  final imageUrl = producto.foto;
                   return ListTile(
                     title: Text(producto.nombre),
-                    subtitle: Text('\${producto.tienda} - \$${producto.precio.toStringAsFixed(2)}'),
+                      subtitle: Text('${producto.tienda} - \$${producto.precio.toStringAsFixed(2)}')
+                      ,
                     leading: producto.foto.isNotEmpty
                         ? Image.network(
                       imageUrl,
@@ -135,15 +136,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                       height: 50,
                       errorBuilder: (context, error, stackTrace) {
                         print('Error loading image: \$error');
-                        return Image.network(
-                          producto.foto.replaceAll('.jpg', '_001.jpg'),
-                          width: 50,
-                          height: 50,
-                          errorBuilder: (context, error, stackTrace) {
-                            print('Error loading fallback image: \$error');
-                            return Icon(Icons.broken_image);
-                          },
-                        );
+                        return Icon(Icons.broken_image);
                       },
                     )
                         : Icon(Icons.image_not_supported),
@@ -157,4 +150,3 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     );
   }
 }
-
