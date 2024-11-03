@@ -55,8 +55,8 @@ class CarrefourFinderService {
       List<CarrefourProduct> carrefourProducts = [];
       for (var item in items){ 
         CarrefourProduct placeHolder = CarrefourProduct(
-          active_price: item['active_price'],
-          app_price: item['app_price'],
+          active_price: (item['active_price']).toDouble(),
+          app_price: (item['app_price']).toDouble(),
           average_weight: item['average_weight'] ?? -1,
           brand: item['brand'] ?? "",
           catalog_ref_id: item['catalog_ref_id'],
