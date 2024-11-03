@@ -4,14 +4,14 @@ class Producto
   final String nombre;
   final String foto;
   final List<bool> alergenos;
-  /*
-  Explicación campo alérgenos
-  -----------------------------
-  Consistirá en una lista de 3 booleanos con las posiciones establecidas de la siguiente manera
-  - Posición 0: booleano para el GLUTEN
-  - Posición 1: booleano para la LACTOSA
-  - Posición 2: booleano para los FRUTOS SECOS
-  */
+  //
+  //Explicación campo alérgenos
+  //-----------------------------
+  //Consistirá en una lista de 3 booleanos con las posiciones establecidas de la siguiente manera
+  //- Posición 0: booleano para el GLUTEN
+  //- Posición 1: booleano para la LACTOSA
+  //- Posición 2: booleano para los FRUTOS SECOS
+  //
   double precio;
   double precioMedida;
   final String tienda;
