@@ -5,6 +5,7 @@ import '../../features/obtencion_producto/application/consum_finder_service.dart
 import '../../features/obtencion_producto/application/dia_finder_service.dart';
 import '../../features/comparacion_productos/application/comparacion_producto.dart';
 import '../../features/obtencion_producto/application/carrefour_finder_service.dart';
+
 abstract class ProductSearcher {
   Future<List<Producto>> searchProducts(String query);
 }
@@ -12,10 +13,12 @@ abstract class ProductSearcher {
 class MultiMarketProductSearcher implements ProductSearcher {
   final ConsumFinderService consumService;
   final DiaFinderService diaService;
+  final CarrefourFinderService carrefourService;
 
   MultiMarketProductSearcher({
     required this.consumService,
     required this.diaService,
+    required this.carrefourService,
   });
 
   @override
@@ -23,7 +26,8 @@ class MultiMarketProductSearcher implements ProductSearcher {
     try {
       final consumProductsFuture = consumService.fetchProductsFromApi(query);
       final diaProductsFuture = diaService.getProductList(query);
-      final results = await Future.wait([consumProductsFuture, diaProductsFuture]);
+      final carrefourProductsFuture = carrefourService.getProductList(query);
+      final results = await Future.wait([consumProductsFuture, diaProductsFuture, carrefourProductsFuture]);
       final allProducts = <Producto>[];
       if (results[0] != null) {
         allProducts.addAll(results[0] as List<Producto>);
@@ -31,10 +35,13 @@ class MultiMarketProductSearcher implements ProductSearcher {
       if (results[1] != null) {
         allProducts.addAll(results[1] as List<Producto>);
       }
+      if (results[2] != null) {
+        allProducts.addAll(results[2] as List<Producto>);
+      }
       ordenarProductosPorPrecio(allProducts);
       return allProducts;
     } catch (e) {
-      print("Error al buscar productos: $e");
+      print("Error al buscar productos: \$e");
       return [];
     }
   }
@@ -50,6 +57,7 @@ class ProductSearchScreen extends StatefulWidget {
 class ProductSearchScreenState extends State<ProductSearchScreen> {
   final ConsumFinderService consumService = ConsumFinderService();
   final DiaFinderService diaService = DiaFinderService();
+  final CarrefourFinderService carrefourService = CarrefourFinderService();
   final TextEditingController _searchController = TextEditingController();
   List<Producto> _productos = [];
   bool _isLoading = false;
@@ -68,6 +76,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     final searcher = MultiMarketProductSearcher(
       consumService: consumService,
       diaService: diaService,
+      carrefourService: carrefourService,
     );
 
     try {
@@ -79,7 +88,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         print("No se encontraron productos para la consulta: \${_searchController.text}");
       }
     } catch (e) {
-      print("Error al buscar productos: $e");
+      print("Error al buscar productos: \$e");
     } finally {
       setState(() {
         _isLoading = false;
@@ -125,7 +134,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                       width: 50,
                       height: 50,
                       errorBuilder: (context, error, stackTrace) {
-                        print('Error loading image: $error');
+                        print('Error loading image: \$error');
                         return Icon(Icons.broken_image);
                       },
                     )
