@@ -45,7 +45,7 @@ void main() {
     ];
 
     // Act
-    ordenarProductosPorPrecio(productos);
+    Comparacion_producto.ordenarProductosPorPrecio(productos);
 
     // Assert
     expect(productos[0].precio, 0.80);
@@ -58,7 +58,7 @@ void main() {
     List<Producto> productos = [];
 
     // Act
-    ordenarProductosPorPrecio(productos);
+    Comparacion_producto.ordenarProductosPorPrecio(productos);
 
     // Assert
     expect(productos, isEmpty);
