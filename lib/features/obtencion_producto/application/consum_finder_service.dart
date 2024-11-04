@@ -48,7 +48,7 @@ class ConsumFinderService {
           precio: priceVal["centAmount"],
           precioMedida: priceVal["centUnitAmount"],
           nombre: currProduct["name"],
-          foto: currProduct["imageURL"],
+          foto: productJson["media"][0]["url"],
           alergenos: [false, false, false],
       );
 
