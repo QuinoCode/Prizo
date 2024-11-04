@@ -18,7 +18,7 @@ class DiaFinderService {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
+        final jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
         final List productsJsonList = jsonResponse["search_items"];
         final List facets = jsonResponse["facets"];
 
