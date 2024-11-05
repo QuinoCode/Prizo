@@ -94,6 +94,7 @@ class CarrefourFinderService {
         tienda: "Carrefour",
         marca: carrefourProduct.brand ?? "Marca blanca",
         foto: carrefourProduct.image_path,
+        categoria: carrefourProduct.display_name.split(' ')[0],
        );
        productos.add(producto);
     }
