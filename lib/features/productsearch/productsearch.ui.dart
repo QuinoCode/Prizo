@@ -7,6 +7,10 @@ import '../../features/comparacion_productos/application/comparacion_producto.da
 import '../../features/obtencion_producto/application/carrefour_finder_service.dart';
 import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
 import '../../../shared/data_entities/lista_compra.dart';
+import '../../features/lista_compra/application/lista_compra_service.dart';
+import '../../../shared/data_entities/lista_favoritos.dart';
+import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+
 abstract class ProductSearcher {
   Future<List<Producto>> searchProducts(String query);
 }
@@ -62,6 +66,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Producto> _productos = [];
   bool _isLoading = false;
+  final ListaCompraService listaCompraService = ListaCompraService();
+  ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
+  ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
 
   @override
   void dispose() {
@@ -101,8 +108,65 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ListaCompraInterfaz(listaCompra: ListaCompra(id: '1', usuario: 'usuario_demo', productos: _productos)),
+        builder: (context) => ListaCompraInterfaz(
+          listaCompra: listaCompra,
+        ),
       ),
+    );
+  }
+
+  void _navigateToListaFavoritos() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ListaFavoritosInterfaz(
+          listaFavoritos: listaFavoritos,
+        ),
+      ),
+    );
+  }
+
+  void _showAddProductDialog(Producto producto) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Añadir producto'),
+          content: Text('¿Deseas añadir este producto a la lista de compra o a favoritos?'),
+          actions: [
+            TextButton(
+              child: Text('Lista de Compra'),
+              onPressed: () {
+                setState(() {
+                  listaCompra.productos.add(producto);
+                });
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('\${producto.nombre} ha sido añadido a la lista de la compra')),
+                );
+              },
+            ),
+            TextButton(
+              child: Text('Favoritos'),
+              onPressed: () {
+                setState(() {
+                  listaFavoritos.productos.add(producto);
+                });
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${producto.nombre} ha sido añadido a la lista de favoritos')),
+                );
+              },
+            ),
+            TextButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -115,6 +179,10 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: _navigateToListaCompra,
+          ),
+          IconButton(
+            icon: Icon(Icons.favorite),
+            onPressed: _navigateToListaFavoritos,
           ),
         ],
       ),
@@ -142,6 +210,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                   final producto = _productos[index];
                   final imageUrl = producto.foto;
                   final precioMedida = producto.precioMedida > 0 ? ' (€${producto.precioMedida.toStringAsFixed(2)}/kg)' : '';
+
                   return ListTile(
                     title: Text(producto.nombre),
                     subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(2)}$precioMedida'),
@@ -151,11 +220,14 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                       width: 50,
                       height: 50,
                       errorBuilder: (context, error, stackTrace) {
-                        print('Error loading image: \$error');
+                        print('Error loading image: $error');
                         return Icon(Icons.broken_image);
                       },
                     )
                         : Icon(Icons.image_not_supported),
+                    onTap: () {
+                      _showAddProductDialog(producto);
+                    },
                   );
                 },
               ),
@@ -166,3 +238,4 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     );
   }
 }
+
