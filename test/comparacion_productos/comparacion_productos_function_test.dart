@@ -15,6 +15,7 @@ void main() {
     tienda: 'Supermercado A',
     precioMedida: 10,
     marca: '',
+    categoria: 'leche',
   );
 
   Producto producto2 = Producto(
@@ -26,6 +27,7 @@ void main() {
     tienda: 'Panadería B',
     precioMedida: 10,
     marca: '',
+    categoria: 'pan',
   );
 
   Producto producto3 = Producto(
@@ -37,6 +39,7 @@ void main() {
     tienda: 'Tienda de Jugos C',
     precioMedida: 10,
     marca: '',
+    categoria: 'Jugo',
   );
 
     List<Producto> product_list = [producto1, producto2, producto3];

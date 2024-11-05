@@ -52,6 +52,7 @@ class DiaFinderService {
                 ? imageHost + productJson["image"]
                 : "",
             alergenos: [glutenFree, lactoseFree, nutsFree],
+            categoria: productJson["l2_category_description"],
           );
           if (pricesObj["is_promo_price"] == true) {
             product.oferta = true;
