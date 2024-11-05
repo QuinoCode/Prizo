@@ -5,7 +5,8 @@ import '../../features/obtencion_producto/application/consum_finder_service.dart
 import '../../features/obtencion_producto/application/dia_finder_service.dart';
 import '../../features/comparacion_productos/application/comparacion_producto.dart';
 import '../../features/obtencion_producto/application/carrefour_finder_service.dart';
-
+import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
+import '../../../shared/data_entities/lista_compra.dart';
 abstract class ProductSearcher {
   Future<List<Producto>> searchProducts(String query);
 }
@@ -96,11 +97,26 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     }
   }
 
+  void _navigateToListaCompra() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ListaCompraInterfaz(listaCompra: ListaCompra(id: '1', usuario: 'usuario_demo', productos: _productos)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Product Search'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: _navigateToListaCompra,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -128,7 +144,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                   final precioMedida = producto.precioMedida > 0 ? ' (€${producto.precioMedida.toStringAsFixed(2)}/kg)' : '';
                   return ListTile(
                     title: Text(producto.nombre),
-                    subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(2)}$precioMedida'),
+                    subtitle: Text('\${producto.tienda} - €${producto.precio.toStringAsFixed(2)}$precioMedida'),
                     leading: producto.foto.isNotEmpty
                         ? Image.network(
                       imageUrl,
