@@ -95,9 +95,9 @@ class CarrefourFinderService {
         tienda: "Carrefour",
         marca: carrefourProduct.brand ?? "Marca blanca",
         foto: carrefourProduct.image_path,
-        oferta: carrefourProduct.has_offers ?? false,
-        precioOferta: carrefourProduct.active_price
        );
+        producto.oferta = carrefourProduct.has_offers ?? false;
+        producto.precioOferta = carrefourProduct.active_price;
        productos.add(producto);
     }
     return productos;

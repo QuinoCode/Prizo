@@ -28,8 +28,6 @@ class Producto
     required this.precioMedida,
     required this.tienda,
     required this.marca, 
-    required this.oferta,
-    required this.precioOferta,
   });
 
   @override
