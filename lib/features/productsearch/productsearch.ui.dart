@@ -144,7 +144,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                   final precioMedida = producto.precioMedida > 0 ? ' (€${producto.precioMedida.toStringAsFixed(2)}/kg)' : '';
                   return ListTile(
                     title: Text(producto.nombre),
-                    subtitle: Text('\${producto.tienda} - €${producto.precio.toStringAsFixed(2)}$precioMedida'),
+                    subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(2)}$precioMedida'),
                     leading: producto.foto.isNotEmpty
                         ? Image.network(
                       imageUrl,
