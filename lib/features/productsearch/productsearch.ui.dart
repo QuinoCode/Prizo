@@ -46,7 +46,7 @@ class MultiMarketProductSearcher implements ProductSearcher {
       ordenarProductosPorPrecio(allProducts);
       return allProducts;
     } catch (e) {
-      print("Error al buscar productos: \$e");
+      print("Error al buscar productos: $e");
       return [];
     }
   }
@@ -93,10 +93,10 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         _productos = productos;
       });
       if (productos.isEmpty) {
-        print("No se encontraron productos para la consulta: \${_searchController.text}");
+        print("No se encontraron productos para la consulta: ${_searchController.text}");
       }
     } catch (e) {
-      print("Error al buscar productos: \$e");
+      print("Error al buscar productos: $e");
     } finally {
       setState(() {
         _isLoading = false;
@@ -142,7 +142,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                 });
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('\${producto.nombre} ha sido añadido a la lista de la compra')),
+                  SnackBar(content: Text('${producto.nombre} ha sido añadido a la lista de la compra')),
                 );
               },
             ),
