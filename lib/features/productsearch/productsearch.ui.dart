@@ -110,7 +110,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Product Search'),
+        title: Text('Busqueda producto'),
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_cart),
@@ -125,7 +125,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Search for a product',
+                labelText: 'Busca un producto',
                 suffixIcon: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: _searchProducts,
