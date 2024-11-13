@@ -34,4 +34,25 @@ class Producto
   String toString() {
     return 'Producto{id: $id, nombre: $nombre, precio: $precio, imagen: $foto, marca: $marca, glutenFree: ${alergenos[0]}, lactoseFree: ${alergenos[1]}, nutsFree: ${alergenos[2]}}';
   }
+
+  bool equals(Producto otro) {
+    return id == otro.id &&
+        nombre == otro.nombre &&
+        (foto == null ? otro.foto == null : (otro.foto == null ? false : foto == otro.foto)) &&
+        _listasIguales(alergenos, otro.alergenos) &&
+        precio == otro.precio &&
+        precioMedida == otro.precioMedida &&
+        tienda == otro.tienda &&
+        marca == otro.marca &&
+        oferta == otro.oferta &&
+        precioOferta == otro.precioOferta;
+  }
+
+  bool _listasIguales(List<bool> lista1, List<bool> lista2) {
+    if (lista1.length != lista2.length) return false;
+    for (int i = 0; i < lista1.length; i++) {
+      if (lista1[i] != lista2[i]) return false;
+    }
+    return true;
+  }
 }

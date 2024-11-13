@@ -71,8 +71,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
 
   @override
-  void dispose() {
-    _searchController.dispose();
+  void dispose() {_searchController.dispose();
     super.dispose();
   }
 
@@ -138,24 +137,24 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: Text('Lista de Compra'),
               onPressed: () {
                 setState(() {
-                  listaCompra.productos.add(producto);
+                  listaCompra.addProduct(producto);
                 });
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                /*ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('${producto.nombre} ha sido añadido a la lista de la compra')),
-                );
+                );*/
               },
             ),
             TextButton(
               child: Text('Favoritos'),
               onPressed: () {
                 setState(() {
-                  listaFavoritos.productos.add(producto);
+                  listaFavoritos.addProduct(producto);
                 });
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                /*ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('${producto.nombre} ha sido añadido a la lista de favoritos')),
-                );
+                );*/
               },
             ),
             TextButton(

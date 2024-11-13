@@ -11,4 +11,24 @@ class ListaFavoritos
     required this.usuario,
     required this.productos,
   });
+
+  void addProduct(Producto producto) {
+    if (productos.isEmpty) {
+      /*Si la lista está vacía, añadir el producto directamente*/
+      productos.add(producto);
+    } else {
+      /*Si la lista no está vacía, comprobar si el producto ya existe*/
+      bool productoExiste = false;
+      for (var prod in productos) {
+        if (prod.equals(producto)) {
+          productoExiste = true;
+          break;
+        }
+      }
+      /*Si no existe, añadir el producto a la lista*/
+      if (!productoExiste) {
+        productos.add(producto);
+      }
+    }
+  }
 }
