@@ -24,10 +24,10 @@ Producto? obtenerProductoMasBarato(List<Producto> productos) {
   }
   return (listaCategoriaCabeza, productos);
 }
-List<Producto> combinaListaTuplas(List<(List<Producto>, List<Producto>)> listaTuplas){
+(List<Producto>, List<Producto>) combinaListasSupers(List<(List<Producto>, List<Producto>)> listaTuplas){
   List<Producto> primeraListaTupla = [];
   List<Producto> segundaListaTupla = [];
-  List<Producto> listaCombinada = [];
+
   //Añade las listas primeras de la tupla con las primeras y las segundas con las segundas
   for ((List<Producto>, List<Producto>) tupla in listaTuplas){
     primeraListaTupla += tupla.$1;
@@ -35,7 +35,13 @@ List<Producto> combinaListaTuplas(List<(List<Producto>, List<Producto>)> listaTu
   }
   ordenarProductosPorPrecio(primeraListaTupla);
   ordenarProductosPorPrecio(segundaListaTupla);
-  listaCombinada = primeraListaTupla + segundaListaTupla;
+  return (primeraListaTupla, segundaListaTupla);
+}
+
+List<Producto> combinaTupla(List<(List<Producto>, List<Producto>)> listaTuplas){
+  List<Producto> listaCombinada = [];
+  (List<Producto>, List<Producto>) listaFinal = combinaListasSupers(listaTuplas);
+  listaCombinada = listaFinal.$1 + listaFinal.$2;
   return listaCombinada;
 }
 
