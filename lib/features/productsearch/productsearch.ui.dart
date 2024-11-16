@@ -142,9 +142,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                   productsearchAuxiliar.addCom(listaCompra, producto);
                 });
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                /*ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('${producto.nombre} ha sido añadido a la lista de la compra')),
-                );
+                );*/
               },
             ),
             TextButton(
@@ -154,9 +154,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                   productsearchAuxiliar.addFav(listaFavoritos, producto);////
                 });
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                /*ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('${producto.nombre} ha sido añadido a la lista de favoritos')),
-                );
+                );*/
               },
             ),
             TextButton(
