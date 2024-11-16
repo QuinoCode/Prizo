@@ -17,4 +17,8 @@ class ListaCompraService {
     list.productos.add(product);
   }
 
+  void removeProduct(ListaCompra list, Producto product) {
+    list.productos.remove(product);
+  }
+
 }
