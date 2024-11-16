@@ -4,11 +4,11 @@ import 'package:prizo/shared/data_entities/producto.dart';
 
 class productsearchAuxiliar {
 
-  void addCom(ListaCompra list, Producto product){
+  static void addCom(ListaCompra list, Producto product){
     list.productos.add(product);
   }
 
-  void addFav(ListaFavoritos list, Producto product) {
+  static void addFav(ListaFavoritos list, Producto product) {
     bool exists = list.productos.any((p) =>
         p.id == product.id &&
         p.nombre == product.nombre &&
