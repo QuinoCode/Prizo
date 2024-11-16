@@ -139,7 +139,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: Text('Lista de Compra'),
               onPressed: () {
                 setState(() {
-                  listaCompra.productos.add(producto);
+                  productsearchAuxiliar.addCom(listaCompra, producto);
                 });
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -151,7 +151,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: Text('Favoritos'),
               onPressed: () {
                 setState(() {
-                  listaFavoritos.productos.add(producto);
+                  productsearchAuxiliar.addFav(listaFavoritos, producto);////
                 });
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
