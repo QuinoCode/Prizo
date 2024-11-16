@@ -69,5 +69,3 @@ class DiaFinderService {
     return productList;
   }
 }
-
-

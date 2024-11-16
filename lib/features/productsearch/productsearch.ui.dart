@@ -239,4 +239,3 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     );
   }
 }
-
