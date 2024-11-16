@@ -10,6 +10,7 @@ import '../../../shared/data_entities/lista_compra.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../../shared/data_entities/lista_favoritos.dart';
 import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+import '../../features/productsearch/productsearch_auxiliar.dart';
 
 abstract class ProductSearcher {
   Future<List<Producto>> searchProducts(String query);
