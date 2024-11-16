@@ -4,7 +4,7 @@ import 'package:prizo/shared/data_entities/producto.dart';
 
 class productsearchAuxiliar {
 
-  void addCompra(ListaCompra list, Producto product){
+  void addCom(ListaCompra list, Producto product){
     list.productos.add(product);
   }
 
