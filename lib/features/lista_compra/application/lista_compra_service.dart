@@ -40,4 +40,23 @@ class ListaCompraService {
     }
   }
 
+  ListaCompraAuxiliar crearListaCompraAuxiliar(ListaCompra listaCompra) {
+    /*Mapa para contar la cantidad de cada producto*/
+    Map<String, int> contadorProductos = {};
+    List<Producto> productosUnicos = [];
+
+    for (var producto in listaCompra.productos) {
+      if (contadorProductos.containsKey(producto.id)) {
+        contadorProductos[producto.id] = contadorProductos[producto.id]! + 1;
+      } else {
+        contadorProductos[producto.id] = 1;
+        productosUnicos.add(producto); /*Agregar producto único*/
+      }
+    }
+    /*Crear las listas de productos y cantidades*/
+    List<int> cantidades = productosUnicos.map((producto) => contadorProductos[producto.id]!).toList();
+
+    return ListaCompraAuxiliar(productos: productosUnicos, cantidades: cantidades);
+  }
+
 }
