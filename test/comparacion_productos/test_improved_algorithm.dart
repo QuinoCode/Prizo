@@ -22,7 +22,7 @@ void main() async {
       (List<Producto>, List<Producto>) resultConsumTupla = ([],[]);
       (List<Producto>, List<Producto>) resultDiaTupla = ([],[]);
 
-      List<Producto> combinedResult = [];
+      (List<Producto>, List<Producto>) combinedResult = ([],[]);
 
       String query = "Ketchup";
 
@@ -34,9 +34,9 @@ void main() async {
       resultConsumTupla = ordenaPrioridadCategoria(resultConsum);
       resultDiaTupla = ordenaPrioridadCategoria(resultDia);
 
-      combinedResult = combinaListaTuplas([resultC4Tupla, resultConsumTupla, resultDiaTupla]);
+      combinedResult = combinaListasSupers([resultC4Tupla, resultConsumTupla, resultDiaTupla]);
 
-      expect(combinedResult, isA<List<Producto>>());
+      expect(combinedResult, isA<(List<Producto>, List<Producto>)>());
     });
   });
 
