@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/lista_favoritos.dart';
+import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
 
 class ListaFavoritosInterfaz extends StatelessWidget {
   final ListaFavoritos listaFavoritos;
