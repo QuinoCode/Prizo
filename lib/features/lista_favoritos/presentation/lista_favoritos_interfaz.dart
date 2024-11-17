@@ -16,14 +16,25 @@ class ListaFavoritosInterfaz extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: listaFavoritos.productos.isEmpty
-            ? Center(
-          child: Text('Tu lista de favoritos está vacía.'),
-        )
+            ? Center(child: Text('Tu lista de favoritos está vacía.'))
             : ListView.builder(
           itemCount: listaFavoritos.productos.length,
           itemBuilder: (context, index) {
             final producto = listaFavoritos.productos[index];
+            final imageUrl = producto.foto;
+
             return ListTile(
+              leading: producto.foto.isNotEmpty
+                  ? Image.network(
+                imageUrl,
+                width: 50,
+                height: 50,
+                errorBuilder: (context, error, stackTrace) {
+                  print('Error loading image: $error');
+                  return Icon(Icons.broken_image);
+                },
+              )
+                  : Icon(Icons.image_not_supported),
               title: Text(producto.nombre),
               subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(2)}'),
             );
