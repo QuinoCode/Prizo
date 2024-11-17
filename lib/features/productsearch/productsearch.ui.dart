@@ -83,7 +83,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     );
 
     try {
-      final productos = await searcher.searchProducts(_searchController.text); // **Cambio aquí**
+      final productos = await searcher.searchProducts(_searchController.text);
 
       // Por cada súper separa los productos en dos listas
       List<(List<Producto>, List<Producto>)> listasSeparadas = productos.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
