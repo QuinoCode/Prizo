@@ -95,17 +95,17 @@ class DetallesProducto extends StatelessWidget {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey, // Color de fondo del botón
+                    backgroundColor: Colors.grey,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),
-                    padding: EdgeInsets.all(20), // Tamaño del padding para hacerlo más grande
+                    padding: EdgeInsets.all(20),
                   ),
                   child: Icon(
                     Icons.shopping_cart,
-                    size: 40, // Tamaño del ícono
-                    color: Colors.white, // Color del ícono
+                    size: 40,
+                    color: Colors.white,
                   ),
                 ),
-                SizedBox(width: 10), // Espacio entre los botones
+                SizedBox(width: 10), //Espacio entre los botones
 
                 ElevatedButton(
                   onPressed: () async {
@@ -122,14 +122,14 @@ class DetallesProducto extends StatelessWidget {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red, // Color de fondo del botón
+                    backgroundColor: Colors.red,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),
-                    padding: EdgeInsets.all(20), // Tamaño del padding para hacerlo más grande
+                    padding: EdgeInsets.all(20),
                   ),
                   child: Icon(
                     Icons.favorite,
-                    size: 40, // Tamaño del ícono
-                    color: Colors.white, // Color del ícono
+                    size: 40,
+                    color: Colors.white,
                   ),
                 ),
               ],
