@@ -38,6 +38,7 @@ class ConsumFinderService {
       final priceMap = productJson["priceData"];
       final priceObj = priceMap["prices"];
       final priceVal = priceObj[0]["value"];
+      final categoria = productJson["categories"][0]["name"];
 
 
 //crear producto
@@ -50,6 +51,7 @@ class ConsumFinderService {
           nombre: currProduct["name"],
           foto: productJson["media"][0]["url"],
           alergenos: [false, false, false],
+          categoria: categoria,
       );
 
       if (priceObj.length > 1){

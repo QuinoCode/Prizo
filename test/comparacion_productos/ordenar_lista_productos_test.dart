@@ -12,7 +12,7 @@ void main() {
       tienda: 'Supermercado A',
       alergenos: [false, true, false],
       precioMedida: 0.5,
-      marca: "hacendado",
+      marca: "hacendado", categoria: '',
     );
 
     Producto producto2 = Producto(
@@ -23,7 +23,7 @@ void main() {
       tienda: 'Panadería B',
       alergenos: [false, true, false],
       precioMedida: 0.5,
-      marca: "hacendado",
+      marca: "hacendado", categoria: '',
     );
 
     Producto producto3 = Producto(
@@ -34,7 +34,7 @@ void main() {
       tienda: 'Tienda de Jugos C',
       alergenos: [false, true, false],
       precioMedida: 0.5,
-      marca: "hacendado",
+      marca: "hacendado", categoria: '',
     );
 
     // Arrange
