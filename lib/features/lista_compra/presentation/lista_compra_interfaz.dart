@@ -1,26 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/lista_compra.dart';
+import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 
-class ListaCompraInterfaz extends StatelessWidget {
+class ListaCompraInterfaz extends StatefulWidget {
   final ListaCompra listaCompra;
-
   ListaCompraInterfaz({super.key, required this.listaCompra});
 
   @override
+  _ListaCompraInterfazState createState() => _ListaCompraInterfazState();
+}
+
+class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
+  final ListaCompraService listaCompraService = ListaCompraService();
+
+  @override
   Widget build(BuildContext context) {
+    final listaCompraAuxiliar = listaCompraService.crearListaCompraAuxiliar(widget.listaCompra);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Tu Lista de la Compra'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: listaCompra.productos.isEmpty
+        child: listaCompraAuxiliar.productos.isEmpty
             ? Center(child: Text('Tu lista de la compra está vacía.'))
             : ListView.builder(
-          itemCount: listaCompra.productos.length,
+          itemCount: listaCompraAuxiliar.productos.length,
           itemBuilder: (context, index) {
-            final producto = listaCompra.productos[index];
-            final imageUrl = producto.foto; // Obtener la URL de la imagen
+            final producto = listaCompraAuxiliar.productos[index];
+            final cantidad = listaCompraAuxiliar.cantidades[index];
+            final imageUrl = producto.foto;
 
             return ListTile(
               leading: producto.foto.isNotEmpty
@@ -30,12 +41,41 @@ class ListaCompraInterfaz extends StatelessWidget {
                 height: 50,
                 errorBuilder: (context, error, stackTrace) {
                   print('Error loading image: $error');
-                  return Icon(Icons.broken_image); // Mostrar un icono en caso de error
+                  return Icon(Icons.broken_image);
                 },
               )
                   : Icon(Icons.image_not_supported),
               title: Text(producto.nombre),
-              subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(2)}'),
+              subtitle: Text(
+                  '${producto.tienda} - €${producto.precio.toStringAsFixed(2)}'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.remove_circle_outline),
+                    onPressed: () {
+                      if (cantidad > 1) {
+                        setState(() {
+                          listaCompraService.removeProduct(widget.listaCompra, producto);
+                        });
+                      }
+                    },
+                  ),
+                  /* Mostrar la cantidad de instancias con texto más grande */
+                  Text(
+                    cantidad.toString(),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add_circle_outline),
+                    onPressed: () {
+                      setState(() {
+                        listaCompraService.addProduct(widget.listaCompra, producto);
+                      });
+                    },
+                  ),
+                ],
+              ),
             );
           },
         ),
