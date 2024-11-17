@@ -4,6 +4,7 @@ import '../../lista_compra/application/lista_compra_service.dart';
 import '../../lista_favoritos/application/lista_favoritos_service.dart';
 import '../../../shared/data_entities/lista_compra.dart';
 import '../../../shared/data_entities/lista_favoritos.dart';
+import '../../pantalla_producto/application/pantalla_producto_service.dart';
 
 class DetallesProducto extends StatelessWidget {
   final Producto producto;
@@ -11,6 +12,8 @@ class DetallesProducto extends StatelessWidget {
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
   final ListaCompra listaCompra;
   final ListaFavoritos listaFavoritos;
+  final List<Producto> productosRelacionados = [];
+  final PantallaProductoService pantallaProductoService = PantallaProductoService();
 
   DetallesProducto({
     Key? key,
@@ -133,6 +136,86 @@ class DetallesProducto extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 40),
+
+            const SizedBox(height: 20),
+
+            // Lista horizontal de productos relacionados
+            Text(
+              'Productos relacionados',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+
+            // FutureBuilder para manejar el Future<List<Producto>>
+            FutureBuilder<List<Producto>>(
+              future: pantallaProductoService.obtenerProductosSimilares(PantallaProductoService.limpiarNombreProducto(producto.nombre)),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Mientras se obtiene la respuesta, icono de carga
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 50.0), // Mover hacia abajo
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error al cargar productos relacionados.'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No hay productos relacionados.'));
+                } else {
+                  // Si los productos están disponibles, mostramos la lista horizontal
+                  List<Producto> productosRelacionados = snapshot.data!;
+
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: productosRelacionados.map((productoRelacionado) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Column(
+                            children: [
+                              Image.network(
+                                productoRelacionado.foto,
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.broken_image, size: 100);
+                                },
+                              ),
+                              const SizedBox(height: 8),
+                              SizedBox(
+                                width: 95,
+                                child: Text(
+                                  productoRelacionado.nombre,
+                                  style: const TextStyle(fontSize: 10),
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                  maxLines: 3,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                productoRelacionado.tienda,
+                                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 4),
+                              Align(
+                                alignment: Alignment.bottomCenter, // Alinear siempre en la parte inferior
+                                child: Text(
+                                  '${productoRelacionado.precio.toStringAsFixed(2)}€',
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                }
+              },
             ),
           ],
         ),
