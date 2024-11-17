@@ -5,7 +5,6 @@ import 'package:prizo/features/lista_compra/application/lista_compra_service.dar
 
 class ListaCompraInterfaz extends StatefulWidget {
   final ListaCompra listaCompra;
-
   ListaCompraInterfaz({super.key, required this.listaCompra});
 
   @override
@@ -18,6 +17,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   @override
   Widget build(BuildContext context) {
     final listaCompraAuxiliar = listaCompraService.crearListaCompraAuxiliar(widget.listaCompra);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Tu Lista de la Compra'),
@@ -32,6 +32,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
             final producto = listaCompraAuxiliar.productos[index];
             final cantidad = listaCompraAuxiliar.cantidades[index];
             final imageUrl = producto.foto;
+
             return ListTile(
               leading: producto.foto.isNotEmpty
                   ? Image.network(
@@ -61,10 +62,25 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                       }
                     },
                   ),
-                  // Mostrar la cantidad de instancias con texto más grande
-                  Text(
-                    cantidad.toString(),
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  /* Aquí se puede cambiar la cantidad directamente */
+                  Container(
+                    width: 50,
+                    child: TextField(
+                      controller: TextEditingController(text: cantidad.toString()),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(8.0),
+                      ),
+                      onSubmitted: (newQuantity) {
+                        int? newQuantityInt = int.tryParse(newQuantity);
+                        if (newQuantityInt != null && newQuantityInt > 1) {
+                          setState(() {
+                            listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantityInt);
+                          });
+                        }
+                      },
+                    ),
                   ),
                   IconButton(
                     icon: Icon(Icons.add_circle_outline),
@@ -83,7 +99,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     );
   }
 
-  /*Método para mostrar el diálogo de confirmación */
+  /* Método para mostrar el diálogo de confirmación de eliminación */
   void _showConfirmDeleteDialog(BuildContext context, Producto producto) {
     showDialog(
       context: context,
@@ -105,11 +121,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                   listaCompraService.removeProduct(widget.listaCompra, producto);
                 });
                 Navigator.of(context).pop();
-                /*ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${producto.nombre} ha sido eliminado de la lista de compra'),
-                  ),
-                );*/
               },
             ),
           ],
