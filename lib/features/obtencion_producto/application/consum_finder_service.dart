@@ -52,13 +52,9 @@ class ConsumFinderService {
           foto: productJson["media"][0]["url"],
           alergenos: [false, false, false],
           categoria: categoria,
+          oferta: priceObj.length > 1,
+          precioOferta: priceObj[1]["value"]["centAmount"],
       );
-
-      if (priceObj.length > 1){
-        product.oferta = true;
-        product.precioOferta = priceObj[1]["value"]["centAmount"];
-      }
-
 
       productList.add(product);
     }

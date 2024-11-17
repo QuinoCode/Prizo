@@ -53,11 +53,9 @@ class DiaFinderService {
                 : "",
             alergenos: [glutenFree, lactoseFree, nutsFree],
             categoria: productJson["l2_category_description"],
+            oferta: pricesObj["is_promo_price"] == true,
+            precioOferta: pricesObj["price"].toDouble(),
           );
-          if (pricesObj["is_promo_price"] == true) {
-            product.oferta = true;
-          }
-          product.precioOferta = pricesObj["price"].toDouble();
           productList.add(product);
         }
       } else {

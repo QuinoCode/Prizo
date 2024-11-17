@@ -13,6 +13,8 @@ void main() {
       alergenos: [false, true, false],
       precioMedida: 0.5,
       marca: "hacendado", categoria: '',
+      oferta: false,
+      precioOferta: 0.0,
     );
 
     Producto producto2 = Producto(
@@ -24,6 +26,8 @@ void main() {
       alergenos: [false, true, false],
       precioMedida: 0.5,
       marca: "hacendado", categoria: '',
+      oferta: false,
+      precioOferta: 0.0,
     );
 
     Producto producto3 = Producto(
@@ -35,6 +39,8 @@ void main() {
       alergenos: [false, true, false],
       precioMedida: 0.5,
       marca: "hacendado", categoria: '',
+      oferta: false,
+      precioOferta: 0.0,
     );
 
     // Arrange

@@ -16,6 +16,8 @@ void main() {
     precioMedida: 10,
     marca: '',
     categoria: 'leche',
+    oferta: false,
+    precioOferta: 0.0,
   );
 
   Producto producto2 = Producto(
@@ -28,6 +30,8 @@ void main() {
     precioMedida: 10,
     marca: '',
     categoria: 'pan',
+    oferta: false,
+    precioOferta: 0.0,
   );
 
   Producto producto3 = Producto(
@@ -40,6 +44,8 @@ void main() {
     precioMedida: 10,
     marca: '',
     categoria: 'Jugo',
+    oferta: false,
+    precioOferta: 0.0,
   );
 
     List<Producto> product_list = [producto1, producto2, producto3];
