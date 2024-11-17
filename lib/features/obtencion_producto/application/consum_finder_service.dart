@@ -53,7 +53,7 @@ class ConsumFinderService {
           alergenos: [false, false, false],
           categoria: categoria,
           oferta: priceObj.length > 1,
-          precioOferta: priceObj[1]["value"]["centAmount"],
+          precioOferta: priceObj.length > 1 ? priceObj[1]["value"]["centAmount"] : priceVal["centAmount"],
       );
 
       productList.add(product);

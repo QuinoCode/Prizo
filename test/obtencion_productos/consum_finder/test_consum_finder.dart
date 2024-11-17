@@ -8,7 +8,6 @@ void main() async {
 // Arrange
       ConsumFinderService finder = ConsumFinderService();
       String query = "ketchup";
-
 // Act
       List<Producto> products = await finder.fetchProductsFromApi(query);
 
