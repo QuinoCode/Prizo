@@ -9,13 +9,14 @@ class PantallaProductoService {
   final DiaFinderService diaService = DiaFinderService();
   final CarrefourFinderService carrefourService = CarrefourFinderService();
 
-  Future<List<Producto>> obtenerProductosSimilares(String query) async {
+  Future<List<Producto>> obtenerProductosSimilares(String query, Producto productoActual) async {
     try {
       final consumProductsFuture = consumService.fetchProductsFromApi(query);
       final diaProductsFuture = diaService.getProductList(query);
       final carrefourProductsFuture = carrefourService.getProductList(query);
       final results = await Future.wait([consumProductsFuture, diaProductsFuture, carrefourProductsFuture]);
       List<Producto> listaCombinada = results[0] + results[1] + results[2];
+      listaCombinada.removeWhere((producto) => producto.id == productoActual.id);
       ordenarProductosPorPrecio(listaCombinada);
       return listaCombinada;
     } catch (e) {

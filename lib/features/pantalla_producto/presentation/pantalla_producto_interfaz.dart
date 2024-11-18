@@ -150,7 +150,7 @@ class DetallesProducto extends StatelessWidget {
 
             // FutureBuilder para manejar el Future<List<Producto>>
             FutureBuilder<List<Producto>>(
-              future: pantallaProductoService.obtenerProductosSimilares(PantallaProductoService.limpiarNombreProducto(producto.nombre)),
+              future: pantallaProductoService.obtenerProductosSimilares(PantallaProductoService.limpiarNombreProducto(producto.nombre), producto),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   // Mientras se obtiene la respuesta, icono de carga
@@ -170,45 +170,60 @@ class DetallesProducto extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: productosRelacionados.map((productoRelacionado) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Column(
-                            children: [
-                              Image.network(
-                                productoRelacionado.foto,
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(Icons.broken_image, size: 100);
-                                },
-                              ),
-                              const SizedBox(height: 8),
-                              SizedBox(
-                                width: 95,
-                                child: Text(
-                                  productoRelacionado.nombre,
-                                  style: const TextStyle(fontSize: 10),
-                                  softWrap: true,
-                                  overflow: TextOverflow.visible,
-                                  maxLines: 3,
+                        return GestureDetector(
+                          onTap: () {
+                            // Navegar a la pantalla de detalles del producto seleccionado
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetallesProducto(
+                                  producto: productoRelacionado,
+                                  listaCompra: listaCompra,
+                                  listaFavoritos: listaFavoritos,
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                productoRelacionado.tienda,
-                                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 4),
-                              Align(
-                                alignment: Alignment.bottomCenter, // Alinear siempre en la parte inferior
-                                child: Text(
-                                  '${productoRelacionado.precio.toStringAsFixed(2)}€',
-                                  style: const TextStyle(fontSize: 12),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 16.0),
+                            child: Column(
+                              children: [
+                                Image.network(
+                                  productoRelacionado.foto,
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.broken_image, size: 100);
+                                  },
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 8),
+                                SizedBox(
+                                  width: 95,
+                                  child: Text(
+                                    productoRelacionado.nombre,
+                                    style: const TextStyle(fontSize: 10),
+                                    softWrap: true,
+                                    overflow: TextOverflow.visible,
+                                    maxLines: 3,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  productoRelacionado.tienda,
+                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 4),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Text(
+                                    '${productoRelacionado.precio.toStringAsFixed(2)}€',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       }).toList(),
@@ -216,7 +231,7 @@ class DetallesProducto extends StatelessWidget {
                   );
                 }
               },
-            ),
+            )
           ],
         ),
       ),
