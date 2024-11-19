@@ -7,4 +7,15 @@ class ListaFavoritosService {
     list.productos.remove(product);
   }
 
+  void addProduct(ListaFavoritos list, Producto product) {
+    bool exists = list.productos.any((p) =>
+    p.id == product.id &&
+        p.nombre == product.nombre &&
+        p.tienda == product.tienda &&
+        p.marca == product.marca);
+    if (!exists) {
+      list.productos.add(product);
+    }
+  }
+
 }
