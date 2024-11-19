@@ -21,9 +21,13 @@ class ListaCompraService {
     list.productos.remove(product);
   }
 
-  void setProductQuantity(ListaCompra list, Producto product, int quantity) {
+  int getProductQuantity(ListaCompra list, Producto product) {
     /*Contar las instancias actuales del producto en la lista*/
-    int currentQuantity = list.productos.where((p) => p.id == product.id).length;
+    return list.productos.where((p) => p.id == product.id).length;
+  }
+
+  void setProductQuantity(ListaCompra list, Producto product, int quantity) {
+    int currentQuantity = getProductQuantity(list, product);
 
     if (currentQuantity < quantity) {
       /*Agregar las instancias necesarias para llegar a la cantidad deseada*/
