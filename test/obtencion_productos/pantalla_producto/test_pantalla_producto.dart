@@ -7,8 +7,16 @@ void main() {
     String nombreCarrefour = "Almendras crudas Carrefour 200g.";
     String nombreConsum = "Almendra Repelada Cruda";
 
-    print(PantallaProductoService.limpiarNombreProducto(nombreDia));
-    print(PantallaProductoService.limpiarNombreProducto(nombreCarrefour));
-    print(PantallaProductoService.limpiarNombreProducto(nombreConsum));
+    String nombreDiaLimpio = PantallaProductoService.limpiarNombreProducto(nombreDia);
+    String nombreCarrefourLimpio = PantallaProductoService.limpiarNombreProducto(nombreCarrefour);
+    String nombreConsumLimpio = PantallaProductoService.limpiarNombreProducto(nombreConsum);
+
+    print(nombreDiaLimpio);
+    print(nombreCarrefourLimpio);
+    print(nombreConsumLimpio);
+
+    expect(nombreDiaLimpio, equals("almendras sin"));
+    expect(nombreCarrefourLimpio, equals("almendras crudas"));
+    expect(nombreConsumLimpio, equals("almendra repelada"));
   });
 }
