@@ -51,7 +51,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Botón de eliminar cantidad (restar uno)
+                  /* Botón de eliminar cantidad (restar uno) */
                   IconButton(
                     icon: Icon(Icons.remove_circle_outline),
                     onPressed: () {
@@ -64,7 +64,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                       }
                     },
                   ),
-                  // Campo de texto para cambiar la cantidad
+                  /* Campo de texto para cambiar la cantidad */
                   Container(
                     width: 50,
                     child: TextField(
@@ -84,7 +84,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                       },
                     ),
                   ),
-                  // Botón de aumentar cantidad (sumar uno)
+                  /* Botón de aumentar cantidad (sumar uno) */
                   IconButton(
                     icon: Icon(Icons.add_circle_outline),
                     onPressed: () {
@@ -93,7 +93,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                       });
                     },
                   ),
-                  // Botón de papelera para eliminar producto (poner cantidad a 0)
+                  /* Botón de papelera para eliminar producto (poner cantidad a 0) */
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
@@ -111,7 +111,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     );
   }
 
-  // Método para mostrar el diálogo de confirmación de eliminación
+  /* Método para mostrar el diálogo de confirmación de eliminación */
   void _showConfirmDeleteDialog(BuildContext context, Producto producto) {
     showDialog(
       context: context,
