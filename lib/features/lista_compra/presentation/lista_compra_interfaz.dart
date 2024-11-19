@@ -5,6 +5,7 @@ import 'package:prizo/features/lista_compra/application/lista_compra_service.dar
 
 class ListaCompraInterfaz extends StatefulWidget {
   final ListaCompra listaCompra;
+
   ListaCompraInterfaz({super.key, required this.listaCompra});
 
   @override
@@ -50,6 +51,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Botón de eliminar cantidad (restar uno)
                   IconButton(
                     icon: Icon(Icons.remove_circle_outline),
                     onPressed: () {
@@ -62,7 +64,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                       }
                     },
                   ),
-                  /* Aquí se puede cambiar la cantidad directamente */
+                  // Campo de texto para cambiar la cantidad
                   Container(
                     width: 50,
                     child: TextField(
@@ -82,11 +84,21 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                       },
                     ),
                   ),
+                  // Botón de aumentar cantidad (sumar uno)
                   IconButton(
                     icon: Icon(Icons.add_circle_outline),
                     onPressed: () {
                       setState(() {
                         listaCompraService.addProduct(widget.listaCompra, producto);
+                      });
+                    },
+                  ),
+                  // Botón de papelera para eliminar producto (poner cantidad a 0)
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      setState(() {
+                        listaCompraService.setProductQuantity(widget.listaCompra, producto, 0);
                       });
                     },
                   ),
@@ -99,7 +111,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     );
   }
 
-  /* Método para mostrar el diálogo de confirmación de eliminación */
+  // Método para mostrar el diálogo de confirmación de eliminación
   void _showConfirmDeleteDialog(BuildContext context, Producto producto) {
     showDialog(
       context: context,
