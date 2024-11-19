@@ -14,6 +14,7 @@ class ListaCompraInterfaz extends StatefulWidget {
 
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   final ListaCompraService listaCompraService = ListaCompraService();
+  TextEditingController _quantityController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +77,16 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                       ),
                       onSubmitted: (newQuantity) {
                         int? newQuantityInt = int.tryParse(newQuantity);
-                        if (newQuantityInt != null && newQuantityInt > 1) {
+                        int currentQuantityInt = listaCompraService.getProductQuantity(widget.listaCompra, producto);
+                        if (newQuantityInt != null && newQuantityInt >= 1) {
+                          if(newQuantityInt != currentQuantityInt) {
+                            setState(() {
+                              listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantityInt);
+                            });
+                          }
+                        } else {
                           setState(() {
-                            listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantityInt);
+                            _quantityController.text = currentQuantityInt.toString();
                           });
                         }
                       },
