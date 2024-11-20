@@ -166,67 +166,71 @@ class DetallesProducto extends StatelessWidget {
                   // Si los productos están disponibles, mostramos la lista horizontal
                   List<Producto> productosRelacionados = snapshot.data!;
 
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: productosRelacionados.map((productoRelacionado) {
-                        return GestureDetector(
-                          onTap: () {
-                            // Navegar a la pantalla de detalles del producto seleccionado
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetallesProducto(
-                                  producto: productoRelacionado,
-                                  listaCompra: listaCompra,
-                                  listaFavoritos: listaFavoritos,
+                  return Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: productosRelacionados.map((productoRelacionado) {
+                          return GestureDetector(
+                            onTap: () {
+                              // Navegar a la pantalla de detalles del producto seleccionado
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetallesProducto(
+                                    producto: productoRelacionado,
+                                    listaCompra: listaCompra,
+                                    listaFavoritos: listaFavoritos,
+                                  ),
                                 ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: Column(
+                                children: [
+                                  Image.network(
+                                    productoRelacionado.foto,
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(Icons.broken_image, size: 100);
+                                    },
+                                  ),
+                                  const SizedBox(height: 8),
+                                  SizedBox(
+                                    width: 95,
+                                    child: Text(
+                                      productoRelacionado.nombre,
+                                      style: const TextStyle(fontSize: 10),
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Expanded(
+                                    child: Text(
+                                      productoRelacionado.tienda,
+                                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Text(
+                                      '${productoRelacionado.precio.toStringAsFixed(2)}€',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 16.0),
-                            child: Column(
-                              children: [
-                                Image.network(
-                                  productoRelacionado.foto,
-                                  width: 70,
-                                  height: 70,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.broken_image, size: 100);
-                                  },
-                                ),
-                                const SizedBox(height: 8),
-                                SizedBox(
-                                  width: 95,
-                                  child: Text(
-                                    productoRelacionado.nombre,
-                                    style: const TextStyle(fontSize: 10),
-                                    softWrap: true,
-                                    overflow: TextOverflow.visible,
-                                    maxLines: 3,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  productoRelacionado.tienda,
-                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 4),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Text(
-                                    '${productoRelacionado.precio.toStringAsFixed(2)}€',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                ),
-                              ],
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   );
                 }
