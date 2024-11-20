@@ -28,7 +28,7 @@ class PantallaProductoService {
   static String limpiarNombreProducto(String nombre) {
     // Lista de palabras comunes a eliminar
     List<String> stopwords = [
-      "de", "con", "y", "en", "el", "la", "al", "los", "las", "ud", "g", "bolsa", "natural", "molino", "kg", "pack", "sabor"
+      "de", "con", "y", "en", "el", "la", "al", "los", "las", "ud", "g", "natural", "molino", "kg", "pack", "sabor", "paquete", "bolsa"
     ];
 
     // Normaliza el texto
