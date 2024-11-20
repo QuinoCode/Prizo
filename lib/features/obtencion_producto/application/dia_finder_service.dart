@@ -52,7 +52,7 @@ class DiaFinderService {
                 ? imageHost + productJson["image"]
                 : "",
             alergenos: [glutenFree, lactoseFree, nutsFree],
-            categoria: productJson["l2_category_description"],
+            categoria: productJson["display_name"].split(' ')[0],
             oferta: pricesObj["is_promo_price"] == true,
             precioOferta: pricesObj["price"].toDouble(),
           );

@@ -22,6 +22,7 @@ void main() async {
         print("Image: ${product.foto}");
         print("Oferta: ${product.oferta}");
         print("Precio oferta: ${product.precioOferta}");
+        print("Categoria: ${product.categoria}");
         print("Alergenos: Gluten-Free: ${product.alergenos[0]}, Lactose-Free: ${product.alergenos[1]}, Nuts-Free: ${product.alergenos[2]}");
         print("------------------------------------------------------------");
 
