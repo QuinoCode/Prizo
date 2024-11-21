@@ -29,7 +29,7 @@ class PantallaProductoService {
     // Lista de palabras comunes a eliminar
     List<String> stopwords = [
       "de", "con", "y", "en", "el", "la", "al", "los", "las", "ud", "g", "natural", "molino", "kg", "pack", "sabor", "paquete", "bolsa",
-      "carrefour", "dia", "consum"
+      "carrefour", "dia", "consum", "caja"
     ];
 
     // Normaliza el texto
