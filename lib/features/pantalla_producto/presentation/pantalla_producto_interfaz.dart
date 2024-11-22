@@ -139,103 +139,112 @@ class DetallesProducto extends StatelessWidget {
             ),
             const SizedBox(height: 40),
 
-            const SizedBox(height: 20),
+            // Aquí usar un Spacer para tomar el espacio disponible
+            Spacer(),
 
-            // Lista horizontal de productos relacionados
-            Text(
-              'Productos relacionados',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
+            // Lista horizontal de productos relacionados con altura fija
+            Container(
+              height: 200, // Altura fija para la sección de productos relacionados
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Productos relacionados',
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
 
-            // FutureBuilder para manejar el Future<List<Producto>>
-            FutureBuilder<List<Producto>>(
-              future: pantallaProductoService.obtenerProductosSimilares(PantallaProductoService.limpiarNombreProducto(producto.nombre), producto),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // Mientras se obtiene la respuesta, icono de carga
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 50.0), // Mover hacia abajo
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error al cargar productos relacionados.'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No hay productos relacionados.'));
-                } else {
-                  // Si los productos están disponibles, mostramos la lista horizontal
-                  List<Producto> productosRelacionados = snapshot.data!;
+                  // FutureBuilder para manejar el Future<List<Producto>>
+                  FutureBuilder<List<Producto>>(
+                    future: pantallaProductoService.obtenerProductosSimilares(
+                        PantallaProductoService.limpiarNombreProducto(producto.nombre), producto),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        // Mientras se obtiene la respuesta, icono de carga
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 50.0), // Mover hacia abajo
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error al cargar productos relacionados.'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(child: Text('No hay productos relacionados.'));
+                      } else {
+                        List<Producto> productosRelacionados = snapshot.data!;
 
-                  return Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: productosRelacionados.map((productoRelacionado) {
-                          return GestureDetector(
-                            onTap: () {
-                              // Navegar a la pantalla de detalles del producto seleccionado
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetallesProducto(
-                                    producto: productoRelacionado,
-                                    listaCompra: listaCompra,
-                                    listaFavoritos: listaFavoritos,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: Column(
-                                children: [
-                                  Image.network(
-                                    productoRelacionado.foto,
-                                    width: 70,
-                                    height: 70,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(Icons.broken_image, size: 100);
-                                    },
-                                  ),
-                                  const SizedBox(height: 8),
-                                  SizedBox(
-                                    width: 95,
-                                    child: Text(
-                                      productoRelacionado.nombre,
-                                      style: const TextStyle(fontSize: 10),
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
+                        return Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: productosRelacionados.map((productoRelacionado) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    // Navegar a la pantalla de detalles del producto seleccionado
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetallesProducto(
+                                          producto: productoRelacionado,
+                                          listaCompra: listaCompra,
+                                          listaFavoritos: listaFavoritos,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 16.0),
+                                    child: Column(
+                                      children: [
+                                        Image.network(
+                                          productoRelacionado.foto,
+                                          width: 70,
+                                          height: 70,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return const Icon(Icons.broken_image, size: 100);
+                                          },
+                                        ),
+                                        const SizedBox(height: 8),
+                                        SizedBox(
+                                          width: 95,
+                                          child: Text(
+                                            productoRelacionado.nombre,
+                                            style: const TextStyle(fontSize: 10),
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Expanded(
+                                          child: Text(
+                                            productoRelacionado.tienda,
+                                            style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Text(
+                                            '${productoRelacionado.precio.toStringAsFixed(2)}€',
+                                            style: const TextStyle(fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
-                                  Expanded(
-                                    child: Text(
-                                      productoRelacionado.tienda,
-                                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Text(
-                                      '${productoRelacionado.precio.toStringAsFixed(2)}€',
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                );
+                              }).toList(),
                             ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  );
-                }
-              },
-            )
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
