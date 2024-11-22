@@ -6,8 +6,8 @@ class ListaCompraAuxiliar {
   List<int> cantidades;
 
   ListaCompraAuxiliar({
-    required this.productos,
-    required this.cantidades,
+    this.productos = const [], /* Usamos const para listas vacías predeterminadas */
+    this.cantidades = const [],
   });
 }
 
