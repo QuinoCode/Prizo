@@ -26,6 +26,20 @@ class ListaCompraService {
     return list.productos.where((p) => p.id == product.id).length;
   }
 
+  void addProductAux(ListaCompraAuxiliar list, Producto product) {
+    /* Buscar si el producto ya está en la lista */
+    int index = list.productos.indexWhere((p) => p.id == product.id);
+
+    if (index != -1) {
+      /* Si el producto ya existe, incrementar la cantidad */
+      list.cantidades[index]+=1;
+    } else {
+      /* Si el producto no existe, agregarlo con cantidad inicial de 1 */
+      list.productos.add(product);
+      list.cantidades.add(1);
+    }
+  }
+
   void setProductQuantity(ListaCompra list, Producto product, int quantity) {
     int currentQuantity = getProductQuantity(list, product);
 
