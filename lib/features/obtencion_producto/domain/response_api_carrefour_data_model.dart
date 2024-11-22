@@ -21,6 +21,7 @@ class CarrefourProduct {
   int? stock;
   double? unit_conversion_factor;
   String? url;
+  bool? has_offers;
 
   CarrefourProduct({
     required this.active_price,
@@ -44,6 +45,7 @@ class CarrefourProduct {
     required this.stock,
     required this.unit_conversion_factor,
     required this.url,
+    required this.has_offers,
   });
 
 }

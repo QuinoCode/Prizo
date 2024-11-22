@@ -76,6 +76,7 @@ class CarrefourFinderService {
           stock: item['stock'],
           unit_conversion_factor: (item['unit_conversion_factor'] ?? -1.0).toDouble(),
           url: item['url'],
+          has_offers: item['has_offers'] ?? false,
           );
           carrefourProducts.add(placeHolder);
       }
@@ -89,12 +90,14 @@ class CarrefourFinderService {
         id: carrefourProduct.ean13 + "C4",
         nombre: carrefourProduct.display_name,
         alergenos: extractAlergens(carrefourProduct) ?? [true, true, true],
-        precio: carrefourProduct.active_price,
+        precio: carrefourProduct.list_price,
         precioMedida: parsePrecioMedida(carrefourProduct.price_per_unit_text),
         tienda: "Carrefour",
         marca: carrefourProduct.brand ?? "Marca blanca",
         foto: carrefourProduct.image_path,
        );
+        producto.oferta = carrefourProduct.has_offers ?? false;
+        producto.precioOferta = carrefourProduct.active_price;
        productos.add(producto);
     }
     return productos;
