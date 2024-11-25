@@ -74,6 +74,11 @@ class ListaCompraService {
     /*Crear las listas de productos y cantidades*/
     List<int> cantidades = productosUnicos.map((producto) => contadorProductos[producto.id]!).toList();
 
+    ListaCompraAuxiliar lista = new ListaCompraAuxiliar();
+    for (var producto in listaCompra.productos) {
+      addProductAux(lista, producto);
+    }
+
     return ListaCompraAuxiliar(productos: productosUnicos, cantidades: cantidades);
   }
 
