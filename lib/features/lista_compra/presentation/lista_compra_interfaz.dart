@@ -5,7 +5,6 @@ import 'package:prizo/features/lista_compra/application/lista_compra_service.dar
 
 class ListaCompraInterfaz extends StatefulWidget {
   final ListaCompra2 listaCompra;
-
   ListaCompraInterfaz({super.key, required this.listaCompra});
 
   @override
@@ -31,8 +30,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
             final productoTuple = widget.listaCompra.productos[index];
             final producto = productoTuple.$1;
             final cantidad = productoTuple.$2;
+            final totalPrice = listaCompraService.getPrice(widget.listaCompra, producto);
 
-            // Si el producto no tiene imagen, se muestra el ícono de imagen rota
             return ListTile(
               leading: producto.foto.isNotEmpty
                   ? Image.network(
@@ -41,22 +40,42 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                 height: 50,
                 errorBuilder: (context, error, stackTrace) {
                   print('Error loading image: $error');
-                  return Icon(Icons.broken_image);
+                  return Icon(Icons.image_not_supported);
                 },
               )
                   : Icon(Icons.image_not_supported),
-              title: null, // Eliminar el nombre del producto
-              subtitle: null, // Eliminar la descripción del producto
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Botón para eliminar una instancia
+                  IconButton(
+                    icon: Icon(Icons.remove_circle_outline),
+                    onPressed: () {
+                      setState(() {
+                        listaCompraService.removeInstance(widget.listaCompra, producto);
+                      });
+                    },
+                  ),
+                  // Cantidad
                   Text(
                     '$cantidad',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                   ),
+                  // Botón para agregar una instancia
+                  IconButton(
+                    icon: Icon(Icons.add_circle_outline),
+                    onPressed: () {
+                      setState(() {
+                        listaCompraService.addInstance(widget.listaCompra, producto);
+                      });
+                    },
+                  ),
+                  // Precio total del producto
+                  Text(
+                    '${totalPrice.toStringAsFixed(2)} €',
+                    style: TextStyle(fontSize: 26),
+                  ),
+                  // Botón de papelera para eliminar el producto de la lista
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
