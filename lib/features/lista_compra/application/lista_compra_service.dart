@@ -23,16 +23,6 @@ class ListaCompraService {
     list.productos.add((product, 1));
   }
 
-  void removeInstance(ListaCompra2 list, Producto product) {
-    /* Buscar producto en la lista existente */
-    int i = searchProducto(list, product);
-
-    /* El producto existe en la lista y tiene más de una instancia */
-    if(i != -1 && list.productos[i].$2 > 1) {
-      list.productos[i] = (list.productos[i].$1, list.productos[i].$2 - 1);
-    }
-  }
-
   void removeProduct(ListaCompra2 list, Producto product) {
     /* Buscar producto en la lista existente */
     int i = searchProducto(list, product);
@@ -40,6 +30,27 @@ class ListaCompraService {
     /* El producto existe en la lista */
     if(i != -1) {
       list.productos.remove((list.productos[i].$1, list.productos[i].$2));
+    }
+  }
+
+  /** El Producto product debe existir en la lista para invocar este método */
+  void addInstance(ListaCompra2 list, Producto product) {
+    /* Buscar producto en la lista existente */
+    int i = searchProducto(list, product);
+
+    /* El producto existe en la lista */
+    if(i != -1) {
+      list.productos[i] = (list.productos[i].$1, list.productos[i].$2 + 1);
+    }
+  }
+
+  void removeInstance(ListaCompra2 list, Producto product) {
+    /* Buscar producto en la lista existente */
+    int i = searchProducto(list, product);
+
+    /* El producto existe en la lista y tiene más de una instancia */
+    if(i != -1 && list.productos[i].$2 > 1) {
+      list.productos[i] = (list.productos[i].$1, list.productos[i].$2 - 1);
     }
   }
 
