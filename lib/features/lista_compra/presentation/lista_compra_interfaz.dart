@@ -32,6 +32,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
             final producto = productoTuple.$1;
             final cantidad = productoTuple.$2;
 
+            // Si el producto no tiene imagen, se muestra el ícono de imagen rota
             return ListTile(
               leading: producto.foto.isNotEmpty
                   ? Image.network(
@@ -44,13 +45,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                 },
               )
                   : Icon(Icons.image_not_supported),
-              title: Text(
-                producto.nombre,
-                style: TextStyle(fontSize: 16), // tamaño del texto del producto
-              ),
-              subtitle: Text(
-                '${producto.tienda} - €${producto.precio.toStringAsFixed(2)}',
-              ),
+              title: null, // Eliminar el nombre del producto
+              subtitle: null, // Eliminar la descripción del producto
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -65,8 +61,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                     icon: Icon(Icons.delete),
                     onPressed: () {
                       setState(() {
-                        listaCompraService.removeProduct(
-                            widget.listaCompra, producto);
+                        listaCompraService.removeProduct(widget.listaCompra, producto);
                       });
                     },
                   ),
