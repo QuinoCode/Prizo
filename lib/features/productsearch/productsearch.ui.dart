@@ -141,7 +141,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: Text('Lista de Compra'),
               onPressed: () {
                 setState(() {
-                  listaCompraService.addProduct2(listaCompra2, producto);
+                  listaCompraService.addProduct(listaCompra2, producto);
                 });
                 Navigator.of(context).pop();
                 /*ScaffoldMessenger.of(context).showSnackBar(

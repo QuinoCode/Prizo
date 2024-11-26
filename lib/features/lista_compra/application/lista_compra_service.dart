@@ -13,7 +13,7 @@ class ListaCompraAuxiliar {
 
 class ListaCompraService {
 
-  void addProduct2(ListaCompra2 list, Producto producto) {
+  void addProduct(ListaCompra2 list, Producto producto) {
     /* lista vacía */
     if (list.productos.isEmpty) {
       list.productos.add((producto, 1));
