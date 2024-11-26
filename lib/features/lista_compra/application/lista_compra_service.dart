@@ -37,8 +37,14 @@ class ListaCompraService {
     return juan;
   }
 
-  void removeProduct(ListaCompra list, Producto product) {
-    list.productos.remove(product);
+  void removeProduct(ListaCompra2 list, Producto product) {
+    /* Si el producto existe se borra */
+    for (int i = 0; i < list.productos.length; i++) {
+      if (list.productos[i].$1.id == product.id) {
+        list.productos.remove((list.productos[i].$1, list.productos[i].$2));
+        return; /* fin ejecución */
+      }
+    }
   }
 
   int getProductQuantity(ListaCompra list, Producto product) {
