@@ -17,6 +17,11 @@ class ListaCompraService {
 
   }
 
+  ListaCompra2 newListaCompra2(ListaCompra list) {
+    ListaCompra2 juan = ListaCompra2(id: '1', usuario: 'usuario_demo', productos: []);
+    return juan;
+  }
+
   void addProduct(ListaCompra list, Producto product){
     list.productos.add(product);
   }
