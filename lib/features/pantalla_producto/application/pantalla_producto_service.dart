@@ -29,7 +29,7 @@ class PantallaProductoService {
     // Lista de palabras comunes a eliminar
     List<String> stopwords = [
       "de", "con", "y", "en", "el", "la", "al", "los", "las", "ud", "g", "natural", "molino", "kg", "pack", "sabor", "paquete", "bolsa",
-      "carrefour", "dia", "consum", "caja"
+      "carrefour", "dia", "consum", "caja", "lata", "botella", "envase", "frasco", "sobre"
     ];
 
     // Normaliza el texto
@@ -44,6 +44,8 @@ class PantallaProductoService {
 
     if (palabrasFiltradas.length > 2) {
       palabrasFiltradas = palabrasFiltradas.sublist(0, 2);
+    } else if (palabrasFiltradas.length == 2) {
+      return palabrasFiltradas[0];
     }
 
     return palabrasFiltradas.join(' ');
