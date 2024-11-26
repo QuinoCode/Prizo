@@ -3,16 +3,6 @@ import 'package:prizo/shared/data_entities/producto.dart';
 
 class ListaCompraService {
 
-  int searchProducto(ListaCompra2 list, Producto product) {
-    /* Si el producto existe, devuelve el índice*/
-    for (int i = 0; i < list.productos.length; i++) {
-      if (list.productos[i].$1.id == product.id) {
-        return i; /* fin ejecución */
-      }
-    }
-    return -1;
-  }
-
   void addProduct(ListaCompra2 list, Producto product) {
     /* lista vacía */
     if (list.productos.isEmpty) {
@@ -31,6 +21,16 @@ class ListaCompraService {
 
     /* El producto no existía en la lista */
     list.productos.add((product, 1));
+  }
+
+  void removeInstance(ListaCompra2 list, Producto product) {
+    /* Buscar producto en la lista existente */
+    int i = searchProducto(list, product);
+
+    /* El producto existe en la lista y tiene más de una instancia */
+    if(i != -1 && list.productos[i].$2 > 1) {
+      list.productos[i] = (list.productos[i].$1, list.productos[i].$2 - 1);
+    }
   }
 
   void removeProduct(ListaCompra2 list, Producto product) {
@@ -54,4 +54,14 @@ class ListaCompraService {
     }
     return -1;
   }//setProductQuantity
+
+  int searchProducto(ListaCompra2 list, Producto product) {
+    /* Si el producto existe, devuelve el índice*/
+    for (int i = 0; i < list.productos.length; i++) {
+      if (list.productos[i].$1.id == product.id) {
+        return i; /* fin ejecución */
+      }
+    }
+    return -1;
+  }
 }
