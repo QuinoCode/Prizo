@@ -73,6 +73,13 @@ class DetallesProducto extends StatelessWidget {
             const SizedBox(height: 8),
 
             Text(
+              producto.marca,
+              style: const TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+
+            Text(
               producto.tienda,
               style: const TextStyle(fontSize: 18),
               textAlign: TextAlign.center,
@@ -225,7 +232,7 @@ class DetallesProducto extends StatelessWidget {
                                         ),
                                         const SizedBox(height: 4),
                                         Align(
-                                          alignment: Alignment.bottomCenter,
+                                          alignment: Alignment.topCenter,
                                           child: Text(
                                             '${productoRelacionado.precio.toStringAsFixed(2)}€',
                                             style: const TextStyle(fontSize: 12),
