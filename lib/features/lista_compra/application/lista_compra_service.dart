@@ -82,25 +82,7 @@ class ListaCompraService {
       list.productos.add(product);
       list.cantidades.add(1);
     }
-  }
-
-  void setProductQuantity(ListaCompra list, Producto product, int quantity) {
-    int currentQuantity = getProductQuantity(list, product);
-
-    if (currentQuantity < quantity) {
-      /*Agregar las instancias necesarias para llegar a la cantidad deseada*/
-      int instancesToAdd = quantity - currentQuantity;
-      for (int i = 0; i < instancesToAdd; i++) {
-        list.productos.add(product);
-      }
-    } else if (currentQuantity > quantity) {
-      /*Eliminar el exceso de instancias para llegar a la cantidad deseada*/
-      int instancesToRemove = currentQuantity - quantity;
-      for (int i = 0; i < instancesToRemove; i++) {
-        list.productos.remove(product);
-      }
-    }
-  }
+  }//setProductQuantity
 
   ListaCompraAuxiliar crearListaCompraAuxiliar(ListaCompra listaCompra) {
     /*Mapa para contar la cantidad de cada producto*/
