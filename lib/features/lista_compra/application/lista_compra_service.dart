@@ -3,11 +3,6 @@ import 'package:prizo/shared/data_entities/producto.dart';
 
 class ListaCompraService {
 
-  ListaCompra2 newListaCompra2(ListaCompra list) {
-    ListaCompra2 juan = ListaCompra2(id: '1', usuario: 'usuario_demo', productos: []);
-    return juan;
-  }
-
   int searchProducto(ListaCompra2 list, Producto product) {
     /* Si el producto existe, devuelve el índice*/
     for (int i = 0; i < list.productos.length; i++) {
