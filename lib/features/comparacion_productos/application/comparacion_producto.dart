@@ -11,7 +11,7 @@ Producto? obtenerProductoMasBarato(List<Producto> productos) {
   return productoMasBarato;
 }
 
-//ordena una lista de productos en base a su precio de menor a mayor
+/* ordena una lista de productos en base a su precio de menor a mayor */
 void ordenarProductosPorPrecio(List<Producto> productos) {
   productos.sort((a, b) => a.precio.compareTo(b.precio));
 }
