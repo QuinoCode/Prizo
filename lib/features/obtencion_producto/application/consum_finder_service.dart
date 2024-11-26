@@ -31,7 +31,7 @@ class ConsumFinderService {
 
   Future<List<Producto>> _parseProductList(List productsJsonList) async {
     final List<Producto> productList = [];
-//crear lista de productos
+/*crear lista de productos */
     for (var productJson in productsJsonList) {
       final currProduct = productJson["productData"];
       final marca = currProduct["brand"];
@@ -40,7 +40,7 @@ class ConsumFinderService {
       final priceVal = priceObj[0]["value"];
 
 
-//crear producto
+/*crear producto */
       final product = Producto(
           id: currProduct["id"] ?? "",
           tienda: "CONSUM",
