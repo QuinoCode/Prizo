@@ -84,7 +84,7 @@ class ListaCompraService {
   }
 
   /** Si no hay productos en la lista, devuelve 0.0 */
-  double getTotalPrice(ListaCompra2 list, Producto product) {
+  double getTotalPrice(ListaCompra2 list) {
     double totalPrice = 0.0;
     for (var producto in list.productos) {
       /* Ver si tiene precioOferta */
