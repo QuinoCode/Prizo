@@ -120,11 +120,33 @@ class DetallesProducto extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     try {
-                      // Llamar al servicio para añadir a la lista de favoritos
-                      listaFavoritosService.addProduct(listaFavoritos, producto);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${producto.nombre} añadido a favoritos')),
-                      );
+                      // Verificar si el producto ya está en favoritos
+                      if (listaFavoritosService.isProductInFavorites(listaFavoritos, producto)) {
+                        // Mostrar un diálogo si el producto ya está en favoritos
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Producto ya en favoritos'),
+                              content: Text('${producto.nombre} ya se encuentra en tu lista de favoritos.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Cierra el diálogo
+                                  },
+                                  child: Text('Ok'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        // Añadir a favoritos si no está ya en la lista
+                        listaFavoritosService.addProduct(listaFavoritos, producto);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('${producto.nombre} añadido a favoritos')),
+                        );
+                      }
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Error al añadir a favoritos')),
