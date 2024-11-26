@@ -37,10 +37,6 @@ class ListaCompraService {
     return juan;
   }
 
-  void addProduct(ListaCompra list, Producto product){
-    list.productos.add(product);
-  }
-
   void removeProduct(ListaCompra list, Producto product) {
     list.productos.remove(product);
   }
