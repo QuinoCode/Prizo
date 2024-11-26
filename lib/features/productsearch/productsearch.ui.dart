@@ -112,7 +112,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => ListaCompraInterfaz(
-          listaCompra: listaCompra,
+          listaCompra: listaCompra2,
         ),
       ),
     );
