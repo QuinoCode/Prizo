@@ -13,6 +13,10 @@ class ListaCompraAuxiliar {
 
 class ListaCompraService {
 
+  void addProduct2(ListaCompra2 list, Producto product) {
+
+  }
+
   void addProduct(ListaCompra list, Producto product){
     list.productos.add(product);
   }
