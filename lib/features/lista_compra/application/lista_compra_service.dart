@@ -13,6 +13,16 @@ class ListaCompraAuxiliar {
 
 class ListaCompraService {
 
+  int searchProducto(ListaCompra2 list, Producto product) {
+    /* Si el producto existe, devuelve el índice*/
+    for (int i = 0; i < list.productos.length; i++) {
+      if (list.productos[i].$1.id == product.id) {
+        return i; /* fin ejecución */
+      }
+    }
+    return -1;
+  }
+
   void addProduct(ListaCompra2 list, Producto producto) {
     /* lista vacía */
     if (list.productos.isEmpty) {
