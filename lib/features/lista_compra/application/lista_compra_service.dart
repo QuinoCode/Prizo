@@ -1,16 +1,6 @@
 import 'package:prizo/shared/data_entities/lista_compra.dart';
 import 'package:prizo/shared/data_entities/producto.dart';
 
-class ListaCompraAuxiliar {
-  List<Producto> productos;
-  List<int> cantidades;
-
-  ListaCompraAuxiliar({
-    this.productos = const [], /* Usamos const para listas vacías predeterminadas */
-    this.cantidades = const [],
-  });
-}
-
 class ListaCompraService {
 
   ListaCompra2 newListaCompra2(ListaCompra list) {
