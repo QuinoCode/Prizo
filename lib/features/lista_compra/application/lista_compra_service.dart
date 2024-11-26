@@ -13,8 +13,23 @@ class ListaCompraAuxiliar {
 
 class ListaCompraService {
 
-  void addProduct2(ListaCompra2 list, Producto product) {
+  void addProduct2(ListaCompra2 list, Producto producto) {
+    /* lista vacía */
+    if (list.productos.isEmpty) {
+      list.productos.add((producto, 1));
+      return; /* fin ejecución */
+    }
 
+    /* Si el producto existe se incrementa el número en +1 */
+    for (int i = 0; i < list.productos.length; i++) {
+      if (list.productos[i].$1.id == producto.id) {
+        list.productos[i] = (producto /* se mete con la oferta actual */, list.productos[i].$2 + 1);
+        return; /* fin ejecución */
+      }
+    }
+
+    /* El producto no existía en la lista */
+    list.productos.add((producto, 1));
   }
 
   ListaCompra2 newListaCompra2(ListaCompra list) {
