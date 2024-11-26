@@ -15,7 +15,7 @@ class ListaCompraService {
 
     /* El producto existe en la lista */
     if(i != -1) {
-      list.productos[i] = (product /* se mete con la oferta actual */, list.productos[i].$2 + 1);
+      list.productos[i] = (product /* se mete para obtener oferta actual */, list.productos[i].$2 + 1);
       return; /* fin ejecución */
     }
 
@@ -50,7 +50,7 @@ class ListaCompraService {
 
     /* El producto existe en la lista y tiene más de una instancia */
     if(i != -1 && list.productos[i].$2 > 1) {
-      list.productos[i] = (list.productos[i].$1, list.productos[i].$2 - 1);
+      list.productos[i] = (product /* se mete para obtener oferta actual */, list.productos[i].$2 - 1);
     }
   }
 
@@ -65,6 +65,23 @@ class ListaCompraService {
     }
     return -1;
   }//setProductQuantity
+
+  /** Si el producto no existe, devuelve -1.0 */
+  double getPrice(ListaCompra2 list, Producto product) {
+    /* Buscar producto en la lista existente */
+    int index = searchProducto(list, product);
+
+    /* El producto existe en la lista */
+    if (index != -1) {
+      /* Ver si tiene precioOferta */
+      if (list.productos[index].$1.oferta) {
+        return list.productos[index].$1.precioOferta * list.productos[index].$2;
+      }
+      return list.productos[index].$1.precio * list.productos[index].$2;
+    }
+
+    return -1.0;
+  }
 
   int searchProducto(ListaCompra2 list, Producto product) {
     /* Si el producto existe, devuelve el índice*/
