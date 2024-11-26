@@ -47,7 +47,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Botón para eliminar una instancia
+                  /* Botón para eliminar una instancia */
                   IconButton(
                     icon: Icon(Icons.remove_circle_outline),
                     onPressed: () {
@@ -56,12 +56,12 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                       });
                     },
                   ),
-                  // Cantidad
+                  /* Cantidad */
                   Text(
                     '$cantidad',
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                   ),
-                  // Botón para agregar una instancia
+                  /* Botón para agregar una instancia */
                   IconButton(
                     icon: Icon(Icons.add_circle_outline),
                     onPressed: () {
@@ -70,12 +70,12 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                       });
                     },
                   ),
-                  // Precio total del producto
+                  /* Precio total del producto */
                   Text(
                     '${totalPrice.toStringAsFixed(2)} €',
                     style: TextStyle(fontSize: 26),
                   ),
-                  // Botón de papelera para eliminar el producto de la lista
+                  /* Botón de papelera para eliminar el producto de la lista */
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
