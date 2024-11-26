@@ -58,9 +58,16 @@ class ListaCompraService {
     }
   }
 
-  int getProductQuantity(ListaCompra list, Producto product) {
-    /*Contar las instancias actuales del producto en la lista*/
-    return list.productos.where((p) => p.id == product.id).length;
+  /** Devuelve -1 si no existe el product */
+  int getProductQuantity(ListaCompra2 list, Producto product) {
+    /* Buscar producto en la lista existente */
+    int i = searchProducto(list, product);
+
+    /* El producto existe en la lista */
+    if(i != -1) {
+      return list.productos[i].$2;
+    }
+    return -1;
   }
 
   void addProductAux(ListaCompraAuxiliar list, Producto product) {
