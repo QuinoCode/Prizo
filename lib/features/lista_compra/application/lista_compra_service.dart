@@ -83,6 +83,20 @@ class ListaCompraService {
     return -1.0;
   }
 
+  /** Si no hay productos en la lista, devuelve 0.0 */
+  double getTotalPrice(ListaCompra2 list, Producto product) {
+    double totalPrice = 0.0;
+    for (var producto in list.productos) {
+      /* Ver si tiene precioOferta */
+      if (producto.$1.oferta) {
+        totalPrice += producto.$1.precioOferta * producto.$2;
+      } else {
+        totalPrice += producto.$1.precio * producto.$2;
+      }
+    }
+    return totalPrice;
+  }
+
   int searchProducto(ListaCompra2 list, Producto product) {
     /* Si el producto existe, devuelve el índice*/
     for (int i = 0; i < list.productos.length; i++) {
