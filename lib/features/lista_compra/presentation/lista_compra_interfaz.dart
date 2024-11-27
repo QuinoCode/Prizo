@@ -92,8 +92,12 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                         IconButton(
                           icon: Icon(Icons.remove_circle_outline),
                           onPressed: () {
-                            /* Mostrar el cuadro de confirmación antes de eliminar */
-                            _showConfirmDialog(context, producto);
+                            if(listaCompraService.getProductQuantity(widget.listaCompra, producto) > 1) {
+                              listaCompraService.removeInstance(widget.listaCompra, producto);
+                            } else {
+                              /* Mostrar el cuadro de confirmación antes de eliminar */
+                              _showConfirmDialog(context, producto);
+                            }
                           },
                         ),
                         /* Cantidad */
