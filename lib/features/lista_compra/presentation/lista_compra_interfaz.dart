@@ -5,6 +5,7 @@ import 'package:prizo/features/lista_compra/application/lista_compra_service.dar
 
 class ListaCompraInterfaz extends StatefulWidget {
   final ListaCompra2 listaCompra;
+
   ListaCompraInterfaz({super.key, required this.listaCompra});
 
   @override
@@ -13,6 +14,41 @@ class ListaCompraInterfaz extends StatefulWidget {
 
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   final ListaCompraService listaCompraService = ListaCompraService();
+
+  // Método para mostrar el cuadro de diálogo de confirmación
+  Future<void> _showConfirmDialog(
+      BuildContext context, Producto producto) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // Evita cerrar el diálogo tocando fuera de él
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('¿Eliminar producto?'),
+          content: Text(
+              '¿Estás seguro de que deseas eliminar el producto ${producto.nombre}?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Cerrar el diálogo sin hacer nada
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Eliminar el producto completo de la lista
+                setState(() {
+                  listaCompraService.removeProduct(widget.listaCompra, producto);
+                });
+                Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+              },
+              child: Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +66,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
             final productoTuple = widget.listaCompra.productos[index];
             final producto = productoTuple.$1;
             final cantidad = productoTuple.$2;
-            final totalPrice = listaCompraService.getPrice(widget.listaCompra, producto);
+            final totalPrice = listaCompraService.getPrice(
+                widget.listaCompra, producto);
 
             return ListTile(
               leading: producto.foto.isNotEmpty
@@ -47,41 +84,41 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  /* Botón para eliminar una instancia */
+                  // Botón para eliminar una instancia con confirmación
                   IconButton(
                     icon: Icon(Icons.remove_circle_outline),
                     onPressed: () {
-                      setState(() {
-                        listaCompraService.removeInstance(widget.listaCompra, producto);
-                      });
+                      // Mostrar el cuadro de confirmación antes de eliminar
+                      _showConfirmDialog(context, producto);
                     },
                   ),
-                  /* Cantidad */
+                  // Cantidad
                   Text(
                     '$cantidad',
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  /* Botón para agregar una instancia */
+                  // Botón para agregar una instancia
                   IconButton(
                     icon: Icon(Icons.add_circle_outline),
                     onPressed: () {
                       setState(() {
-                        listaCompraService.addInstance(widget.listaCompra, producto);
+                        listaCompraService.addInstance(
+                            widget.listaCompra, producto);
                       });
                     },
                   ),
-                  /* Precio total del producto */
+                  // Precio total del producto
                   Text(
                     '${totalPrice.toStringAsFixed(2)} €',
-                    style: TextStyle(fontSize: 26),
+                    style: TextStyle(fontSize: 20),
                   ),
-                  /* Botón de papelera para eliminar el producto de la lista */
+                  // Botón de papelera para eliminar el producto completo
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      setState(() {
-                        listaCompraService.removeProduct(widget.listaCompra, producto);
-                      });
+                      // Mostrar el cuadro de confirmación antes de eliminar
+                      _showConfirmDialog(context, producto);
                     },
                   ),
                 ],
