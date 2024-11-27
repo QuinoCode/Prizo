@@ -100,10 +100,19 @@ class ListaCompraService {
   int searchProducto(ListaCompra2 list, Producto product) {
     /* Si el producto existe, devuelve el índice*/
     for (int i = 0; i < list.productos.length; i++) {
-      if (list.productos[i].$1.id == product.id) {
+      if (sameProduct(list.productos[i].$1, product)) {
         return i; /* fin ejecución */
       }
     }
     return -1;
+  }
+
+  bool sameProduct(Producto productA, Producto productB) {
+    /* Solo comparo los atributos que nuca cambian */
+    return        productA.id == productB.id &&
+              productA.nombre == productB.nombre &&
+           productA.alergenos == productB.alergenos &&
+              productA.tienda == productB.tienda &&
+               productA.marca == productB.marca;
   }
 }
