@@ -66,6 +66,17 @@ class ListaCompraService {
     return -1;
   }
 
+  /** El Producto product debe existir en la lista para invocar este método y quantity mayor a 0 */
+  void setProductQuantity(ListaCompra list, Producto product, int quantity) {
+    /* Buscar producto en la lista existente */
+    int index = searchProducto(list, product);
+
+    /* El producto existe en la lista */
+    if(index != -1 && quantity > 0) {
+      list.productos[index] = (list.productos[index].$1, quantity);
+    }
+  }
+
   /** Si el producto no existe, devuelve -1.0 */
   double getPrice(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
