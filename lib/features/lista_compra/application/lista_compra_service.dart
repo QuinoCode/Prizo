@@ -108,7 +108,7 @@ class ListaCompraService {
   }
 
   bool sameProduct(Producto productA, Producto productB) {
-    /* Solo comparo los atributos que nuca cambian */
+    /* Solo comparo los atributos que nunca cambian */
     return        productA.id == productB.id &&
               productA.nombre == productB.nombre &&
            productA.alergenos == productB.alergenos &&
