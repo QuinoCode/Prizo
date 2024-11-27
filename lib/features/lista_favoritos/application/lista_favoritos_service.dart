@@ -16,11 +16,11 @@ class ListaFavoritosService {
 
   bool sameProduct(Producto productA, Producto productB) {
     /* Solo comparo los atributos que nuca cambian */
-    return        productA.id == productB.id &&
-        productA.nombre == productB.nombre &&
+    return     productA.id == productB.id &&
+           productA.nombre == productB.nombre &&
         productA.alergenos == productB.alergenos &&
-        productA.tienda == productB.tienda &&
-        productA.marca == productB.marca;
+           productA.tienda == productB.tienda &&
+            productA.marca == productB.marca;
   }
 
 }
