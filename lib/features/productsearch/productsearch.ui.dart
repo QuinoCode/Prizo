@@ -69,7 +69,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   bool _isLoading = false;
   final ListaCompraService listaCompraService = ListaCompraService();
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
-  ListaCompra2 listaCompra2 = ListaCompra2(id: '1', usuario: 'usuario_demo', productos: []);
+  ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
   ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
 
   @override
@@ -111,7 +111,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => ListaCompraInterfaz(
-          listaCompra: listaCompra2,
+          listaCompra: listaCompra,
         ),
       ),
     );
@@ -140,7 +140,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: Text('Lista de Compra'),
               onPressed: () {
                 setState(() {
-                  listaCompraService.addProduct(listaCompra2, producto);
+                  listaCompraService.addProduct(listaCompra, producto);
                 });
                 Navigator.of(context).pop();
                 /*ScaffoldMessenger.of(context).showSnackBar(

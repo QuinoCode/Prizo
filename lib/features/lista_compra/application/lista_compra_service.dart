@@ -3,7 +3,7 @@ import 'package:prizo/shared/data_entities/producto.dart';
 
 class ListaCompraService {
 
-  void addProduct(ListaCompra2 list, Producto product) {
+  void addProduct(ListaCompra list, Producto product) {
     /* lista vacía */
     if (list.productos.isEmpty) {
       list.productos.add((product, 1));
@@ -23,7 +23,7 @@ class ListaCompraService {
     list.productos.add((product, 1));
   }
 
-  void removeProduct(ListaCompra2 list, Producto product) {
+  void removeProduct(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
     int i = searchProducto(list, product);
 
@@ -34,7 +34,7 @@ class ListaCompraService {
   }
 
   /** El Producto product debe existir en la lista para invocar este método */
-  void addInstance(ListaCompra2 list, Producto product) {
+  void addInstance(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
     int i = searchProducto(list, product);
 
@@ -44,7 +44,7 @@ class ListaCompraService {
     }
   }
 
-  void removeInstance(ListaCompra2 list, Producto product) {
+  void removeInstance(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
     int i = searchProducto(list, product);
 
@@ -55,7 +55,7 @@ class ListaCompraService {
   }
 
   /** Devuelve -1 si no existe el product */
-  int getProductQuantity(ListaCompra2 list, Producto product) {
+  int getProductQuantity(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
     int i = searchProducto(list, product);
 
@@ -67,7 +67,7 @@ class ListaCompraService {
   }//setProductQuantity
 
   /** Si el producto no existe, devuelve -1.0 */
-  double getPrice(ListaCompra2 list, Producto product) {
+  double getPrice(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
     int index = searchProducto(list, product);
 
@@ -84,7 +84,7 @@ class ListaCompraService {
   }
 
   /** Si no hay productos en la lista, devuelve 0.0 */
-  double getTotalPrice(ListaCompra2 list) {
+  double getTotalPrice(ListaCompra list) {
     double totalPrice = 0.0;
     for (var producto in list.productos) {
       /* Ver si tiene precioOferta */
@@ -97,7 +97,7 @@ class ListaCompraService {
     return totalPrice;
   }
 
-  int searchProducto(ListaCompra2 list, Producto product) {
+  int searchProducto(ListaCompra list, Producto product) {
     /* Si el producto existe, devuelve el índice*/
     for (int i = 0; i < list.productos.length; i++) {
       if (sameProduct(list.productos[i].$1, product)) {

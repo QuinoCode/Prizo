@@ -4,7 +4,7 @@ import 'package:prizo/shared/data_entities/producto.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 
 class ListaCompraInterfaz extends StatefulWidget {
-  final ListaCompra2 listaCompra;
+  final ListaCompra listaCompra;
 
   ListaCompraInterfaz({super.key, required this.listaCompra});
 
