@@ -13,15 +13,15 @@ class ListaCompraInterfaz extends StatefulWidget {
 
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   final ListaCompraService listaCompraService = ListaCompraService();
-  // Controlador para mostrar detalles al hacer clic en la imagen
+  /* Controlador para mostrar detalles al hacer clic en la imagen */
   bool _isImageTapped = false;
   Producto? _selectedProducto;
 
-  // Método para mostrar el cuadro de diálogo de confirmación
+  /* Método para mostrar el cuadro de diálogo de confirmación */
   Future<void> _showConfirmDialog(BuildContext context, Producto producto) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // Evita cerrar el diálogo tocando fuera de él
+      barrierDismissible: false, /* Evita cerrar el diálogo tocando fuera de él */
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('¿Eliminar producto?'),
@@ -29,18 +29,18 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                // Cerrar el diálogo sin hacer nada
+                /* Cerrar el diálogo sin hacer nada */
                 Navigator.of(context).pop();
               },
               child: Text('Cancelar'),
             ),
             TextButton(
               onPressed: () {
-                // Eliminar el producto completo de la lista
+                /* Eliminar el producto completo de la lista */
                 setState(() {
                   listaCompraService.removeProduct(widget.listaCompra, producto);
                 });
-                Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
               child: Text('Eliminar'),
             ),
@@ -52,7 +52,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
 
   @override
   Widget build(BuildContext context) {
-    // Calcular el precio total
+    /* Calcular el precio total */
     double totalPrice = listaCompraService.getTotalPrice(widget.listaCompra);
 
     return Scaffold(
@@ -65,7 +65,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
             ? Center(child: Text('Tu lista de la compra está vacía.'))
             : Column(
           children: [
-            // Lista de productos
+            /* Lista de productos */
             Expanded(
               child: ListView.builder(
                 itemCount: widget.listaCompra.productos.length,
@@ -79,7 +79,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          // Mostrar detalles del producto al hacer clic en la imagen
+                          /* Mostrar detalles del producto al hacer clic en la imagen */
                           setState(() {
                             _isImageTapped = !_isImageTapped;
                             _selectedProducto = producto;
@@ -100,24 +100,24 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // Botón para eliminar una instancia con confirmación
+                              /* Botón para eliminar una instancia con confirmación */
                               IconButton(
                                 icon: Icon(Icons.remove_circle_outline),
                                 onPressed: () {
                                   if (listaCompraService.getProductQuantity(widget.listaCompra, producto) > 1) {
                                     listaCompraService.removeInstance(widget.listaCompra, producto);
                                   } else {
-                                    // Mostrar el cuadro de confirmación antes de eliminar
+                                    /* Mostrar el cuadro de confirmación antes de eliminar */
                                     _showConfirmDialog(context, producto);
                                   }
                                 },
                               ),
-                              // Cantidad
+                              /* Cantidad */
                               Text(
                                 '$cantidad',
                                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                               ),
-                              // Botón para agregar una instancia
+                              /* Botón para agregar una instancia */
                               IconButton(
                                 icon: Icon(Icons.add_circle_outline),
                                 onPressed: () {
@@ -126,16 +126,16 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                   });
                                 },
                               ),
-                              // Precio total del producto
+                              /* Precio total del producto */
                               Text(
                                 '${totalPriceForProduct.toStringAsFixed(2)} €',
                                 style: TextStyle(fontSize: 20),
                               ),
-                              // Botón de papelera para eliminar el producto completo
+                              /* Botón de papelera para eliminar el producto completo */
                               IconButton(
                                 icon: Icon(Icons.delete),
                                 onPressed: () {
-                                  // Mostrar el cuadro de confirmación antes de eliminar
+                                  /* Mostrar el cuadro de confirmación antes de eliminar */
                                   _showConfirmDialog(context, producto);
                                 },
                               ),
@@ -143,7 +143,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                           ),
                         ),
                       ),
-                      // Mostrar el nombre y el precio debajo de la imagen
+                      /* Mostrar el nombre y el precio debajo de la imagen */
                       if (_isImageTapped && _selectedProducto == producto)
                         Column(
                           children: [
@@ -163,7 +163,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                 },
               ),
             ),
-            // Muestra el precio total de todos los productos
+            /* Muestra el precio total de todos los productos */
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Row(
