@@ -104,10 +104,13 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                               IconButton(
                                 icon: Icon(Icons.remove_circle_outline),
                                 onPressed: () {
-                                  if (listaCompraService.getProductQuantity(widget.listaCompra, producto) > 1) {
-                                    listaCompraService.removeInstance(widget.listaCompra, producto);
+                                  if (cantidad > 1) {
+                                    /* Disminuir una instancia del producto */
+                                    setState(() {
+                                      listaCompraService.removeInstance(widget.listaCompra, producto);
+                                    });
                                   } else {
-                                    /* Mostrar el cuadro de confirmación antes de eliminar */
+                                    /* Mostrar cuadro de confirmación para eliminar el producto */
                                     _showConfirmDialog(context, producto);
                                   }
                                 },
