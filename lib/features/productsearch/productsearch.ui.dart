@@ -69,7 +69,6 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   bool _isLoading = false;
   final ListaCompraService listaCompraService = ListaCompraService();
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
-  ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
   ListaCompra2 listaCompra2 = ListaCompra2(id: '1', usuario: 'usuario_demo', productos: []);
   ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
 
