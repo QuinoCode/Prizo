@@ -161,18 +161,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                   }
                                 },
                               ),
-                              /* Botón "+" para agregar una instancia */
-                              IconButton(
-                                icon: Icon(Icons.add_circle_outline),
-                                onPressed: () {
-                                  setState(() {
-                                    /* Actualizamos la cantidad utilizando el método correspondiente */
-                                    listaCompraService.addInstance(widget.listaCompra, producto);
-                                    /* Actualizamos el controlador para reflejar el cambio */
-                                    _cantidadControllers[producto.id]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
-                                  });
-                                },
-                              ),
                               /* Campo de cantidad con un TextField para editar */
                               Container(
                                 width: 50,
@@ -197,6 +185,18 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                     });
                                   },
                                 ),
+                              ),
+                              /* Botón "+" para agregar una instancia */
+                              IconButton(
+                                icon: Icon(Icons.add_circle_outline),
+                                onPressed: () {
+                                  setState(() {
+                                    /* Actualizamos la cantidad utilizando el método correspondiente */
+                                    listaCompraService.addInstance(widget.listaCompra, producto);
+                                    /* Actualizamos el controlador para reflejar el cambio */
+                                    _cantidadControllers[producto.id]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                  });
+                                },
                               ),
                               /* Precio total del producto */
                               Text(
