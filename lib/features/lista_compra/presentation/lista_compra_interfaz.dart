@@ -5,6 +5,7 @@ import 'package:prizo/features/lista_compra/application/lista_compra_service.dar
 
 class ListaCompraInterfaz extends StatefulWidget {
   final ListaCompra listaCompra;
+
   ListaCompraInterfaz({super.key, required this.listaCompra});
 
   @override
@@ -13,9 +14,11 @@ class ListaCompraInterfaz extends StatefulWidget {
 
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   final ListaCompraService listaCompraService = ListaCompraService();
-  /* Controlador para mostrar detalles al hacer clic en la imagen */
   bool _isImageTapped = false;
   Producto? _selectedProducto;
+  Map<String, TextEditingController> _cantidadControllers = {}; /* Mapa de controladores */
+  String? _warningMessage;  /* Mensaje de advertencia */
+  GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();/* Key para el scaffold */
 
   /* Método para mostrar el cuadro de diálogo de confirmación */
   Future<void> _showConfirmDialog(BuildContext context, Producto producto) async {
@@ -50,12 +53,43 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     );
   }
 
+  /* Función que maneja el input numérico en el TextField */
+  void _handleInputChange(String input) {
+    /* Verificar que solo se introduzcan números */
+    if (input.isNotEmpty && RegExp(r'[^0-9]').hasMatch(input)) {
+      /* Si no es un número, mostrar un mensaje de advertencia */
+      setState(() {
+        _warningMessage = 'Solo números';
+      });
+      /* Evitar que se agregue el carácter no permitido */
+      /* Esta parte lo hace imposible */
+      _cantidadControllers.forEach((key, controller) {
+        controller.text = controller.text.substring(0, controller.text.length - 1);
+      });
+    } else {
+      setState(() {
+        _warningMessage = null;  /* Limpiar el mensaje de advertencia si el input es válido */
+      });
+    }
+  }
+
+  /* Crear el controlador para cada producto */
+  TextEditingController _getCantidadController(Producto producto) {
+    if (!_cantidadControllers.containsKey(producto.id)) {
+      /* Si no existe el controlador, lo creamos */
+      _cantidadControllers[producto.id] = TextEditingController();
+      _cantidadControllers[producto.id]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+    }
+    return _cantidadControllers[producto.id]!;
+  }
+
   @override
   Widget build(BuildContext context) {
     /* Calcular el precio total */
     double totalPrice = listaCompraService.getTotalPrice(widget.listaCompra);
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Tu Lista de la Compra'),
       ),
@@ -65,6 +99,15 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
             ? Center(child: Text('Tu lista de la compra está vacía.'))
             : Column(
           children: [
+            /* Mostrar el mensaje de advertencia (si existe) */
+            if (_warningMessage != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text(
+                  _warningMessage!,
+                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ),
             /* Lista de productos */
             Expanded(
               child: ListView.builder(
@@ -100,14 +143,17 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              /* Botón para eliminar una instancia con confirmación */
+                              /* Botón "-" para eliminar una instancia con confirmación */
                               IconButton(
                                 icon: Icon(Icons.remove_circle_outline),
                                 onPressed: () {
                                   if (cantidad > 1) {
                                     /* Disminuir una instancia del producto */
                                     setState(() {
+                                      /* Actualizamos la cantidad utilizando el método correspondiente */
                                       listaCompraService.removeInstance(widget.listaCompra, producto);
+                                      /* Actualizamos el controlador para reflejar el cambio */
+                                      _cantidadControllers[producto.id]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
                                     });
                                   } else {
                                     /* Mostrar cuadro de confirmación para eliminar el producto */
@@ -115,19 +161,42 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                   }
                                 },
                               ),
-                              /* Cantidad */
-                              Text(
-                                '$cantidad',
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              /* Botón para agregar una instancia */
+                              /* Botón "+" para agregar una instancia */
                               IconButton(
                                 icon: Icon(Icons.add_circle_outline),
                                 onPressed: () {
                                   setState(() {
+                                    /* Actualizamos la cantidad utilizando el método correspondiente */
                                     listaCompraService.addInstance(widget.listaCompra, producto);
+                                    /* Actualizamos el controlador para reflejar el cambio */
+                                    _cantidadControllers[producto.id]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
                                   });
                                 },
+                              ),
+                              /* Campo de cantidad con un TextField para editar */
+                              Container(
+                                width: 50,
+                                child: TextField(
+                                  controller: _getCantidadController(producto),
+                                  keyboardType: TextInputType.number,
+                                  onChanged: _handleInputChange,
+                                  decoration: InputDecoration(
+                                    hintText: cantidad.toString(),
+                                    border: OutlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  onSubmitted: (value) {
+                                    /* Al hacer "Hecho" o "Enter", actualizar la cantidad */
+                                    int newQuantity = int.tryParse(value) ?? cantidad;
+                                    setState(() {
+                                      /* Actualizar la cantidad usando el método de listaCompraService */
+                                      listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantity);
+                                      /* Actualizamos el TextField con la nueva cantidad */
+                                      _cantidadControllers[producto.id]!.text = newQuantity.toString();
+                                    });
+                                  },
+                                ),
                               ),
                               /* Precio total del producto */
                               Text(
