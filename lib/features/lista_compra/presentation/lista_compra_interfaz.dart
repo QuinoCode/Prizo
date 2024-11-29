@@ -73,14 +73,21 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     }
   }
 
+  String generateKey(Producto producto) {
+    return '${producto.id}_${producto.nombre}_${producto.tienda}_${producto.marca}';
+  }
+
   /* Crear el controlador para cada producto */
   TextEditingController _getCantidadController(Producto producto) {
-    if (!_cantidadControllers.containsKey(producto.id)) {
+    String key = generateKey(producto);
+    if (!_cantidadControllers.containsKey(key)) {
       /* Si no existe el controlador, lo creamos */
-      _cantidadControllers[producto.id] = TextEditingController();
-      _cantidadControllers[producto.id]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+      _cantidadControllers[key] = TextEditingController();
+      _cantidadControllers[key]!.text = listaCompraService
+          .getProductQuantity(widget.listaCompra, producto)
+          .toString();
     }
-    return _cantidadControllers[producto.id]!;
+    return _cantidadControllers[key]!;
   }
 
   @override
@@ -153,7 +160,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                       /* Actualizamos la cantidad utilizando el método correspondiente */
                                       listaCompraService.removeInstance(widget.listaCompra, producto);
                                       /* Actualizamos el controlador para reflejar el cambio */
-                                      _cantidadControllers[producto.id]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                      _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
                                     });
                                   } else {
                                     /* Mostrar cuadro de confirmación para eliminar el producto */
@@ -181,7 +188,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                       /* Actualizar la cantidad usando el método de listaCompraService */
                                       listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantity);
                                       /* Actualizamos el TextField con la nueva cantidad */
-                                      _cantidadControllers[producto.id]!.text = newQuantity.toString();
+                                      _cantidadControllers[generateKey(producto)]!.text = newQuantity.toString();
                                     });
                                   },
                                 ),
@@ -194,7 +201,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                     /* Actualizamos la cantidad utilizando el método correspondiente */
                                     listaCompraService.addInstance(widget.listaCompra, producto);
                                     /* Actualizamos el controlador para reflejar el cambio */
-                                    _cantidadControllers[producto.id]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                    _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
                                   });
                                 },
                               ),
