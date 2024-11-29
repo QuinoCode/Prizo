@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../shared/data_entities/producto.dart';
+import 'obtencion_producto_service.dart';
 
 class ConsumFinderService {
   final String marketUri = "https://tienda.consum.es/api/rest/V1.0/catalog/searcher/products?q=%s&limit=20&showRecommendations=false";
@@ -48,7 +49,7 @@ class ConsumFinderService {
           marca: marca["name"] ?? "-",
           precio: priceVal["centAmount"],
           precioMedida: priceVal["centUnitAmount"],
-          nombre: currProduct["name"],
+          nombre: ObtencionProductoService.limpiarNombreProducto(currProduct["name"], marca["name"] ?? "-", "Consum"),
           foto: productJson["media"][0]["url"],
           alergenos: [false, false, false],
           categoria: categoria,

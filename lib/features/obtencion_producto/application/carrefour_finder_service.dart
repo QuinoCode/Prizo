@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:prizo/shared/data_entities/producto.dart';
 import 'package:prizo/features/obtencion_producto/domain/response_api_carrefour_data_model.dart';
+import 'obtencion_producto_service.dart';
 
 class CarrefourFinderService {
   static int sessionCounter = 0;
@@ -88,7 +89,7 @@ class CarrefourFinderService {
     for (CarrefourProduct carrefourProduct in carrefourProducts){
       Producto producto = Producto(
         id: carrefourProduct.ean13 + "C4",
-        nombre: carrefourProduct.display_name,
+        nombre: ObtencionProductoService.limpiarNombreProducto(carrefourProduct.display_name, carrefourProduct.brand ?? "Marca blanca", "Carrefour"),
         alergenos: extractAlergens(carrefourProduct) ?? [true, true, true],
         precio: carrefourProduct.list_price,
         precioMedida: parsePrecioMedida(carrefourProduct.price_per_unit_text),

@@ -39,7 +39,7 @@ class PantallaProductoService {
 
     // Divide el texto en palabras y filtra las stopwords
     List<String> palabrasFiltradas = textoLimpio.split(' ').where((palabra) {
-      return !stopwords.contains(palabra) && palabra.length > 1; // Filtra palabras de parada y de 1 carácter
+      return !stopwords.contains(palabra) && palabra.length > 1;
     }).toList();
 
     if (palabrasFiltradas.length > 2) {
