@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './features/productsearch/productsearch.ui.dart'; // Asegúrate de que la ruta sea correcta
+import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 
 void main() {
   runApp(const Prizo());
@@ -14,7 +15,7 @@ class Prizo extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => PrizoState(),
       child: const MaterialApp(
-        home: ProductSearchScreen(), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
+        home: ScannerInterface(title: "Titulin"), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
       ),
     );
   }
