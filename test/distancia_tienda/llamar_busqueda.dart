@@ -3,6 +3,7 @@ import 'package:prizo/features/distancia_tienda/shop_distance.dart';
 
 void main() {
   test('Debe devolver una distancia', (){
+
     //Setup
     ShopDistance s = ShopDistance();
     //Act
