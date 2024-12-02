@@ -2,7 +2,7 @@ class CarrefourProduct {
   // Main Product details
   double active_price;
   double app_price;
-  int? average_weight;
+  double? average_weight;
   String? brand;
   String catalog_ref_id;
   String? color_rollup;

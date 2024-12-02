@@ -58,7 +58,7 @@ class CarrefourFinderService {
         CarrefourProduct placeHolder = CarrefourProduct(
           active_price: (item['active_price']).toDouble(),
           app_price: (item['app_price']).toDouble(),
-          average_weight: item['average_weight'] ?? -1,
+          average_weight: (item['average_weight'] ?? -1.0).toDouble(),
           brand: item['brand'] ?? "",
           catalog_ref_id: item['catalog_ref_id'],
           color_rollup: item['color_rollup'],
