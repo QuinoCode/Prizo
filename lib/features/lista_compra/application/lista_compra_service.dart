@@ -1,5 +1,6 @@
 import 'package:prizo/shared/data_entities/lista_compra.dart';
 import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/features/comparacion_productos/application/comparacion_producto.dart';
 
 class ListaCompraService {
 
@@ -118,12 +119,4 @@ class ListaCompraService {
     return -1;
   }
 
-  bool sameProduct(Producto productA, Producto productB) {
-    /* Solo comparo los atributos que nunca cambian */
-    return        productA.id == productB.id &&
-              productA.nombre == productB.nombre &&
-           productA.alergenos == productB.alergenos &&
-              productA.tienda == productB.tienda &&
-               productA.marca == productB.marca;
-  }
 }
