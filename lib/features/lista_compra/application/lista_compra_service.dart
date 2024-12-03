@@ -2,6 +2,8 @@ import 'package:prizo/shared/data_entities/lista_compra.dart';
 import 'package:prizo/shared/data_entities/producto.dart';
 import 'package:prizo/features/comparacion_productos/application/comparacion_producto.dart';
 
+final int LIMITE = 99;
+
 void addProductCompra(ListaCompra list, Producto product) {
   /* lista vacía */
   if (list.productos.isEmpty) {
@@ -12,14 +14,14 @@ void addProductCompra(ListaCompra list, Producto product) {
   /* Buscar producto en la lista existente */
   int index = searchProducto(list, product);
 
-  /* El producto existe en la lista */
-  if(index != -1) {
-    list.productos[index] = (product /* se mete para obtener oferta actual */, list.productos[index].$2 + 1);
+  /* El producto no existía en la lista */
+  if(index == -1) {
+    list.productos.add((product, 1));
     return; /* fin ejecución */
   }
 
-  /* El producto no existía en la lista */
-  list.productos.add((product, 1));
+  /* El producto existe en la lista */
+  addInstanceAuxiliar(index, list, product, list.productos[index].$2 + 1);
 }
 
 void removeProduct(ListaCompra list, Producto product) {
@@ -37,20 +39,14 @@ void addInstance(ListaCompra list, Producto product) {
   /* Buscar producto en la lista existente */
   int index = searchProducto(list, product);
 
-  /* El producto existe en la lista */
-  if(index != -1) {
-    list.productos[index] = (list.productos[index].$1, list.productos[index].$2 + 1);
-  }
+  addInstanceAuxiliar(index, list, product, list.productos[index].$2 + 1);
 }
 
 void removeInstance(ListaCompra list, Producto product) {
   /* Buscar producto en la lista existente */
   int index = searchProducto(list, product);
 
-  /* El producto existe en la lista y tiene más de una instancia */
-  if(index != -1 && list.productos[index].$2 > 1) {
-    list.productos[index] = (product /* se mete para obtener oferta actual */, list.productos[index].$2 - 1);
-  }
+  addInstanceAuxiliar(index, list, product, list.productos[index].$2 - 1);
 }
 
 /** Devuelve -1 si no existe el product */
@@ -70,9 +66,13 @@ void setProductQuantity(ListaCompra list, Producto product, int quantity) {
   /* Buscar producto en la lista existente */
   int index = searchProducto(list, product);
 
+  addInstanceAuxiliar(index, list, product, quantity);
+}
+
+void addInstanceAuxiliar(int index, ListaCompra list, Producto product, int newCantidad) {
   /* El producto existe en la lista */
-  if(index != -1 && quantity > 0) {
-    list.productos[index] = (list.productos[index].$1, quantity);
+  if(index != -1) {
+    list.productos[index] = (product /* se mete para obtener oferta actual */, newCantidad > 0 && newCantidad <= LIMITE ? list.productos[index].$2 : newCantidad);
   }
 }
 
