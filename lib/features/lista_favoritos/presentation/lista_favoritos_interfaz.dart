@@ -12,7 +12,6 @@ class ListaFavoritosInterfaz extends StatefulWidget {
 }
 
 class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
-  final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                 icon: Icon(Icons.delete), // Icono de papelera
                 onPressed: () {
                   setState(() {
-                    listaFavoritosService.removeProduct(widget.listaFavoritos, producto);
+                    removeProduct(widget.listaFavoritos, producto);
                   });
                   /*ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('${producto.nombre} ha sido eliminado de favoritos')),

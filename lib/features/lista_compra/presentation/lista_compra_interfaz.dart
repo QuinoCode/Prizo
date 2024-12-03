@@ -13,7 +13,6 @@ class ListaCompraInterfaz extends StatefulWidget {
 }
 
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
-  final ListaCompraService listaCompraService = ListaCompraService();
   bool _isImageTapped = false;
   Producto? _selectedProducto;
   Map<String, TextEditingController> _cantidadControllers = {}; /* Mapa de controladores */
@@ -41,7 +40,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
               onPressed: () {
                 /* Eliminar el producto completo de la lista */
                 setState(() {
-                  listaCompraService.removeProduct(widget.listaCompra, producto);
+                  removeProduct(widget.listaCompra, producto);
                 });
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
@@ -83,9 +82,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     if (!_cantidadControllers.containsKey(key)) {
       /* Si no existe el controlador, lo creamos */
       _cantidadControllers[key] = TextEditingController();
-      _cantidadControllers[key]!.text = listaCompraService
-          .getProductQuantity(widget.listaCompra, producto)
-          .toString();
+      _cantidadControllers[key]!.text = getProductQuantity(widget.listaCompra, producto).toString();
     }
     return _cantidadControllers[key]!;
   }
@@ -93,7 +90,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   @override
   Widget build(BuildContext context) {
     /* Calcular el precio total */
-    double totalPrice = listaCompraService.getTotalPrice(widget.listaCompra);
+    double totalPrice = getTotalPrice(widget.listaCompra);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -123,7 +120,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                   final productoTuple = widget.listaCompra.productos[index];
                   final producto = productoTuple.$1;
                   final cantidad = productoTuple.$2;
-                  final totalPriceForProduct = listaCompraService.getPrice(widget.listaCompra, producto);
+                  final totalPriceForProduct = getPrice(widget.listaCompra, producto);
 
                   return Column(
                     children: [
@@ -158,9 +155,9 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                     /* Disminuir una instancia del producto */
                                     setState(() {
                                       /* Actualizamos la cantidad utilizando el método correspondiente */
-                                      listaCompraService.removeInstance(widget.listaCompra, producto);
+                                      removeInstance(widget.listaCompra, producto);
                                       /* Actualizamos el controlador para reflejar el cambio */
-                                      _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                      _cantidadControllers[generateKey(producto)]!.text = getProductQuantity(widget.listaCompra, producto).toString();
                                     });
                                   } else {
                                     /* Mostrar cuadro de confirmación para eliminar el producto */
@@ -186,7 +183,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                     int newQuantity = int.tryParse(value) ?? cantidad;
                                     setState(() {
                                       /* Actualizar la cantidad usando el método de listaCompraService */
-                                      listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantity);
+                                      setProductQuantity(widget.listaCompra, producto, newQuantity);
                                       /* Actualizamos el TextField con la nueva cantidad */
                                       _cantidadControllers[generateKey(producto)]!.text = newQuantity.toString();
                                     });
@@ -199,9 +196,9 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                 onPressed: () {
                                   setState(() {
                                     /* Actualizamos la cantidad utilizando el método correspondiente */
-                                    listaCompraService.addInstance(widget.listaCompra, producto);
+                                    addInstance(widget.listaCompra, producto);
                                     /* Actualizamos el controlador para reflejar el cambio */
-                                    _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                    _cantidadControllers[generateKey(producto)]!.text = getProductQuantity(widget.listaCompra, producto).toString();
                                   });
                                 },
                               ),

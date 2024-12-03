@@ -67,8 +67,6 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Producto> _productos = [];
   bool _isLoading = false;
-  final ListaCompraService listaCompraService = ListaCompraService();
-  final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
   ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
   ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
 
@@ -140,7 +138,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: Text('Lista de Compra'),
               onPressed: () {
                 setState(() {
-                  listaCompraService.addProduct(listaCompra, producto);
+                  addProductCompra(listaCompra, producto);
                 });
                 Navigator.of(context).pop();
                 /*ScaffoldMessenger.of(context).showSnackBar(
@@ -152,7 +150,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: Text('Favoritos'),
               onPressed: () {
                 setState(() {
-                  listaFavoritosService.addProduct(listaFavoritos, producto);
+                  addProductFavoritos(listaFavoritos, producto);
                 });
                 Navigator.of(context).pop();
                 /*ScaffoldMessenger.of(context).showSnackBar(
