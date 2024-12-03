@@ -68,7 +68,7 @@ class CarrefourFinderService {
           info_tags: item['info_tags'],
           list_price: (item['list_price'] ?? -1.0).toDouble(), 
           measure_unit: item['measure_unit'] ?? "",
-          num_images: item['num_images'],
+          num_images: item['num_images'] ?? 0,
           price_per_unit_text: item['price_per_unit_text'] ?? "",
           product_id: item['product_id'],
           section: item['section'],
