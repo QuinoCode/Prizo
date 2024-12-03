@@ -2,7 +2,6 @@ import 'package:diacritic/diacritic.dart';
 
 class ObtencionProductoService {
 
-  // Método para eliminar acentos de un texto
   static String eliminarAcentos(String texto) {
     return removeDiacritics(texto);
   }
@@ -30,7 +29,6 @@ class ObtencionProductoService {
   }
 
   static String restaurarAcentos(String nombreLimpiado, String nombreOriginal) {
-    // Función auxiliar que restaura los acentos y mantiene las mayúsculas
     List<String> palabrasLimpiadas = nombreLimpiado.split(' ');
     List<String> palabrasOriginales = nombreOriginal.split(' ');
 
@@ -41,11 +39,11 @@ class ObtencionProductoService {
       String palabraLimpiada = palabrasLimpiadas[i];
       String palabraOriginal = palabrasOriginales[i];
 
-      // Si la palabra limpia coincide con la original (sin marca), restauramos el acento
+      // Si la palabra limpia coincide con la original, restauramos el acento
       if (removeDiacritics(palabraLimpiada).toLowerCase() == removeDiacritics(palabraOriginal).toLowerCase()) {
-        palabrasRestauradas.add(palabraOriginal); // Restauramos con mayúsculas y acentos
+        palabrasRestauradas.add(palabraOriginal);
       } else {
-        palabrasRestauradas.add(palabraLimpiada); // Si no, dejamos la palabra limpia (sin marca)
+        palabrasRestauradas.add(palabraLimpiada);
       }
     }
 
