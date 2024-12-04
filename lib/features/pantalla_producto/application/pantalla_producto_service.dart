@@ -44,7 +44,7 @@ class PantallaProductoService {
 
     if (palabrasFiltradas.length > 2) {
       palabrasFiltradas = palabrasFiltradas.sublist(0, 2);
-    } else if (palabrasFiltradas.length == 2) {
+    } else if (palabrasFiltradas.length <= 2) {
       return palabrasFiltradas[0];
     }
 

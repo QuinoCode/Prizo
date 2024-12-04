@@ -40,8 +40,8 @@ class DetallesProducto extends StatelessWidget {
               child: imageUrl.isNotEmpty
                   ? Image.network(
                 imageUrl,
-                width: 200,
-                height: 200,
+                width: 185,
+                height: 185,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return const Icon(Icons.broken_image, size: 100);
@@ -53,7 +53,7 @@ class DetallesProducto extends StatelessWidget {
 
             Text(
               producto.nombre,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 8),
@@ -166,14 +166,14 @@ class DetallesProducto extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
 
             // Aquí usar un Spacer para tomar el espacio disponible
             Spacer(),
 
             // Lista horizontal de productos relacionados con altura fija
             Container(
-              height: 200, // Altura fija para la sección de productos relacionados
+              height: 175, // Altura fija para la sección de productos relacionados
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -226,8 +226,8 @@ class DetallesProducto extends StatelessWidget {
                                       children: [
                                         Image.network(
                                           productoRelacionado.foto,
-                                          width: 70,
-                                          height: 70,
+                                          width: 60,
+                                          height: 60,
                                           fit: BoxFit.cover,
                                           errorBuilder: (context, error, stackTrace) {
                                             return const Icon(Icons.broken_image, size: 100);
