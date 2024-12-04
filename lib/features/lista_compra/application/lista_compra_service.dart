@@ -2,6 +2,7 @@ import 'package:prizo/shared/data_entities/lista_compra.dart';
 import 'package:prizo/shared/data_entities/producto.dart';
 
 class ListaCompraService {
+  final int LIMITE = 99;
 
   void addProduct(ListaCompra list, Producto product) {
     /* lista vacía */
@@ -15,7 +16,7 @@ class ListaCompraService {
 
     /* El producto existe en la lista */
     if(index != -1) {
-      list.productos[index] = (product /* se mete para obtener oferta actual */, list.productos[index].$2 + 1);
+      setProductQuantityAux(index, list, product, list.productos[index].$2 + 1);
       return; /* fin ejecución */
     }
 
@@ -40,7 +41,7 @@ class ListaCompraService {
 
     /* El producto existe en la lista */
     if(index != -1) {
-      list.productos[index] = (list.productos[index].$1, list.productos[index].$2 + 1);
+      setProductQuantityAux(index, list, product, list.productos[index].$2 + 1);
     }
   }
 
@@ -48,9 +49,9 @@ class ListaCompraService {
     /* Buscar producto en la lista existente */
     int index = searchProducto(list, product);
 
-    /* El producto existe en la lista y tiene más de una instancia */
-    if(index != -1 && list.productos[index].$2 > 1) {
-      list.productos[index] = (product /* se mete para obtener oferta actual */, list.productos[index].$2 - 1);
+    /* El producto existe en la lista */
+    if(index != -1) {
+      setProductQuantityAux(index, list, product, list.productos[index].$2 - 1);
     }
   }
 
@@ -72,9 +73,22 @@ class ListaCompraService {
     int index = searchProducto(list, product);
 
     /* El producto existe en la lista */
-    if(index != -1 && quantity > 0) {
-      list.productos[index] = (list.productos[index].$1, quantity);
+    if(index != -1) {
+      setProductQuantityAux(index, list, list.productos[index].$1, quantity);
     }
+  }
+
+  /** index debe ser distinto de -1 */
+  void setProductQuantityAux(int index, ListaCompra list, Producto product, int quantity) {
+    int newQuantity = list.productos[index].$2;
+    if(quantity > 0) {
+      if(quantity > LIMITE) {
+        newQuantity = LIMITE;
+      } else {
+        newQuantity = quantity;
+      }
+    }
+    list.productos[index] = (product /* se mete para obtener oferta actualizada */, newQuantity);
   }
 
   /** Si el producto no existe, devuelve -1.0 */

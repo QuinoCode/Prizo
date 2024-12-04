@@ -188,7 +188,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                       /* Actualizar la cantidad usando el método de listaCompraService */
                                       listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantity);
                                       /* Actualizamos el TextField con la nueva cantidad */
-                                      _cantidadControllers[generateKey(producto)]!.text = newQuantity.toString();
+                                      _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
                                     });
                                   },
                                 ),
