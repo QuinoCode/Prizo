@@ -32,6 +32,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
+                /* El producto no se ha borrado y ponemos la cantidad actual del producto en el TextField */
+                _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
                 /* Cerrar el diálogo sin hacer nada */
                 Navigator.of(context).pop();
               },
@@ -184,12 +186,17 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                   onSubmitted: (value) {
                                     /* Al hacer "Hecho" o "Enter", actualizar la cantidad */
                                     int newQuantity = int.tryParse(value) ?? cantidad;
-                                    setState(() {
-                                      /* Actualizar la cantidad usando el método de listaCompraService */
-                                      listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantity);
-                                      /* Actualizamos el TextField con la nueva cantidad */
-                                      _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
-                                    });
+                                    if(newQuantity > 0) {
+                                      setState(() {
+                                        /* Actualizar la cantidad usando el método de listaCompraService */
+                                        listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantity);
+                                        /* Actualizamos el TextField con la nueva cantidad */
+                                        _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                      });
+                                    } else {
+                                      /* Mostrar cuadro de confirmación para eliminar el producto */
+                                      _showConfirmDialog(context, producto);
+                                    }
                                   },
                                 ),
                               ),
