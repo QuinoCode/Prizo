@@ -123,6 +123,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       MaterialPageRoute(
         builder: (context) => ListaFavoritosInterfaz(
           listaFavoritos: listaFavoritos,
+          listaCompra: listaCompra,
         ),
       ),
     );

@@ -6,8 +6,9 @@ import 'package:prizo/features/lista_favoritos/application/lista_favoritos_servi
 
 class ListaFavoritosInterfaz extends StatefulWidget {
   final ListaFavoritos listaFavoritos;
+  final ListaCompra listaCompra;
 
-  ListaFavoritosInterfaz({super.key, required this.listaFavoritos});
+  ListaFavoritosInterfaz({super.key, required this.listaFavoritos, required this.listaCompra});
 
   @override
   _ListaFavoritosInterfazState createState() => _ListaFavoritosInterfazState();
