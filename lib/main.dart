@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import './features/productsearch/productsearch.ui.dart'; // Asegúrate de que la ruta sea correcta
 
 void main() {
+
   runApp(const Prizo());
 }
 
@@ -13,7 +14,7 @@ class Prizo extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => PrizoState(),
-      child: MaterialApp(
+      child: const MaterialApp(
         home: ProductSearchScreen(), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
       ),
     );

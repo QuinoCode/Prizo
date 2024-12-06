@@ -10,7 +10,9 @@ class CarrefourFinderService {
   Future<List<Producto>> getProductList(String query) async {
     List<Producto> productsList = [];
     http.Response? response;
-    while (response == null) response = await doHttpRequest(query);
+    while (response == null) {
+      response = await doHttpRequest(query);
+    }
     var unprocessedItems = getItemsFromHttpReply(response);
     List<CarrefourProduct> processedItems = convertListOfItemsIntoCarrefourProducts(unprocessedItems);
     productsList = convertCarrefourProductIntoProducto(processedItems);
@@ -40,7 +42,7 @@ class CarrefourFinderService {
         }
         return response;
       } catch (e) {
-          print("EXCEPTION WHEN DOING AN HTTP REQUEST: " + e.toString());
+          print("EXCEPTION WHEN DOING AN HTTP REQUEST: $e");
       }
       return null;
   }
@@ -87,7 +89,7 @@ class CarrefourFinderService {
     List<Producto> productos = [];
     for (CarrefourProduct carrefourProduct in carrefourProducts){
       Producto producto = Producto(
-        id: carrefourProduct.ean13 + "C4",
+        id: "${carrefourProduct.ean13}C4",
         nombre: carrefourProduct.display_name,
         alergenos: extractAlergens(carrefourProduct) ?? [true, true, true],
         precio: carrefourProduct.list_price,
@@ -103,9 +105,9 @@ class CarrefourFinderService {
     return productos;
   }
 
-  double parsePrecioMedida(String price_per_unit_text){
-    if (price_per_unit_text == "") return -1.0;
-    String splittedPrice = price_per_unit_text.split(' ')[0];
+  double parsePrecioMedida(String pricePerUnitText){
+    if (pricePerUnitText == "") return -1.0;
+    String splittedPrice = pricePerUnitText.split(' ')[0];
     String doubleFormattedPrice = splittedPrice.replaceAll(",", ".");
     return double.parse(doubleFormattedPrice);
   }

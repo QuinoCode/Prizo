@@ -4,18 +4,18 @@ import 'package:prizo/shared/data_entities/lista_compra.dart';
 class ListaCompraInterfaz extends StatelessWidget {
   final ListaCompra listaCompra;
 
-  ListaCompraInterfaz({super.key, required this.listaCompra});
+  const ListaCompraInterfaz({super.key, required this.listaCompra});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tu Lista de la Compra'),
+        title: const Text('Tu Lista de la Compra'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: listaCompra.productos.isEmpty
-            ? Center(
+            ? const Center(
           child: Text('Tu lista de la compra está vacía.'),
         )
             : ListView.builder(

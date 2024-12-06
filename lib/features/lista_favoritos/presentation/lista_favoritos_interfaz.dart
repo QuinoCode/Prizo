@@ -4,18 +4,18 @@ import 'package:prizo/shared/data_entities/lista_favoritos.dart';
 class ListaFavoritosInterfaz extends StatelessWidget {
   final ListaFavoritos listaFavoritos;
 
-  ListaFavoritosInterfaz({super.key, required this.listaFavoritos});
+  const ListaFavoritosInterfaz({super.key, required this.listaFavoritos});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tu Lista de Favoritos'),
+        title: const Text('Tu Lista de Favoritos'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: listaFavoritos.productos.isEmpty
-            ? Center(
+            ? const Center(
           child: Text('Tu lista de favoritos está vacía.'),
         )
             : ListView.builder(

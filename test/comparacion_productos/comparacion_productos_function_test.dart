@@ -39,11 +39,11 @@ void main() {
       marca: '',
     );
 
-    List<Producto> product_list = [producto1, producto2, producto3];
+    List<Producto> productList = [producto1, producto2, producto3];
     var expectedOutput = 0.8;
 
     // Act
-    var result = obtenerProductoMasBarato(product_list)?.precio;
+    var result = obtenerProductoMasBarato(productList)?.precio;
 
     // Assert
     expect(result, expectedOutput);

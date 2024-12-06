@@ -1,19 +1,19 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 
 class ShopDistance {
   final String HEREapi = "https://discover.search.hereapi.com/v1/discover?at=%a&q=%b&apiKey=%c";
   final String HEREkey = "cWq-x6-p6dQ007TjTfvpfuhKsQKFyDBtzJZ8dbjEH6Y";
 
-  Future<String> getCurrentPosition() async {
+  Future<Position> getCurrentPosition() async {
     const LocationSettings lS = LocationSettings(
       accuracy: LocationAccuracy.high,
       distanceFilter: 100,
     );
-    return await Geolocator.getCurrentPosition(locationSettings: lS).toString();
+    Position pos = await Geolocator.getCurrentPosition(locationSettings: lS);
+    return pos;
   }
 
+/*
   Uri getFullUri(String coords, String query){
     String s = HEREapi.replaceFirst('%a', coords);
     s = HEREapi.replaceFirst('%b', query);
@@ -38,6 +38,6 @@ class ShopDistance {
       print("Error fetching location: $e");
       return "";
     }
-  }
+  }*/
 
 }

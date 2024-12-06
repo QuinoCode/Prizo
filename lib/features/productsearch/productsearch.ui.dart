@@ -34,16 +34,10 @@ class MultiMarketProductSearcher implements ProductSearcher {
       final carrefourProductsFuture = carrefourService.getProductList(query);
       final results = await Future.wait([consumProductsFuture, diaProductsFuture, carrefourProductsFuture]);
       final allProducts = <Producto>[];
-      if (results[0] != null) {
-        allProducts.addAll(results[0] as List<Producto>);
-      }
-      if (results[1] != null) {
-        allProducts.addAll(results[1] as List<Producto>);
-      }
-      if (results[2] != null) {
-        allProducts.addAll(results[2] as List<Producto>);
-      }
-      ordenarProductosPorPrecio(allProducts);
+      allProducts.addAll(results[0]);
+          allProducts.addAll(results[1]);
+          allProducts.addAll(results[2]);
+          ordenarProductosPorPrecio(allProducts);
       return allProducts;
     } catch (e) {
       print("Error al buscar productos: $e");
@@ -53,7 +47,7 @@ class MultiMarketProductSearcher implements ProductSearcher {
 }
 
 class ProductSearchScreen extends StatefulWidget {
-  const ProductSearchScreen({Key? key}) : super(key: key);
+  const ProductSearchScreen({super.key});
 
   @override
   ProductSearchScreenState createState() => ProductSearchScreenState();
@@ -131,11 +125,11 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Añadir producto'),
-          content: Text('¿Deseas añadir este producto a la lista de compra o a favoritos?'),
+          title: const Text('Añadir producto'),
+          content: const Text('¿Deseas añadir este producto a la lista de compra o a favoritos?'),
           actions: [
             TextButton(
-              child: Text('Lista de Compra'),
+              child: const Text('Lista de Compra'),
               onPressed: () {
                 setState(() {
                   listaCompra.productos.add(producto);
@@ -147,7 +141,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               },
             ),
             TextButton(
-              child: Text('Favoritos'),
+              child: const Text('Favoritos'),
               onPressed: () {
                 setState(() {
                   listaFavoritos.productos.add(producto);
@@ -159,7 +153,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               },
             ),
             TextButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -174,14 +168,14 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Busqueda producto'),
+        title: const Text('Busqueda producto'),
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart),
             onPressed: _navigateToListaCompra,
           ),
           IconButton(
-            icon: Icon(Icons.favorite),
+            icon: const Icon(Icons.favorite),
             onPressed: _navigateToListaFavoritos,
           ),
         ],
@@ -195,14 +189,14 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               decoration: InputDecoration(
                 labelText: 'Busca un producto',
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: _searchProducts,
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _isLoading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : Expanded(
               child: ListView.builder(
                 itemCount: _productos.length,
@@ -221,10 +215,10 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                       height: 50,
                       errorBuilder: (context, error, stackTrace) {
                         print('Error loading image: $error');
-                        return Icon(Icons.broken_image);
+                        return const Icon(Icons.broken_image);
                       },
                     )
-                        : Icon(Icons.image_not_supported),
+                        : const Icon(Icons.image_not_supported),
                     onTap: () {
                       _showAddProductDialog(producto);
                     },
