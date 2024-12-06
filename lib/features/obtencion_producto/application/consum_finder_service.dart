@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:io';
 import '../../../shared/data_entities/producto.dart';
 
 class ConsumFinderService {
@@ -11,6 +12,7 @@ class ConsumFinderService {
   }
 
   Future<List<Producto>> fetchProductsFromApi(String query) async {
+    HttpOverrides.global = MyHttpOverrides();
     try {
       final url = getMarketUri(query);
       final response = await http.get(url);
@@ -59,5 +61,13 @@ class ConsumFinderService {
       productList.add(product);
     }
     return productList;
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }
