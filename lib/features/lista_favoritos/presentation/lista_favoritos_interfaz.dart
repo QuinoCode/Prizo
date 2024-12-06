@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:prizo/shared/data_entities/lista_compra.dart';
 import 'package:prizo/shared/data_entities/lista_favoritos.dart';
+import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
 
 class ListaFavoritosInterfaz extends StatefulWidget {
