@@ -7,7 +7,8 @@ void main() async {
     test('should fetch products and map them correctly', () async {
 // Arrange
       ConsumFinderService finder = ConsumFinderService();
-      String query = "ketchup";
+      String query = "chocolate nestle";
+
 // Act
       List<Producto> products = await finder.fetchProductsFromApi(query);
 

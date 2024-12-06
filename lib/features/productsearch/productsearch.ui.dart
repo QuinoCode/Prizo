@@ -10,6 +10,8 @@ import '../../../shared/data_entities/lista_compra.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../../shared/data_entities/lista_favoritos.dart';
 import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import '../lista_favoritos/application/lista_favoritos_service.dart';
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
@@ -57,6 +59,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   List<Producto> _productosRestantes = [];
   bool _isLoading = false;
   final ListaCompraService listaCompraService = ListaCompraService();
+  final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
   ListaCompra listaCompra = ListaCompra(
       id: '1', usuario: 'usuario_demo', productos: []);
   ListaFavoritos listaFavoritos = ListaFavoritos(
@@ -80,7 +83,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     );
 
     try {
-      final productos = await searcher.searchProducts(_searchController.text); // **Cambio aquí**
+      final productos = await searcher.searchProducts(_searchController.text);
 
       // Por cada súper separa los productos en dos listas
       List<(List<Producto>, List<Producto>)> listasSeparadas = productos.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
@@ -140,7 +143,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: const Text('Lista de Compra'),
               onPressed: () {
                 setState(() {
-                  listaCompra.productos.add(producto);
+                  listaCompraService.addProduct(listaCompra, producto);
                 });
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -153,7 +156,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: const Text('Favoritos'),
               onPressed: () {
                 setState(() {
-                  listaFavoritos.productos.add(producto);
+                  listaFavoritosService.addProduct(listaFavoritos, producto);
                 });
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -257,12 +260,10 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
 
   Widget _buildProductTile(Producto producto) {
     final imageUrl = producto.foto;
-    final precioMedida = producto.precioMedida > 0 ? ' (€${producto.precioMedida
-        .toStringAsFixed(2)}/kg)' : '';
+    final precioMedida = producto.precioMedida > 0 ? ' (${producto.precioMedida.toStringAsFixed(2)}€/kg)' : '';
     return ListTile(
       title: Text(producto.nombre),
-      subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(
-          2)}$precioMedida'),
+      subtitle: Text('${producto.tienda} - ${producto.precio.toStringAsFixed(2)}€$precioMedida'),
       leading: producto.foto.isNotEmpty
           ? Image.network(
         imageUrl,
@@ -274,9 +275,27 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         },
       )
           : Icon(Icons.image_not_supported),
+      // Al pulsar producto, se abre la pantalla de este
       onTap: () {
-        _showAddProductDialog(producto);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetallesProducto(
+          producto: producto, // El producto seleccionado
+          listaCompra: listaCompra, // Pasamos la instancia de ListaCompra
+          listaFavoritos: listaFavoritos,
+            ),
+          ),
+        );
       },
+      // Icono de + a la derecha
+      trailing: IconButton(
+        icon: const Icon(Icons.add),
+        onPressed: () {
+          // Al tocar el ícono de +, se muestra el diálogo para añadir el producto
+          _showAddProductDialog(producto);
+        },
+      ),
     );
   }
 }
