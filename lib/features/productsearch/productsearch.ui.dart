@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../../shared/data_entities/producto.dart';
+import '../../features/obtencion_producto/application/carrefour_finder_service.dart';
 import '../../features/obtencion_producto/application/consum_finder_service.dart';
 import '../../features/obtencion_producto/application/dia_finder_service.dart';
 import '../../features/comparacion_productos/application/comparacion_producto.dart';
-import '../../features/obtencion_producto/application/carrefour_finder_service.dart';
-import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
 import '../../../shared/data_entities/lista_compra.dart';
-import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../../shared/data_entities/lista_favoritos.dart';
+import '../../../shared/data_entities/producto.dart';
+import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
+import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 import '../lista_favoritos/application/lista_favoritos_service.dart';
+import '../../features/lista_favoritos/application/lista_favoritos_service.dart';
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
@@ -146,10 +147,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                   listaCompraService.addProduct(listaCompra, producto);
                 });
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${producto
-                      .nombre} ha sido añadido a la lista de la compra')),
-                );
+                /*ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${producto.nombre} ha sido añadido a la lista de la compra')),
+                );*/
               },
             ),
             TextButton(
@@ -159,10 +159,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                   listaFavoritosService.addProduct(listaFavoritos, producto);
                 });
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${producto
-                      .nombre} ha sido añadido a la lista de favoritos')),
-                );
+                /*ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${producto.nombre} ha sido añadido a la lista de favoritos')),
+                );*/
               },
             ),
             TextButton(

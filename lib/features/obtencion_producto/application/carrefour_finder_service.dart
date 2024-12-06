@@ -132,4 +132,3 @@ class CarrefourFinderService {
     return url.replaceFirst("%s", session);
   }
 }
-

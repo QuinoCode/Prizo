@@ -23,12 +23,12 @@ class DiaFinderService {
         final List productsJsonList = jsonResponse["search_items"];
         final List facets = jsonResponse["facets"];
 
-        // Variables para almacenar los valores de gluten, lactosa y frutos secos
+        /* Variables para almacenar los valores de gluten, lactosa y frutos secos */
         bool glutenFree = false;
         bool lactoseFree = false;
         bool nutsFree = false;
 
-        // Extraer información de los campos facets (alergenos)
+        /* Extraer información de los campos facets (alergenos) */
         for (var facet in facets) {
           if (facet["field"] == "gluten_free") {
             glutenFree = facet["filters"][0]["title"].toLowerCase() == "si";
@@ -39,7 +39,7 @@ class DiaFinderService {
           }
         }
 
-        // Procesar la lista de productos
+        /* Procesar la lista de productos */
         for (var productJson in productsJsonList) {
           final pricesObj = productJson["prices"];
           final product = Producto(
@@ -69,5 +69,3 @@ class DiaFinderService {
     return productList;
   }
 }
-
-
