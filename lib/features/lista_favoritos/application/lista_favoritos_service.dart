@@ -39,4 +39,12 @@ class ListaFavoritosService {
         productA.precioOferta != productB.precioOferta;
   }
 
+  bool isProductInFavorites(ListaFavoritos list, Producto product) {
+    return list.productos.any((p) =>
+    p.id == product.id &&
+        p.nombre == product.nombre &&
+        p.tienda == product.tienda &&
+        p.marca == product.marca);
+  }
+
 }

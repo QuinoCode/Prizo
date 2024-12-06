@@ -128,7 +128,7 @@ class DetallesProducto extends StatelessWidget {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text('Producto ya en favoritos'),
-                              content: Text('${producto.nombre} ya se encuentra en tuna lista de favoritos.'),
+                              content: Text('${producto.nombre} ya se encuentra en tu lista de favoritos.'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
