@@ -12,7 +12,6 @@ import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 import '../lista_favoritos/application/lista_favoritos_service.dart';
-import '../../features/lista_favoritos/application/lista_favoritos_service.dart';
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
