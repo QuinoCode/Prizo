@@ -1,6 +1,6 @@
 import 'package:prizo/shared/data_entities/producto.dart';
 import 'package:prizo/shared/data_entities/lista_compra.dart';
-import 'package:prizo/features/obtencion_producto/application/producto_service.dart';
+import 'package:prizo/shared/application/producto_service.dart';
 
 class ListaCompraService {
   final int LIMITE = 99;
