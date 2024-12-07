@@ -13,11 +13,8 @@ class ListaFavoritosService {
     int index = list.productos.indexWhere((p) => productoService.sameProduct(p, product));
 
     if (index != -1) {
-      /* El producto existe, verificamos si está actualizado */
-      if (productoService.updatedProduct(list.productos[index], product)) {
-        /* Reemplazar el producto existente con el nuevo */
-        list.productos[index] = product;
-      }
+      /* Se mete para obtener oferta actualizada */
+      list.productos[index] = product ;
     } else {
       /* Si no existe, se agrega el nuevo producto */
       list.productos.add(product);
