@@ -125,6 +125,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         builder: (context) =>
             ListaFavoritosInterfaz(
               listaFavoritos: listaFavoritos,
+              listaCompra: listaCompra,
             ),
       ),
     );

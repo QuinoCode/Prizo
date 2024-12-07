@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/lista_favoritos.dart';
+import 'package:prizo/shared/data_entities/lista_compra.dart';
 import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
 
 class ListaFavoritosInterfaz extends StatefulWidget {
   final ListaFavoritos listaFavoritos;
+  final ListaCompra listaCompra;
 
-  ListaFavoritosInterfaz({super.key, required this.listaFavoritos});
+  ListaFavoritosInterfaz({super.key, required this.listaFavoritos, required this.listaCompra});
 
   @override
   _ListaFavoritosInterfazState createState() => _ListaFavoritosInterfazState();
