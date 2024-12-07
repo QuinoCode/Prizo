@@ -45,14 +45,11 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
               title: Text(producto.nombre),
               subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(2)}'),
               trailing: IconButton(
-                icon: Icon(Icons.delete), // Icono de papelera
+                icon: Icon(Icons.delete), /* Icono de papelera */
                 onPressed: () {
                   setState(() {
                     listaFavoritosService.removeProduct(widget.listaFavoritos, producto);
                   });
-                  /*ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${producto.nombre} ha sido eliminado de favoritos')),
-                  );*/
                 },
               ),
             );

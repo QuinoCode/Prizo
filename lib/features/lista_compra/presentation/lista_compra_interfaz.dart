@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/lista_compra.dart';
 import 'package:prizo/shared/data_entities/producto.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
+import 'package:prizo/features/obtencion_producto/application/producto_service.dart';
 
 class ListaCompraInterfaz extends StatefulWidget {
   final ListaCompra listaCompra;
@@ -14,6 +15,7 @@ class ListaCompraInterfaz extends StatefulWidget {
 
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   final ListaCompraService listaCompraService = ListaCompraService();
+  final ProductoService productoService = new ProductoService();
   bool _isImageTapped = false;
   Producto? _selectedProducto;
   Map<String, TextEditingController> _cantidadControllers = {}; /* Mapa de controladores */
@@ -33,7 +35,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
             TextButton(
               onPressed: () {
                 /* El producto no se ha borrado y ponemos la cantidad actual del producto en el TextField */
-                _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                actualizarController(producto);
                 /* Cerrar el diálogo sin hacer nada */
                 Navigator.of(context).pop();
               },
@@ -75,13 +77,15 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     }
   }
 
-  String generateKey(Producto producto) {
-    return '${producto.id}_${producto.nombre}_${producto.tienda}_${producto.marca}';
+  void actualizarController(Producto producto) {
+    _cantidadControllers[productoService.generateKey(producto)]!.text = listaCompraService
+        .getProductQuantity(widget.listaCompra, producto)
+        .toString();
   }
 
   /* Crear el controlador para cada producto */
   TextEditingController _getCantidadController(Producto producto) {
-    String key = generateKey(producto);
+    String key = productoService.generateKey(producto);
     if (!_cantidadControllers.containsKey(key)) {
       /* Si no existe el controlador, lo creamos */
       _cantidadControllers[key] = TextEditingController();
@@ -162,7 +166,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                       /* Actualizamos la cantidad utilizando el método correspondiente */
                                       listaCompraService.removeInstance(widget.listaCompra, producto);
                                       /* Actualizamos el controlador para reflejar el cambio */
-                                      _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                      actualizarController(producto);
                                     });
                                   } else {
                                     /* Mostrar cuadro de confirmación para eliminar el producto */
@@ -191,7 +195,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                         /* Actualizar la cantidad usando el método de listaCompraService */
                                         listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantity);
                                         /* Actualizamos el TextField con la nueva cantidad */
-                                        _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                        actualizarController(producto);
                                       });
                                     } else {
                                       /* Mostrar cuadro de confirmación para eliminar el producto */
@@ -208,7 +212,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                     /* Actualizamos la cantidad utilizando el método correspondiente */
                                     listaCompraService.addInstance(widget.listaCompra, producto);
                                     /* Actualizamos el controlador para reflejar el cambio */
-                                    _cantidadControllers[generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                    actualizarController(producto);
                                   });
                                 },
                               ),

@@ -1,8 +1,10 @@
-import 'package:prizo/shared/data_entities/lista_compra.dart';
 import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/lista_compra.dart';
+import 'package:prizo/features/obtencion_producto/application/producto_service.dart';
 
 class ListaCompraService {
   final int LIMITE = 99;
+  final ProductoService productoService = new ProductoService();
 
   void addProduct(ListaCompra list, Producto product) {
     /* lista vacía */
@@ -98,11 +100,7 @@ class ListaCompraService {
 
     /* El producto existe en la lista */
     if (index != -1) {
-      /* Ver si tiene precioOferta */
-      if (list.productos[index].$1.oferta) {
-        return list.productos[index].$1.precioOferta * list.productos[index].$2;
-      }
-      return list.productos[index].$1.precio * list.productos[index].$2;
+      return productoService.getPrice(list.productos[index].$1) * list.productos[index].$2;
     }
 
     return -1.0;
@@ -112,12 +110,7 @@ class ListaCompraService {
   double getTotalPrice(ListaCompra list) {
     double totalPrice = 0.0;
     for (var producto in list.productos) {
-      /* Ver si tiene precioOferta */
-      if (producto.$1.oferta) {
-        totalPrice += producto.$1.precioOferta * producto.$2;
-      } else {
-        totalPrice += producto.$1.precio * producto.$2;
-      }
+      totalPrice += productoService.getPrice(producto.$1) * producto.$2;
     }
     return totalPrice;
   }
@@ -125,19 +118,10 @@ class ListaCompraService {
   int searchProducto(ListaCompra list, Producto product) {
     /* Si el producto existe, devuelve el índice*/
     for (int index = 0; index < list.productos.length; index++) {
-      if (sameProduct(list.productos[index].$1, product)) {
+      if (productoService.sameProduct(list.productos[index].$1, product)) {
         return index; /* fin ejecución */
       }
     }
     return -1;
-  }
-
-  bool sameProduct(Producto productA, Producto productB) {
-    /* Solo comparo los atributos que nunca cambian */
-    return        productA.id == productB.id &&
-              productA.nombre == productB.nombre &&
-           productA.alergenos == productB.alergenos &&
-              productA.tienda == productB.tienda &&
-               productA.marca == productB.marca;
   }
 }
