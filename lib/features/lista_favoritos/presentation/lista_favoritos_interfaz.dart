@@ -9,6 +9,7 @@ import 'package:prizo/features/lista_favoritos/application/lista_favoritos_servi
 class ListaFavoritosInterfaz extends StatefulWidget {
   final ListaFavoritos listaFavoritos;
   final ListaCompra listaCompra;
+
   ListaFavoritosInterfaz({super.key, required this.listaFavoritos, required this.listaCompra});
 
   @override
@@ -19,6 +20,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
   final ListaCompraService listaCompraService = ListaCompraService();
   final ProductoService productoService = ProductoService();
+
   Map<String, TextEditingController> _cantidadControllers = {}; // Mapa de controladores
   String? _warningMessage; // Mensaje de advertencia
 
@@ -55,7 +57,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
       });
     } else {
       setState(() {
-        _warningMessage = null;  // Limpiar el mensaje de advertencia si el input es válido
+        _warningMessage = null; // Limpiar el mensaje de advertencia si el input es válido
       });
     }
   }
