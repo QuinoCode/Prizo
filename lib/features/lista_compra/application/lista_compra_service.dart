@@ -93,7 +93,7 @@ class ListaCompraService {
     list.productos[index] = (product /* se mete para obtener oferta actualizada */, newQuantity);
   }
 
-  /** Si el producto no existe, devuelve -1.0 */
+  /** Si el producto no existe, devuelve 0.0 */
   double getPrice(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
     int index = searchProducto(list, product);
@@ -103,7 +103,7 @@ class ListaCompraService {
       return productoService.getPrice(list.productos[index].$1) * list.productos[index].$2;
     }
 
-    return -1.0;
+    return 0.0;
   }
 
   /** Si no hay productos en la lista, devuelve 0.0 */
