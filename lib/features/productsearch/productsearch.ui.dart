@@ -31,7 +31,7 @@ class MultiMarketProductSearcher implements ProductSearcher {
   @override
   Future<List<List<Producto>>> searchProducts(String query) async {
     try {
-      final consumProductsFuture = consumService.fetchProductsFromApi(query);
+      final consumProductsFuture = consumService.getProductList(query);
       final diaProductsFuture = diaService.getProductList(query);
       final carrefourProductsFuture = carrefourService.getProductList(query);
       final results = await Future.wait([consumProductsFuture, diaProductsFuture, carrefourProductsFuture]);

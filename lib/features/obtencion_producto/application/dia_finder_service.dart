@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:prizo/features/obtencion_producto/application/finder_wrapper.dart';
 import '../../../shared/data_entities/producto.dart';
 import 'obtencion_producto_service.dart';
 
-class DiaFinderService {
+class DiaFinderService implements FinderWrapper {
+  @override
   final String marketUri = "https://www.dia.es/api/v1/search-back/search/reduced?q=%s&page=1";
   final String imageHost = "https://www.dia.es";
 
@@ -11,6 +13,7 @@ class DiaFinderService {
     return marketUri.replaceFirst("%s", query);
   }
 
+  @override
   Future<List<Producto>> getProductList(String query) async {
     final List<Producto> productList = [];
 

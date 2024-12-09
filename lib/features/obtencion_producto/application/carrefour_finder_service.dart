@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:prizo/features/obtencion_producto/application/finder_wrapper.dart';
 import 'package:prizo/shared/data_entities/producto.dart';
 import 'package:prizo/features/obtencion_producto/domain/response_api_carrefour_data_model.dart';
 import 'obtencion_producto_service.dart';
 
-class CarrefourFinderService {
+class CarrefourFinderService implements FinderWrapper{
   static int sessionCounter = 0;
+  @override
   final String marketUri = "https://www.carrefour.es/search-api/query/v1/search?query=%q&scope=tablet&lang=es&session=%s&rows=24&start=0&origin=default&f.op=OR";
 
+  @override
   Future<List<Producto>> getProductList(String query) async {
     List<Producto> productsList = [];
     http.Response? response;
@@ -88,7 +91,7 @@ class CarrefourFinderService {
     List<Producto> productos = [];
     for (CarrefourProduct carrefourProduct in carrefourProducts){
       Producto producto = Producto(
-        id: carrefourProduct.ean13 + "C4",
+        id: carrefourProduct.ean13,
         nombre: ObtencionProductoService.limpiarNombreProducto(carrefourProduct.display_name, carrefourProduct.brand ?? "Marca blanca", "Carrefour"),
         alergenos: extractAlergens(carrefourProduct) ?? [true, true, true],
         precio: carrefourProduct.list_price,

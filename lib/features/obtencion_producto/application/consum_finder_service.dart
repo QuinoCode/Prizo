@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:prizo/features/obtencion_producto/application/finder_wrapper.dart';
 import 'dart:io';
 import '../../../shared/data_entities/producto.dart';
 import 'obtencion_producto_service.dart';
 
-class ConsumFinderService {
+class ConsumFinderService implements FinderWrapper{
+  @override
   final String marketUri = "https://tienda.consum.es/api/rest/V1.0/catalog/searcher/products?q=%s&limit=20&showRecommendations=false";
   final String imageHost = "https://www.tienda.consum.es";
 
@@ -12,7 +14,8 @@ class ConsumFinderService {
     return Uri.parse(marketUri.replaceFirst('%s', query));
   }
 
-  Future<List<Producto>> fetchProductsFromApi(String query) async {
+  @override
+  Future<List<Producto>> getProductList(String query) async {
     HttpOverrides.global = MyHttpOverrides();
     try {
       final url = getMarketUri(query);
@@ -46,7 +49,7 @@ class ConsumFinderService {
 
 /*crear producto */
       final product = Producto(
-          id: currProduct["id"] ?? "",
+          id: productJson["ean"] ?? "",
           tienda: "CONSUM",
           marca: marca["name"] ?? "-",
           precio: priceVal["centAmount"],

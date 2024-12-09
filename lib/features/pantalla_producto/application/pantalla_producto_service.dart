@@ -11,7 +11,7 @@ class PantallaProductoService {
 
   Future<List<Producto>> obtenerProductosSimilares(String query, Producto productoActual) async {
     try {
-      final consumProductsFuture = consumService.fetchProductsFromApi(query);
+      final consumProductsFuture = consumService.getProductList(query);
       final diaProductsFuture = diaService.getProductList(query);
       final carrefourProductsFuture = carrefourService.getProductList(query);
       final results = await Future.wait([consumProductsFuture, diaProductsFuture, carrefourProductsFuture]);

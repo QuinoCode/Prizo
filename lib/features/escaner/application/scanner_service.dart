@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:prizo/features/obtencion_producto/application/ean_finder.dart';
+import 'package:prizo/features/obtencion_producto/application/finder_wrapper.dart';
+import 'package:prizo/shared/data_entities/producto.dart';
 
 
 MobileScanner createScanner(BuildContext context) {
@@ -23,4 +26,9 @@ MobileScanner createScanner(BuildContext context) {
 );
   return scanner;
   
+}
+
+Future<List<Producto?>>  getProductFromScan(String ean) async {
+  EanFinder finder = EanFinder();
+  return await finder.getProductList(ean);
 }
