@@ -12,6 +12,7 @@ import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 import '../lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
@@ -106,6 +107,17 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     }
   }
 
+  void _navigateToListaEscaner() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            ScannerInterface(
+             title: "Titulin", 
+            ),
+      ),
+    );
+  }
   void _navigateToListaCompra() {
     Navigator.push(
       context,
@@ -181,6 +193,10 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       appBar: AppBar(
         title: const Text('Busqueda producto'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.scanner),
+            onPressed: _navigateToListaEscaner,
+          ),
           IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: _navigateToListaCompra,
