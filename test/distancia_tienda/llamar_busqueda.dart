@@ -7,10 +7,11 @@ void main() {
 
     //Setup
     ShopDistance s = ShopDistance();
+    String query = 'Carrefour';
     //Act
-    final s2 = await s.getCurrentPosition();
-    print(s2);
+    final s2 = await s.fetchLocationsAPI(query);
     //Assert
+    print(s2);
   });
 
 }
