@@ -31,7 +31,7 @@ class ShopDistance {
   }
 */
   Uri getFullUri(LocationData coords, String query){
-    String s = HEREapi.replaceFirst('%a', coords.toString());
+    String s = HEREapi.replaceFirst('%a', "${coords.latitude},${coords.longitude}");
     s = HEREapi.replaceFirst('%b', query);
     s = HEREapi.replaceFirst('%c', HEREkey);
     return Uri.parse(s);
