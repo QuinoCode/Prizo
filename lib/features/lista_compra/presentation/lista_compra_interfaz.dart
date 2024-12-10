@@ -16,14 +16,14 @@ class ListaCompraInterfaz extends StatefulWidget {
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   final ListaCompraService listaCompraService = ListaCompraService();
   final ProductoService productoService = new ProductoService();
-  bool _isImageTapped = false;
-  Producto? _selectedProducto;
-  Map<String, TextEditingController> _cantidadControllers = {}; /* Mapa de controladores */
-  String? _warningMessage;  /* Mensaje de advertencia */
-  GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();/* Key para el scaffold */
+  bool _esImagenPulsada = false;
+  Producto? _productoSeleccionado;
+  Map<String, TextEditingController> _mapaControladorCantidad = {};
+  String? _mensajeAdvertencia;
+  GlobalKey<ScaffoldMessengerState> _scaffoldClave = GlobalKey<ScaffoldMessengerState>();
 
   /* Método para mostrar el cuadro de diálogo de confirmación */
-  Future<void> _showConfirmDialog(BuildContext context, Producto producto) async {
+  Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, /* Evita cerrar el diálogo tocando fuera de él */
@@ -45,7 +45,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
               onPressed: () {
                 /* Eliminar el producto completo de la lista */
                 setState(() {
-                  listaCompraService.removeProduct(widget.listaCompra, producto);
+                  listaCompraService.quitarProducto(widget.listaCompra, producto);
                 });
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
@@ -63,46 +63,46 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     if (input.isNotEmpty && RegExp(r'[^0-9]').hasMatch(input)) {
       /* Si no es un número, mostrar un mensaje de advertencia */
       setState(() {
-        _warningMessage = 'Solo números';
+        _mensajeAdvertencia = 'Solo números';
       });
       /* Evitar que se agregue el carácter no permitido */
       /* Esta parte lo hace imposible */
-      _cantidadControllers.forEach((key, controller) {
+      _mapaControladorCantidad.forEach((key, controller) {
         controller.text = controller.text.substring(0, controller.text.length - 1);
       });
     } else {
       setState(() {
-        _warningMessage = null;  /* Limpiar el mensaje de advertencia si el input es válido */
+        _mensajeAdvertencia = null;  /* Limpiar el mensaje de advertencia si el input es válido */
       });
     }
   }
 
   void actualizarController(Producto producto) {
-    _cantidadControllers[productoService.generateKey(producto)]!.text = listaCompraService
-        .getProductQuantity(widget.listaCompra, producto)
+    _mapaControladorCantidad[productoService.generarClave(producto)]!.text = listaCompraService
+        .getCantidadProducto(widget.listaCompra, producto)
         .toString();
   }
 
   /* Crear el controlador para cada producto */
   TextEditingController _getCantidadController(Producto producto) {
-    String key = productoService.generateKey(producto);
-    if (!_cantidadControllers.containsKey(key)) {
+    String key = productoService.generarClave(producto);
+    if (!_mapaControladorCantidad.containsKey(key)) {
       /* Si no existe el controlador, lo creamos */
-      _cantidadControllers[key] = TextEditingController();
-      _cantidadControllers[key]!.text = listaCompraService
-          .getProductQuantity(widget.listaCompra, producto)
+      _mapaControladorCantidad[key] = TextEditingController();
+      _mapaControladorCantidad[key]!.text = listaCompraService
+          .getCantidadProducto(widget.listaCompra, producto)
           .toString();
     }
-    return _cantidadControllers[key]!;
+    return _mapaControladorCantidad[key]!;
   }
 
   @override
   Widget build(BuildContext context) {
     /* Calcular el precio total */
-    double totalPrice = listaCompraService.getTotalPrice(widget.listaCompra);
+    double precioTotal = listaCompraService.getPrecioTotal(widget.listaCompra);
 
     return Scaffold(
-      key: _scaffoldKey,
+      key: _scaffoldClave,
       appBar: AppBar(
         title: Text('Tu Lista de la Compra'),
       ),
@@ -113,11 +113,11 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
             : Column(
           children: [
             /* Mostrar el mensaje de advertencia (si existe) */
-            if (_warningMessage != null)
+            if (_mensajeAdvertencia != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
-                  _warningMessage!,
+                  _mensajeAdvertencia!,
                   style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -129,7 +129,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                   final productoTuple = widget.listaCompra.productos[index];
                   final producto = productoTuple.$1;
                   final cantidad = productoTuple.$2;
-                  final totalPriceForProduct = listaCompraService.getPrice(widget.listaCompra, producto);
+                  final totalPriceForProduct = listaCompraService.getPrecio(widget.listaCompra, producto);
 
                   return Column(
                     children: [
@@ -137,8 +137,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                         onTap: () {
                           /* Mostrar detalles del producto al hacer clic en la imagen */
                           setState(() {
-                            _isImageTapped = !_isImageTapped;
-                            _selectedProducto = producto;
+                            _esImagenPulsada = !_esImagenPulsada;
+                            _productoSeleccionado = producto;
                           });
                         },
                         child: ListTile(
@@ -164,13 +164,12 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                     /* Disminuir una instancia del producto */
                                     setState(() {
                                       /* Actualizamos la cantidad utilizando el método correspondiente */
-                                      listaCompraService.removeInstance(widget.listaCompra, producto);
+                                      listaCompraService.quitarInstancia(widget.listaCompra, producto);
                                       /* Actualizamos el controlador para reflejar el cambio */
                                       actualizarController(producto);
                                     });
                                   } else {
-                                    /* Mostrar cuadro de confirmación para eliminar el producto */
-                                    _showConfirmDialog(context, producto);
+                                    _ventanaConfirmacion(context, producto);
                                   }
                                 },
                               ),
@@ -193,13 +192,12 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                     if(newQuantity > 0) {
                                       setState(() {
                                         /* Actualizar la cantidad usando el método de listaCompraService */
-                                        listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantity);
+                                        listaCompraService.setCantidadProducto(widget.listaCompra, producto, newQuantity);
                                         /* Actualizamos el TextField con la nueva cantidad */
                                         actualizarController(producto);
                                       });
                                     } else {
-                                      /* Mostrar cuadro de confirmación para eliminar el producto */
-                                      _showConfirmDialog(context, producto);
+                                      _ventanaConfirmacion(context, producto);
                                     }
                                   },
                                 ),
@@ -210,7 +208,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                 onPressed: () {
                                   setState(() {
                                     /* Actualizamos la cantidad utilizando el método correspondiente */
-                                    listaCompraService.addInstance(widget.listaCompra, producto);
+                                    listaCompraService.annadirInsatncia(widget.listaCompra, producto);
                                     /* Actualizamos el controlador para reflejar el cambio */
                                     actualizarController(producto);
                                   });
@@ -225,8 +223,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                               IconButton(
                                 icon: Icon(Icons.delete),
                                 onPressed: () {
-                                  /* Mostrar el cuadro de confirmación antes de eliminar */
-                                  _showConfirmDialog(context, producto);
+                                  _ventanaConfirmacion(context, producto);
                                 },
                               ),
                             ],
@@ -234,7 +231,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                         ),
                       ),
                       /* Mostrar el nombre y el precio debajo de la imagen */
-                      if (_isImageTapped && _selectedProducto == producto)
+                      if (_esImagenPulsada && _productoSeleccionado == producto)
                         Column(
                           children: [
                             SizedBox(height: 8),
@@ -264,7 +261,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '${totalPrice.toStringAsFixed(2)} €',
+                    '${precioTotal.toStringAsFixed(2)} €',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
                   ),
                 ],

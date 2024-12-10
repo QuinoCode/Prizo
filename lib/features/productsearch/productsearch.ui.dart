@@ -144,7 +144,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: const Text('Lista de Compra'),
               onPressed: () {
                 setState(() {
-                  listaCompraService.addProduct(listaCompra, producto);
+                  listaCompraService.annadirProducto(listaCompra, producto);
                 });
                 Navigator.of(context).pop();
                 /*ScaffoldMessenger.of(context).showSnackBar(
@@ -156,7 +156,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: const Text('Favoritos'),
               onPressed: () {
                 setState(() {
-                  listaFavoritosService.addProduct(listaFavoritos, producto);
+                  listaFavoritosService.annadirProducto(listaFavoritos, producto);
                 });
                 Navigator.of(context).pop();
                 /*ScaffoldMessenger.of(context).showSnackBar(

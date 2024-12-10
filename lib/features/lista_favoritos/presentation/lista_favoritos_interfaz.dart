@@ -28,10 +28,10 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
 
   /* Crear el controlador para cada producto */
   TextEditingController _getCantidadController(Producto producto) {
-    String key = productoService.generateKey(producto);
+    String key = productoService.generarClave(producto);
     if (!_cantidadControllers.containsKey(key)) {
       _cantidadControllers[key] = TextEditingController();
-      _cantidadControllers[key]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+      _cantidadControllers[key]!.text = listaCompraService.getCantidadProducto(widget.listaCompra, producto).toString();
     }
     return _cantidadControllers[key]!;
   }
@@ -83,13 +83,13 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                 itemBuilder: (context, index) {
                   final producto = widget.listaFavoritos.productos[index];
                   final imageUrl = producto.foto;
-                  final cantidad = listaCompraService.getProductQuantity(widget.listaCompra, producto);
+                  final cantidad = listaCompraService.getCantidadProducto(widget.listaCompra, producto);
 
                   return Dismissible(
-                    key: Key(productoService.generateKey(producto)),
+                    key: Key(productoService.generarClave(producto)),
                     direction: DismissDirection.startToEnd,
                     onDismissed: (direction) {
-                      listaFavoritosService.removeProduct(widget.listaFavoritos, producto);
+                      listaFavoritosService.quitarProducto(widget.listaFavoritos, producto);
                     },
                     background: Container(
                       color: Colors.red,
@@ -106,7 +106,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                           : Icon(Icons.image_not_supported),
                       title: Text(producto.nombre),
                       subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(2)}'),
-                      trailing: _isProductInCart[productoService.generateKey(producto)] == true
+                      trailing: _isProductInCart[productoService.generarClave(producto)] == true
                           ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -115,13 +115,13 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                             onPressed: () {
                               if (cantidad > 1) {
                                 setState(() {
-                                  listaCompraService.removeInstance(widget.listaCompra, producto);
-                                  _cantidadControllers[productoService.generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                  listaCompraService.quitarInstancia(widget.listaCompra, producto);
+                                  _cantidadControllers[productoService.generarClave(producto)]!.text = listaCompraService.getCantidadProducto(widget.listaCompra, producto).toString();
                                 });
                               } else {
                                 setState(() {
-                                  listaCompraService.removeProduct(widget.listaCompra, producto);
-                                  _isProductInCart[productoService.generateKey(producto)] = false; /* Resetear al formato carrito */
+                                  listaCompraService.quitarProducto(widget.listaCompra, producto);
+                                  _isProductInCart[productoService.generarClave(producto)] = false; /* Resetear al formato carrito */
                                 });
                               }
                             },
@@ -142,13 +142,13 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                                 int newQuantity = int.tryParse(value) ?? cantidad;
                                 if (newQuantity > 0) {
                                   setState(() {
-                                    listaCompraService.setProductQuantity(widget.listaCompra, producto, newQuantity);
-                                    _cantidadControllers[productoService.generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                    listaCompraService.setCantidadProducto(widget.listaCompra, producto, newQuantity);
+                                    _cantidadControllers[productoService.generarClave(producto)]!.text = listaCompraService.getCantidadProducto(widget.listaCompra, producto).toString();
                                   });
                                 } else {
                                   setState(() {
-                                    listaCompraService.removeProduct(widget.listaCompra, producto);
-                                    _isProductInCart[productoService.generateKey(producto)] = false; /* Resetear al formato carrito */
+                                    listaCompraService.quitarProducto(widget.listaCompra, producto);
+                                    _isProductInCart[productoService.generarClave(producto)] = false; /* Resetear al formato carrito */
                                   });
                                 }
                               },
@@ -158,12 +158,12 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                             icon: Icon(Icons.add_circle_outline),
                             onPressed: () {
                               setState(() {
-                                if(_cantidadControllers[productoService.generateKey(producto)]!.text == "0") {
-                                  listaCompraService.addProduct(widget.listaCompra, producto);
+                                if(_cantidadControllers[productoService.generarClave(producto)]!.text == "0") {
+                                  listaCompraService.annadirProducto(widget.listaCompra, producto);
                                 } else {
-                                  listaCompraService.addInstance(widget.listaCompra, producto);
+                                  listaCompraService.annadirInsatncia(widget.listaCompra, producto);
                                 }
-                                _cantidadControllers[productoService.generateKey(producto)]!.text = listaCompraService.getProductQuantity(widget.listaCompra, producto).toString();
+                                _cantidadControllers[productoService.generarClave(producto)]!.text = listaCompraService.getCantidadProducto(widget.listaCompra, producto).toString();
                               });
                             },
                           ),
@@ -173,7 +173,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                         icon: Icon(Icons.shopping_cart),
                         onPressed: () {
                           setState(() {
-                            _isProductInCart[productoService.generateKey(producto)] = true; /* Cambiar solo la interfaz */
+                            _isProductInCart[productoService.generarClave(producto)] = true; /* Cambiar solo la interfaz */
                           });
                         },
                       ),
