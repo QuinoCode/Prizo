@@ -37,7 +37,7 @@ class ListaCompraService {
   }
 
   /** El Producto product debe existir en la lista para invocar este método */
-  void annadirInsatncia(ListaCompra list, Producto product) {
+  void annadirInstancia(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
     int index = buscarProducto(list, product);
 

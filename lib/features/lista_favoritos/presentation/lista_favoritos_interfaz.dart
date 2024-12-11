@@ -20,39 +20,49 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
   final ListaCompraService listaCompraService = ListaCompraService();
   final ProductoService productoService = ProductoService();
-  Map<String, TextEditingController> _cantidadControllers = {};
-  String? _warningMessage;
+  Map<String, TextEditingController> _mapaControladorCantidad = {};
+  String? _mensajeAdvertencia;
 
   /* Mapa para saber si el producto está en "formato carrito" */
-  Map<String, bool> _isProductInCart = {};
+  Map<String, bool> _productoConBotonCarrito = {};
 
-  /* Crear el controlador para cada producto */
-  TextEditingController _getCantidadController(Producto producto) {
+  TextEditingController _crearCantidadController(Producto producto) {
     String key = productoService.generarClave(producto);
-    if (!_cantidadControllers.containsKey(key)) {
-      _cantidadControllers[key] = TextEditingController();
-      _cantidadControllers[key]!.text = listaCompraService.getCantidadProducto(widget.listaCompra, producto).toString();
+    if (!_mapaControladorCantidad.containsKey(key)) {
+      _mapaControladorCantidad[key] = TextEditingController();
+      _mapaControladorCantidad[key]!.text = listaCompraService.getCantidadProducto(widget.listaCompra, producto).toString();
     }
-    return _cantidadControllers[key]!;
+    return _mapaControladorCantidad[key]!;
   }
 
-  /** Función que maneja el input numérico en el TextField */
-  void _handleInputChange(String input) {
+  void actualizarCantidadController(Producto producto) {
+    _mapaControladorCantidad[productoService.generarClave(producto)]!.text = listaCompraService
+        .getCantidadProducto(widget.listaCompra, producto)
+        .toString();
+  }
+
+  void _manejadorTextField(String input) {
+    /* Verificar que solo se introduzcan números */
     if (input.isNotEmpty && RegExp(r'[^0-9]').hasMatch(input)) {
+      /* Si no es un número, mostrar un mensaje de advertencia*/
       setState(() {
-        _warningMessage = 'Solo números';
+        _mensajeAdvertencia = 'Solo números';
       });
-      _cantidadControllers.forEach((key, controller) {
+      /* Evitar que se agregue el carácter no permitido */
+      /* Esta parte lo hace imposible */
+      _mapaControladorCantidad.forEach((key, controller) {
         controller.text = controller.text.substring(0, controller.text.length - 1);
       });
       Future.delayed(Duration(seconds: 2), () {
+        /* Limpiar el mensaje de advertencia si han pasado 2 segundos */
         setState(() {
-          _warningMessage = null;
+          _mensajeAdvertencia = null;
         });
       });
     } else {
+      /* Limpiar el mensaje de advertencia si el input es válido */
       setState(() {
-        _warningMessage = null;
+        _mensajeAdvertencia = null;
       });
     }
   }
@@ -69,11 +79,11 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
             ? Center(child: Text('Tu lista de favoritos está vacía.'))
             : Column(
           children: [
-            if (_warningMessage != null)
+            if (_mensajeAdvertencia != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
-                  _warningMessage!,
+                  _mensajeAdvertencia!,
                   style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -106,7 +116,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                           : Icon(Icons.image_not_supported),
                       title: Text(producto.nombre),
                       subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(2)}'),
-                      trailing: _isProductInCart[productoService.generarClave(producto)] == true
+                      trailing: _productoConBotonCarrito[productoService.generarClave(producto)] == true
                           ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -116,12 +126,12 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                               if (cantidad > 1) {
                                 setState(() {
                                   listaCompraService.quitarInstancia(widget.listaCompra, producto);
-                                  _cantidadControllers[productoService.generarClave(producto)]!.text = listaCompraService.getCantidadProducto(widget.listaCompra, producto).toString();
+                                  actualizarCantidadController(producto);
                                 });
                               } else {
                                 setState(() {
                                   listaCompraService.quitarProducto(widget.listaCompra, producto);
-                                  _isProductInCart[productoService.generarClave(producto)] = false; /* Resetear al formato carrito */
+                                  _productoConBotonCarrito[productoService.generarClave(producto)] = false; /* Resetear al formato carrito */
                                 });
                               }
                             },
@@ -129,7 +139,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                           Container(
                             width: 50,
                             child: TextField(
-                              controller: _getCantidadController(producto),
+                              controller: _crearCantidadController(producto),
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 hintText: cantidad.toString(),
@@ -137,18 +147,18 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                                 contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                               ),
                               textAlign: TextAlign.center,
-                              onChanged: _handleInputChange,
+                              onChanged: _manejadorTextField,
                               onSubmitted: (value) {
                                 int newQuantity = int.tryParse(value) ?? cantidad;
                                 if (newQuantity > 0) {
                                   setState(() {
                                     listaCompraService.setCantidadProducto(widget.listaCompra, producto, newQuantity);
-                                    _cantidadControllers[productoService.generarClave(producto)]!.text = listaCompraService.getCantidadProducto(widget.listaCompra, producto).toString();
+                                    actualizarCantidadController(producto);
                                   });
                                 } else {
                                   setState(() {
                                     listaCompraService.quitarProducto(widget.listaCompra, producto);
-                                    _isProductInCart[productoService.generarClave(producto)] = false; /* Resetear al formato carrito */
+                                    _productoConBotonCarrito[productoService.generarClave(producto)] = false; /* Resetear al formato carrito */
                                   });
                                 }
                               },
@@ -158,12 +168,12 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                             icon: Icon(Icons.add_circle_outline),
                             onPressed: () {
                               setState(() {
-                                if(_cantidadControllers[productoService.generarClave(producto)]!.text == "0") {
+                                if(_mapaControladorCantidad[productoService.generarClave(producto)]!.text == "0") {
                                   listaCompraService.annadirProducto(widget.listaCompra, producto);
                                 } else {
-                                  listaCompraService.annadirInsatncia(widget.listaCompra, producto);
+                                  listaCompraService.annadirInstancia(widget.listaCompra, producto);
                                 }
-                                _cantidadControllers[productoService.generarClave(producto)]!.text = listaCompraService.getCantidadProducto(widget.listaCompra, producto).toString();
+                                actualizarCantidadController(producto);
                               });
                             },
                           ),
@@ -173,7 +183,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                         icon: Icon(Icons.shopping_cart),
                         onPressed: () {
                           setState(() {
-                            _isProductInCart[productoService.generarClave(producto)] = true; /* Cambiar solo la interfaz */
+                            _productoConBotonCarrito[productoService.generarClave(producto)] = true; /* Cambiar solo la interfaz */
                           });
                         },
                       ),

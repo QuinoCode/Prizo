@@ -22,7 +22,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   String? _mensajeAdvertencia;
   GlobalKey<ScaffoldMessengerState> _scaffoldClave = GlobalKey<ScaffoldMessengerState>();
 
-  /* Método para mostrar el cuadro de diálogo de confirmación */
   Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
     return showDialog<void>(
       context: context,
@@ -35,7 +34,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
             TextButton(
               onPressed: () {
                 /* El producto no se ha borrado y ponemos la cantidad actual del producto en el TextField */
-                actualizarController(producto);
+                actualizarCantidadController(producto);
                 /* Cerrar el diálogo sin hacer nada */
                 Navigator.of(context).pop();
               },
@@ -57,11 +56,25 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     );
   }
 
-  /* Función que maneja el input numérico en el TextField */
-  void _handleInputChange(String input) {
+  TextEditingController _crearCantidadController(Producto producto) {
+    String key = productoService.generarClave(producto);
+    if (!_mapaControladorCantidad.containsKey(key)) {
+      _mapaControladorCantidad[key] = TextEditingController();
+      _mapaControladorCantidad[key]!.text = listaCompraService.getCantidadProducto(widget.listaCompra, producto).toString();
+    }
+    return _mapaControladorCantidad[key]!;
+  }
+
+  void actualizarCantidadController(Producto producto) {
+    _mapaControladorCantidad[productoService.generarClave(producto)]!.text = listaCompraService
+        .getCantidadProducto(widget.listaCompra, producto)
+        .toString();
+  }
+
+  void _manejadorTextField(String input) {
     /* Verificar que solo se introduzcan números */
     if (input.isNotEmpty && RegExp(r'[^0-9]').hasMatch(input)) {
-      /* Si no es un número, mostrar un mensaje de advertencia */
+      /* Si no es un número, mostrar un mensaje de advertencia*/
       setState(() {
         _mensajeAdvertencia = 'Solo números';
       });
@@ -70,35 +83,22 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
       _mapaControladorCantidad.forEach((key, controller) {
         controller.text = controller.text.substring(0, controller.text.length - 1);
       });
+      Future.delayed(Duration(seconds: 2), () {
+        /* Limpiar el mensaje de advertencia si han pasado 2 segundos */
+        setState(() {
+          _mensajeAdvertencia = null;
+        });
+      });
     } else {
+      /* Limpiar el mensaje de advertencia si el input es válido */
       setState(() {
-        _mensajeAdvertencia = null;  /* Limpiar el mensaje de advertencia si el input es válido */
+        _mensajeAdvertencia = null;
       });
     }
   }
 
-  void actualizarController(Producto producto) {
-    _mapaControladorCantidad[productoService.generarClave(producto)]!.text = listaCompraService
-        .getCantidadProducto(widget.listaCompra, producto)
-        .toString();
-  }
-
-  /* Crear el controlador para cada producto */
-  TextEditingController _getCantidadController(Producto producto) {
-    String key = productoService.generarClave(producto);
-    if (!_mapaControladorCantidad.containsKey(key)) {
-      /* Si no existe el controlador, lo creamos */
-      _mapaControladorCantidad[key] = TextEditingController();
-      _mapaControladorCantidad[key]!.text = listaCompraService
-          .getCantidadProducto(widget.listaCompra, producto)
-          .toString();
-    }
-    return _mapaControladorCantidad[key]!;
-  }
-
   @override
   Widget build(BuildContext context) {
-    /* Calcular el precio total */
     double precioTotal = listaCompraService.getPrecioTotal(widget.listaCompra);
 
     return Scaffold(
@@ -126,9 +126,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
               child: ListView.builder(
                 itemCount: widget.listaCompra.productos.length,
                 itemBuilder: (context, index) {
-                  final productoTuple = widget.listaCompra.productos[index];
-                  final producto = productoTuple.$1;
-                  final cantidad = productoTuple.$2;
+                  final producto = widget.listaCompra.productos[index].$1;
+                  final cantidad = widget.listaCompra.productos[index].$2;
                   final totalPriceForProduct = listaCompraService.getPrecio(widget.listaCompra, producto);
 
                   return Column(
@@ -166,7 +165,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                       /* Actualizamos la cantidad utilizando el método correspondiente */
                                       listaCompraService.quitarInstancia(widget.listaCompra, producto);
                                       /* Actualizamos el controlador para reflejar el cambio */
-                                      actualizarController(producto);
+                                      actualizarCantidadController(producto);
                                     });
                                   } else {
                                     _ventanaConfirmacion(context, producto);
@@ -177,9 +176,9 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                               Container(
                                 width: 50,
                                 child: TextField(
-                                  controller: _getCantidadController(producto),
+                                  controller: _crearCantidadController(producto),
                                   keyboardType: TextInputType.number,
-                                  onChanged: _handleInputChange,
+                                  onChanged: _manejadorTextField,
                                   decoration: InputDecoration(
                                     hintText: cantidad.toString(),
                                     border: OutlineInputBorder(),
@@ -188,13 +187,13 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                   textAlign: TextAlign.center,
                                   onSubmitted: (value) {
                                     /* Al hacer "Hecho" o "Enter", actualizar la cantidad */
-                                    int newQuantity = int.tryParse(value) ?? cantidad;
-                                    if(newQuantity > 0) {
+                                    int nuevaCantidad = int.tryParse(value) ?? cantidad;
+                                    if(nuevaCantidad > 0) {
                                       setState(() {
                                         /* Actualizar la cantidad usando el método de listaCompraService */
-                                        listaCompraService.setCantidadProducto(widget.listaCompra, producto, newQuantity);
+                                        listaCompraService.setCantidadProducto(widget.listaCompra, producto, nuevaCantidad);
                                         /* Actualizamos el TextField con la nueva cantidad */
-                                        actualizarController(producto);
+                                        actualizarCantidadController(producto);
                                       });
                                     } else {
                                       _ventanaConfirmacion(context, producto);
@@ -208,9 +207,9 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                 onPressed: () {
                                   setState(() {
                                     /* Actualizamos la cantidad utilizando el método correspondiente */
-                                    listaCompraService.annadirInsatncia(widget.listaCompra, producto);
+                                    listaCompraService.annadirInstancia(widget.listaCompra, producto);
                                     /* Actualizamos el controlador para reflejar el cambio */
-                                    actualizarController(producto);
+                                    actualizarCantidadController(producto);
                                   });
                                 },
                               ),
