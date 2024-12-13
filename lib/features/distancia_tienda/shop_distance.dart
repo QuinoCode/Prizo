@@ -1,6 +1,7 @@
 import "dart:convert";
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'package:map_launcher/map_launcher.dart';
 import 'package:location/location.dart';
 
 class ShopDistance {
@@ -9,28 +10,6 @@ class ShopDistance {
 
   Location location = Location();
 
-  /*Future<bool> _serviceEnabled() async {
-    var service = await location.serviceEnabled();
-    if (!service) {
-      service = await location.requestService();
-      if (!service) {
-        return service;
-      }
-    }
-    return service;
-  }
-
-  Future<PermissionStatus> _permissionGranted() async{
-    var permission = await location.hasPermission();
-    if (permission == PermissionStatus.denied){
-      permission = await location.requestPermission();
-      if (permission == PermissionStatus.denied){
-        return permission;
-      }
-    }
-    return permission;
-  }
-*/
   String getFullUri(LocationData coords, String query){
     String s = HEREapi.replaceFirst('%a', '${coords.latitude},${coords.longitude}');
     s = s.replaceFirst('%b', query);
@@ -38,7 +17,7 @@ class ShopDistance {
     return Uri.encodeFull(s);
   }
 
-  Future<String> fetchLocationsAPI(String query) async {
+  Future<Map<String, dynamic>?> fetchLocationsAPI(String query) async {
     try {
       //_serviceEnabled();
       //_permissionGranted();
@@ -49,18 +28,26 @@ class ShopDistance {
       var response = await http.get(Uri.parse(url), headers:{"Accept":"application/json", "Accept-Encoding":"gzip"});
       if (response. statusCode == 200) {
         final jsonResp = json.decode(response.body);
-        final locationJsonMap = jsonResp["items"];
-        return locationJsonMap[0]["distance"];
+        return jsonResp;
       } else {
         throw Exception("Failed to get location");
       }
     } catch (e) {
       print("Error fetching location: $e");
-      return "";
+      return null;
     }
   }
 
+  void launchMapQuery (String query) async{
+    Map<String, dynamic>? jsonMap = await fetchLocationsAPI(query);
+    final availableMaps = await MapLauncher.installedMaps;
+    final coords = new Coords(jsonMap?["items"][0]["position"]["lat"],jsonMap?["items"][0]["position"]["lng"]);
+    if(jsonMap != null){
+      await MapLauncher.showDirections(mapType: availableMaps.first.mapType, destination: coords);
+    }
+  }
 }
+
 class MyHttpOverrides extends HttpOverrides{
   @override
   HttpClient createHttpClient(SecurityContext? context){

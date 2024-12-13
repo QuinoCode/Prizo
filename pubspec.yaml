@@ -15,6 +15,7 @@ dependencies:
   json_annotation: ^4.7.0
   location: ^6.0.2
   fl_location: ^5.0.0
+  map_launcher: ^3.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
