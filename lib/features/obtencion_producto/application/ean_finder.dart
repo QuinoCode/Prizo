@@ -5,13 +5,15 @@ import 'package:prizo/features/obtencion_producto/application/consum_finder_serv
 import 'package:prizo/features/obtencion_producto/application/dia_finder_service.dart';
 import 'package:prizo/features/obtencion_producto/application/finder_wrapper.dart';
 import 'package:prizo/shared/data_entities/producto.dart';
-import 'obtencion_producto_service.dart';
 
 class EanFinder {
   final String marketUri = "https://world.openfoodfacts.net/api/v2/product/%q";
 
+  // Devuelve una lista con cada posición de la misma siendo el equivalente al producto buscado por EAN en dicho supermercado
+  // 0. Carrefour
+  // 1. Dia
+  // 2. Consum
   Future<List<Producto?>> getProductList(String query) async {
-    Producto product;
     http.Response? response;
     while (response == null) response = await doHttpRequest(query);
     var unprocessedItems = getItemFromHttpReply(response);
@@ -19,7 +21,6 @@ class EanFinder {
     Producto? productCarrefour = await find_ean_in_finders(productSearch, "carrefour");
     Producto? productoDia = await find_ean_in_finders(productSearch, "dia");
     Producto? productoConsum = await find_ean_in_finders(productSearch, "consum");
-
     return [productCarrefour, productoDia, productoConsum];
   }
 
