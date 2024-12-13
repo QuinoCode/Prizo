@@ -12,23 +12,44 @@ MobileScanner createScanner(BuildContext context) {
       detectionSpeed: DetectionSpeed.noDuplicates,
       returnImage: true
     ),
-    onDetect: (capture){
-      final List<Barcode> barcodes = capture.barcodes;
-      final Uint8List? image = capture.image;
-      for (final barcode in barcodes) {
-      print(barcode.rawValue ?? "No Data found in Barcode");
-    }
-      if (image != null) { showDialog(context: context, builder: (context) =>
-      AlertDialog( title: Text("Barcode details: ${barcodes.first.rawValue}" ??
-      "No data found in barcode"), content: Image(image:
-      MemoryImage(image)),)); }
-    }
+    onDetect:(capture){detected(capture, context);}
 );
   return scanner;
   
 }
 
-Future<List<Producto?>>  getProductFromScan(String ean) async {
+//TODO Make some kind of feedback in order for the user to know if something successfully scanned and we're waiting just for the http process to resolve
+void detected(capture, context) async {
+      final List<Barcode> barcodes = capture.barcodes;
+      final Uint8List? image = capture.image;
+      List<Producto?>? products;
+      for (final barcode in barcodes) {
+        products = await getProductFromScan(barcode.rawValue);
+        if (products == null) {print("No se encontró el producto en ningún supermercado");}
+      }
+      if (image != null) { 
+        showDialog(context: context, builder: (context) =>
+          createAlertDialog(products!, image)
+        ); 
+      }
+}
+AlertDialog createAlertDialog(List<Producto?> products, Uint8List image){
+  String nonNullProducts = ""; 
+  for (int i = 0; i < products.length; i++){
+    if (products[i] != null) {nonNullProducts += "${products[i]!.tienda}: ${products[i]!.precio} \n";}
+  }
+
+  if (nonNullProducts.isEmpty) {nonNullProducts = "No products were found";}
+  return AlertDialog(title: const Text("Precio productos"), content: Column(
+    children: [
+      Text(nonNullProducts),
+      Image(image: MemoryImage(image))
+    ],
+  ));
+}
+
+Future<List<Producto?>?>  getProductFromScan(String? ean) async {
+  if (ean == null) return null;
   EanFinder finder = EanFinder();
   return await finder.getProductList(ean);
 }
