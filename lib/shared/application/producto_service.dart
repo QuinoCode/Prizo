@@ -35,10 +35,22 @@ class ProductoService {
    * - Posición 1: booleano para la LACTOSA
    * - Posición 2: booleano para los FRUTOS SECOS
    * */
-  bool tieneAlergeno(Producto producto, int indice) {
-    if (indice < 0 || indice >= producto.alergenos.length) {
-      throw ArgumentError("Índice fuera de rango");
+  List<Producto> sinAlergenos(List<Producto> productos, List<int> alergenos) {
+    if (alergenos.isEmpty || productos.isEmpty) {
+      return productos;
     }
-    return producto.alergenos[indice];
+    List<Producto> filtrado = [];
+    for (var producto in productos) {
+      int contador = 0;
+      for (var indice in alergenos) {
+        if (producto.alergenos[indice]) {
+          contador += 1;
+        }
+      }
+      if (contador == 0) {
+        filtrado.add(producto);
+      }
+    }
+    return filtrado;
   }
 }

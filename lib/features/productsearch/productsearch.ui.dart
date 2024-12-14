@@ -7,10 +7,12 @@ import '../../features/comparacion_productos/application/comparacion_producto.da
 import '../../../shared/data_entities/lista_compra.dart';
 import '../../../shared/data_entities/lista_favoritos.dart';
 import '../../../shared/data_entities/producto.dart';
+import '../../../shared/application/producto_service.dart';
 import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import '../../features/productsearch/filtro.dart';
 import '../lista_favoritos/application/lista_favoritos_service.dart';
 
 abstract class ProductSearcher {
@@ -35,7 +37,7 @@ class MultiMarketProductSearcher implements ProductSearcher {
       final diaProductsFuture = diaService.getProductList(query);
       final carrefourProductsFuture = carrefourService.getProductList(query);
       final results = await Future.wait([consumProductsFuture, diaProductsFuture, carrefourProductsFuture]);
-      return results; // Devuelve listas de productos separadas por supermercado
+      return results; /* Devuelve listas de productos separadas por supermercado */
     } catch (e) {
       print("Error al buscar productos: $e");
       return [];
@@ -60,6 +62,8 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   bool _isLoading = false;
   final ListaCompraService listaCompraService = ListaCompraService();
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
+  final ProductoService productoService = ProductoService();
+  List<int> alergenosSeleccionados = [];
   ListaCompra listaCompra = ListaCompra(
       id: '1', usuario: 'usuario_demo', productos: []);
   ListaFavoritos listaFavoritos = ListaFavoritos(
@@ -85,16 +89,25 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     try {
       final productos = await searcher.searchProducts(_searchController.text);
 
-      // Por cada súper separa los productos en dos listas
-      List<(List<Producto>, List<Producto>)> listasSeparadas = productos.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
+      /* Filtramos los productos por alérgenos */
+      List<Producto> productosFiltrados = productoService.sinAlergenos(
+          productos.expand((x) => x).toList(),
+          alergenosSeleccionados
+      );
 
-      // Combina las primeras listas de cada supermercado y las segundas de cada supermercado entre ellas
+      /* Ahora que tenemos una lista de productos filtrados, la pasamos a la función 'ordenaPrioridadCategoria' */
+      /* Vamos a crear listas separadas por supermercado, pero antes debemos 'aplanar' las listas para no tener problemas con el tipo. */
+      List<(List<Producto>, List<Producto>)> listasSeparadas = productosFiltrados.map((productosSuper) {
+        return ordenaPrioridadCategoria([productosSuper]);  /* Aquí el 'productosSuper' ya es una lista de productos */
+      }).toList();
+
+      /* Combina las primeras listas de cada supermercado y las segundas de cada supermercado entre ellas */
       final (List<Producto> listaCategoria, List<Producto> listaRestante) = combinaListasSupers(listasSeparadas);
       setState(() {
         _productos = listaCategoria;
         _productosRestantes = listaRestante;
       });
-      if (productos.isEmpty) {
+      if (productosFiltrados.isEmpty) {
         print("No se encontraron productos para la consulta: ${_searchController.text}");
       }
     } catch (e) {
@@ -103,6 +116,27 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  void _navigateToFilterList() async {
+    // Llamamos a la pantalla del filtro pasando la lista de alérgenos seleccionados
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FiltroProductosInterfaz(
+          alergenos: alergenosSeleccionados,
+        ),
+      ),
+    );
+
+    // Si el usuario cambió los alérgenos, actualizamos la lista
+    if (result != null) {
+      setState(() {
+        alergenosSeleccionados = result;
+      });
+      // Llamamos a la búsqueda nuevamente con los filtros aplicados
+      _searchProducts();
     }
   }
 
@@ -147,9 +181,6 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                   listaCompraService.annadirProducto(listaCompra, producto);
                 });
                 Navigator.of(context).pop();
-                /*ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${producto.nombre} ha sido añadido a la lista de la compra')),
-                );*/
               },
             ),
             TextButton(
@@ -159,9 +190,6 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                   listaFavoritosService.annadirProducto(listaFavoritos, producto);
                 });
                 Navigator.of(context).pop();
-                /*ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${producto.nombre} ha sido añadido a la lista de favoritos')),
-                );*/
               },
             ),
             TextButton(
@@ -190,6 +218,10 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
             icon: const Icon(Icons.favorite),
             onPressed: _navigateToListaFavoritos,
           ),
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: _navigateToFilterList,
+          ),
         ],
       ),
       body: Padding(
@@ -206,9 +238,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                 ),
               ),
               textInputAction: TextInputAction.search,
-              // Escuchamos el evento onSubmitted para detectar cuando se presiona "Enter"
+              /* Escuchamos el evento onSubmitted para detectar cuando se presiona "Enter" */
               onSubmitted: (query) {
-                _searchProducts(); // Llamamos a la función de búsqueda al presionar "Enter"
+                _searchProducts(); /* Llamamos a la función de búsqueda al presionar "Enter" */
               },
             ),
             SizedBox(height: 20),
@@ -219,7 +251,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Mostrar la primera lista de productos
+                    /* Mostrar la primera lista de productos */
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -229,7 +261,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                         return _buildProductTile(producto);
                       },
                     ),
-                    // Mostrar la segunda lista si hay productos restantes
+                    /* Mostrar la segunda lista si hay productos restantes */
                     if (_productosRestantes.isNotEmpty) ...[
                       const SizedBox(height: 20),
                       const Text(
@@ -274,24 +306,24 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         },
       )
           : Icon(Icons.image_not_supported),
-      // Al pulsar producto, se abre la pantalla de este
+      /* Al pulsar producto, se abre la pantalla de este */
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => DetallesProducto(
-          producto: producto, // El producto seleccionado
-          listaCompra: listaCompra, // Pasamos la instancia de ListaCompra
+          producto: producto, /* El producto seleccionado */
+          listaCompra: listaCompra, /* Pasamos la instancia de ListaCompra */
           listaFavoritos: listaFavoritos,
             ),
           ),
         );
       },
-      // Icono de + a la derecha
+      /* Icono de + a la derecha */
       trailing: IconButton(
         icon: const Icon(Icons.add),
         onPressed: () {
-          // Al tocar el ícono de +, se muestra el diálogo para añadir el producto
+          /* Al tocar el ícono de +, se muestra el diálogo para añadir el producto */
           _showAddProductDialog(producto);
         },
       ),
