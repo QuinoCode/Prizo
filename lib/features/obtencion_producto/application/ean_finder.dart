@@ -1,22 +1,33 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:prizo/features/obtencion_producto/application/carrefour_finder_service.dart';
 import 'package:prizo/features/obtencion_producto/application/consum_finder_service.dart';
 import 'package:prizo/features/obtencion_producto/application/dia_finder_service.dart';
 import 'package:prizo/features/obtencion_producto/application/finder_wrapper.dart';
+import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 import 'package:prizo/shared/data_entities/producto.dart';
 
 class EanFinder {
   final String marketUri = "https://world.openfoodfacts.net/api/v2/product/%q";
+  static int httpTrys = 0;
+  final void Function(BuildContext, String) onError;
+
+  EanFinder({void Function(BuildContext, String)? onError}) : onError = onError ??
+  ((context, errorMessage) {
+    print("Error: $errorMessage");
+  });
 
   // Devuelve una lista con cada posición de la misma siendo el equivalente al producto buscado por EAN en dicho supermercado
   // 0. Carrefour
   // 1. Dia
   // 2. Consum
-  Future<List<Producto?>> getProductList(String query) async {
+  Future<List<Producto?>?> getProductList(String query) async {
     http.Response? response;
-    while (response == null) response = await doHttpRequest(query);
+    response = await doHttpRequest(query);
+    if (response == null) {return null;}
     var unprocessedItems = getItemFromHttpReply(response);
+    if (unprocessedItems == null){return null;}
     Map<String,dynamic> productSearch = convertItemToProductSearch(unprocessedItems);
     Producto? productCarrefour = await find_ean_in_finders(productSearch, "carrefour");
     Producto? productoDia = await find_ean_in_finders(productSearch, "dia");
@@ -36,12 +47,14 @@ class EanFinder {
             "Keep-Alive": "timeout=5, max=2"
           },
           );
-        while (response.statusCode != 200){response = await http.get(
-          Uri.parse(url),
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-            "Keep-Alive": "timeout=5, max=2"
-          },
+        while (response.statusCode != 200 && httpTrys < 5){
+          httpTrys++;
+          response = await http.get(
+            Uri.parse(url),
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+              "Keep-Alive": "timeout=5, max=2"
+            },
           );
         }
         return response;
@@ -51,26 +64,30 @@ class EanFinder {
       return null;
   }
 
-  Map<String,dynamic> getItemFromHttpReply(http.Response response){
+  Map<String,dynamic>? getItemFromHttpReply(http.Response response){
       Map<String, dynamic> decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      int status = decodedResponse['status'];
+      if (status == 0) {return null;}
       Map<String, dynamic> item = decodedResponse['product'];
       return item;
   }
   Future<Producto?> find_ean_in_finders(Map<String, dynamic> productSearch, String finderType) async {
     FinderWrapper finder= FinderWrapper(finderType);
     List<Producto> products = [];
-    if (finder is ConsumFinderService) {
-      products = await finder.getProductList(productSearch["marca"]);
-      return find_productInList(productSearch, products);
-    }
     if (finder is CarrefourFinderService) {
       products = await finder.getProductList(productSearch["nombre"]);
       return find_productInList(productSearch, products);
       }
     if (finder is DiaFinderService){
       products = await finder.getProductList(productSearch["ean"]);
+      if (products.isEmpty) return null;
       return products[0];
       }
+    if (finder is ConsumFinderService) {
+      products = await finder.getProductList(productSearch["marca"]);
+      Producto? producto = find_productInList(productSearch, products) ?? find_productInList(productSearch, await finder.getProductList(productSearch["nombre"]));
+      return producto;
+    }
     return null;
   }
 
