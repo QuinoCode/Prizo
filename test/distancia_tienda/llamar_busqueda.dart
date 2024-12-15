@@ -19,8 +19,7 @@ void main() {
     //Setup
     String query = 'Mercadona';
     //Act
-    s.
-    launchMapQuery(query);
+    s.launchMapQuery(query);
     //Assert
   });
 }

@@ -13,8 +13,9 @@ dependencies:
   http: ^1.2.2
   html: ^0.15.0
   json_annotation: ^4.7.0
+  diacritic: ^0.1.0
+  mobile_scanner: ^6.0.2
   location: ^6.0.2
-  fl_location: ^5.0.0
   map_launcher: ^3.5.0
 dev_dependencies:
   flutter_test:

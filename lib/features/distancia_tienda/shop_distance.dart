@@ -38,6 +38,20 @@ class ShopDistance {
     }
   }
 
+  Future<int> fetchDistanceAPI(String query) async {
+    try {
+      final jsonMap = await fetchLocationsAPI(query);
+      int toReturn = jsonMap?["items"][0]["distance"];
+      if (jsonMap != null){
+        return toReturn;
+      }
+      return toReturn;
+    }catch (e) {
+      print("Error fetching location: $e");
+      return 0;
+    }
+  }
+
   void launchMapQuery (String query) async{
     Map<String, dynamic>? jsonMap = await fetchLocationsAPI(query);
     final availableMaps = await MapLauncher.installedMaps;
