@@ -41,7 +41,7 @@ class ShopDistance {
   void launchMapQuery (String query) async{
     Map<String, dynamic>? jsonMap = await fetchLocationsAPI(query);
     final availableMaps = await MapLauncher.installedMaps;
-    final coords = new Coords(jsonMap?["items"][0]["position"]["lat"],jsonMap?["items"][0]["position"]["lng"]);
+    final coords = Coords(jsonMap?["items"][0]["position"]["lat"],jsonMap?["items"][0]["position"]["lng"]);
     if(jsonMap != null){
       await MapLauncher.showDirections(mapType: availableMaps.first.mapType, destination: coords);
     }
