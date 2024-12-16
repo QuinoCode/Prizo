@@ -15,7 +15,7 @@ class Prizo extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => PrizoState(),
       child: const MaterialApp(
-        home: ProductSearchScreen(), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
+        home: ProductSearchScreen(),
       ),
     );
   }

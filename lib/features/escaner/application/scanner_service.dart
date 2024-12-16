@@ -44,7 +44,7 @@ Future<void> detected(capture, BuildContext context, EanFinder eanFinder) async 
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text("Error"),
-                content: const Text("Item not found in the database"),
+                content: const Text("No se encontró el artículo"),
                 actions: [
                   TextButton(
                     child: const Text("OK"),
@@ -69,18 +69,39 @@ AlertDialog feedbackSuccessfulScan(Uint8List image){
   return AlertDialog(title: const Text("Escaneado completo"), content: Image(image: MemoryImage(image)));
 }
 AlertDialog createAlertDialog(List<Producto?> products, Uint8List image){
-  String nonNullProducts = ""; 
-  for (int i = 0; i < products.length; i++){
-    if (products[i] != null) {nonNullProducts += "${products[i]!.tienda}: ${products[i]!.precioOferta} \n";}
-  }
-
-  if (nonNullProducts.isEmpty) {nonNullProducts = "No products were found";}
-  return AlertDialog(title: const Text("Precio productos"), content: Column(
-    children: [
-      Text(nonNullProducts),
-      Image(image: MemoryImage(image))
-    ],
-  ));
+  //String nonNullProducts = ""; 
+  //Column productsColumn = Column(children: [],)
+  //for (int i = 0; i < products.length; i++){
+  //  if (products[i] != null) {
+  //    nonNullProducts += "${products[i]!.tienda}: ${products[i]!.precioOferta} \n";
+  //    TextButton button = TextButton(onPressed: onPressed, child: child)
+  //  }
+  //}
+  return products.every((product) => product == null) ? AlertDialog(
+    title: const Text("No se encontró el producto"),
+    content: const Text(":(", textAlign: TextAlign.center,)
+  ) : AlertDialog(
+    title: const Text("Productos"),
+    content: Column (
+      mainAxisSize: MainAxisSize.min,
+    children: products
+      .where((product) => product != null)
+      .map((product) => Row(
+        children: [
+          Text("${product!.tienda}:"),
+          TextButton(
+            onPressed: (){
+              //TODO: addItem
+              //TODO: close stuff
+            },
+            child:
+              Text("${product.precioOferta}")
+          ),
+        ],
+      )
+      ).toList(),
+    )
+  );
 }
 
 Future<List<Producto?>?>  getProductFromScan(BuildContext context, String? ean, EanFinder eanFinder) async {
