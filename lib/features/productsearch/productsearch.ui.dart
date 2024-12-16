@@ -12,7 +12,7 @@ import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
-import '../../features/productsearch/filtro.dart';
+import '../filtro_busqueda/filtro_busqueda.dart';
 import '../lista_favoritos/application/lista_favoritos_service.dart';
 
 abstract class ProductSearcher {
