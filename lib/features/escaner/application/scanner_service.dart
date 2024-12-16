@@ -69,14 +69,6 @@ AlertDialog feedbackSuccessfulScan(Uint8List image){
   return AlertDialog(title: const Text("Escaneado completo"), content: Image(image: MemoryImage(image)));
 }
 AlertDialog createAlertDialog(List<Producto?> products, Uint8List image){
-  //String nonNullProducts = ""; 
-  //Column productsColumn = Column(children: [],)
-  //for (int i = 0; i < products.length; i++){
-  //  if (products[i] != null) {
-  //    nonNullProducts += "${products[i]!.tienda}: ${products[i]!.precioOferta} \n";
-  //    TextButton button = TextButton(onPressed: onPressed, child: child)
-  //  }
-  //}
   return products.every((product) => product == null) ? AlertDialog(
     title: const Text("No se encontró el producto"),
     content: const Text(":(", textAlign: TextAlign.center,)
