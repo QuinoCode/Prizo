@@ -4,11 +4,6 @@ import 'package:prizo/shared/data_entities/producto.dart';
 
 void main() {
   test('debe filtrar productos por alergenos', () {
-    // Declaración de alergenos
-    int GLUTEN = 0;
-    int LACTOSA = 1;
-    int FRUTOS_SECOS = 2;
-
     // Declaracion de los alérgenos para los productos
     List<bool> producto_con_gluten = [true, false, false];
     List<bool> producto_con_lactosa = [false, true, false];
@@ -67,6 +62,11 @@ void main() {
       oferta: false,
       precioOferta: 0.0,
     );
+
+    // Declaración de alergenos para las listas de alérgenos
+    int GLUTEN = 0;
+    int LACTOSA = 1;
+    int FRUTOS_SECOS = 2;
 
     // Arrange
     List<Producto> productos = [
