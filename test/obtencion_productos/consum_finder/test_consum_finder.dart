@@ -7,10 +7,10 @@ void main() async {
     test('should fetch products and map them correctly', () async {
 // Arrange
       ConsumFinderService finder = ConsumFinderService();
-      String query = "chocolate nestle";
+      String query = "Classic descafeinado";
 
 // Act
-      List<Producto> products = await finder.fetchProductsFromApi(query);
+      List<Producto> products = await finder.getProductList(query);
 
 // Assert
       expect(products, isNotEmpty);

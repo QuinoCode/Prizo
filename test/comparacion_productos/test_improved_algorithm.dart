@@ -27,7 +27,7 @@ void main() async {
       String query = "Ketchup";
 
       resultC4 = await c4Finder.getProductList(query);
-      resultConsum = await consumFinder.fetchProductsFromApi(query);
+      resultConsum = await consumFinder.getProductList(query);
       resultDia = await diaFinder.getProductList(query);
 
       resultC4Tupla =  ordenaPrioridadCategoria(resultC4);

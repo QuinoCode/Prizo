@@ -14,6 +14,7 @@ import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dar
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 import '../filtro_busqueda/filtro_busqueda.dart';
 import '../lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
@@ -33,7 +34,7 @@ class MultiMarketProductSearcher implements ProductSearcher {
   @override
   Future<List<List<Producto>>> searchProducts(String query) async {
     try {
-      final consumProductsFuture = consumService.fetchProductsFromApi(query);
+      final consumProductsFuture = consumService.getProductList(query);
       final diaProductsFuture = diaService.getProductList(query);
       final carrefourProductsFuture = carrefourService.getProductList(query);
       final results = await Future.wait([consumProductsFuture, diaProductsFuture, carrefourProductsFuture]);
@@ -119,6 +120,17 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     }
   }
 
+  void _navigateToListaEscaner() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            ScannerInterface(
+             title: "Titulin",
+            ),
+      ),
+    );
+  }
   void _navigateToFilterList() async {
     // Llamamos a la pantalla del filtro pasando la lista de alérgenos seleccionados
     final result = await Navigator.push(
@@ -210,6 +222,10 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       appBar: AppBar(
         title: const Text('Busqueda producto'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.scanner),
+            onPressed: _navigateToListaEscaner,
+          ),
           IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: _navigateToListaCompra,
