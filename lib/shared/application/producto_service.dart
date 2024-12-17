@@ -53,4 +53,30 @@ class ProductoService {
     }
     return filtrado;
   }
+
+  List<Producto> conTienda(List<Producto> productos, List<String> tiendas) {
+    if (!tiendas.isEmpty && !productos.isEmpty) {
+      List<Producto> filtrado = [];
+      for (var producto in productos) {
+        if (tiendas.contains(producto.tienda)) {
+          filtrado.add(producto);
+        }
+      }
+      return filtrado;
+    }
+    return productos;
+  }
+
+  List<Producto> sinTienda(List<Producto> productos, List<String> tiendas) {
+    if (!tiendas.isEmpty && !productos.isEmpty) {
+      List<Producto> filtrado = [];
+      for (var producto in productos) {
+        if (!tiendas.contains(producto.tienda)) {
+          filtrado.add(producto);
+        }
+      }
+      return filtrado;
+    }
+    return productos;
+  }
 }
