@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class PantallaInicio extends StatelessWidget {
+class PantallaInicio extends StatefulWidget {
+  @override
+  _PantallaInicioState createState() => _PantallaInicioState();
+}
+
+class _PantallaInicioState extends State<PantallaInicio> {
+  final PageController _pageController = PageController();
+  int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     final String currentDay = DateFormat.EEEE('es_ES').format(DateTime.now());
@@ -59,36 +67,47 @@ class PantallaInicio extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
-              Container(
-                height: 120,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 100,
+              Column(
+                children: [
+                  Container(
+                    height: 180, // Incrementar altura para productos más grandes
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: 10, // Número de productos
+                      onPageChanged: (index) {
+                        setState(() {
+                          currentIndex = index;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Container(
+                            width: 150,
+                            height: 150,
                             decoration: BoxDecoration(
                               color: Colors.blue[100],
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          SizedBox(height: 4),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(10, (i) => i == index ?
-                            Icon(Icons.circle, size: 8, color: Colors.blue) :
-                            Icon(Icons.circle, size: 6, color: Colors.grey)),
-                          ),
-                        ],
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(10, (index) => Container(
+                      margin: EdgeInsets.symmetric(horizontal: 4),
+                      width: currentIndex == index ? 12 : 8,
+                      height: currentIndex == index ? 12 : 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: currentIndex == index ? Colors.blue : Colors.grey,
                       ),
-                    );
-                  },
-                ),
+                    )),
+                  ),
+                ],
               ),
               SizedBox(height: 20),
               Divider(color: Colors.blue),
@@ -138,43 +157,68 @@ class PantallaInicio extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
-              Column(
-                children: List.generate(3, (index) => ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    child: Icon(Icons.store, color: Colors.white),
-                  ),
-                  title: Text('Supermercado ${index + 1}'),
-                  subtitle: Text('Distancia: ${index * 0.5 + 0.3} km\nDirección: Calle Falsa ${index + 123}'),
-                )),
+              Container(
+                height: 120, // Altura para lista horizontal
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5, // Número de supermercados
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: 200,
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.blue,
+                          child: Icon(Icons.store, color: Colors.white),
+                        ),
+                        title: Text('Supermercado ${index + 1}'),
+                        subtitle: Text('Distancia: ${index * 0.5 + 0.3} km\nDirección: Calle Falsa ${index + 123}'),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Inicio',
+      bottomNavigationBar: Container(
+        margin: EdgeInsets.all(16), // Separación del borde de la pantalla
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30), // Bordes redondeados
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: Icon(Icons.home, color: Colors.blue),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.search, color: Colors.grey),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.list, color: Colors.grey),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.person, color: Colors.grey),
+                onPressed: () {},
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Buscar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Lista',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
-        ],
-        currentIndex: 0,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {},
+        ),
       ),
     );
   }
