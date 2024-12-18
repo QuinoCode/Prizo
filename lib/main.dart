@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './features/productsearch/productsearch.ui.dart'; // Asegúrate de que la ruta sea correcta
-import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
+import 'features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Asegura la inicialización antes de ejecutar la app
+  await initializeDateFormatting('es_ES', null);
   runApp(const Prizo());
 }
 
@@ -14,8 +16,10 @@ class Prizo extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => PrizoState(),
-      child: const MaterialApp(
-        home: ProductSearchScreen(), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false, // Opcional, para quitar la etiqueta de debug
+        title: 'Prizo App',
+        home: PantallaInicio(), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
       ),
     );
   }
