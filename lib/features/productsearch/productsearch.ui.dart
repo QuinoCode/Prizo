@@ -97,7 +97,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
           alergenosSeleccionados
       );
 
-      /* Filtrar los productos por tiendas */
+      /* Filtrar los productos por tiendas JUAN */
       List<Producto> productoEnTienda = productoService.conTienda(productosSinAlergenos, tiendasSeleccionadas);
 
       /* Ahora que tenemos una lista de productos filtrados, la pasamos a la función 'ordenaPrioridadCategoria' */
