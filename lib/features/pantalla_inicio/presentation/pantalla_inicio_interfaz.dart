@@ -21,7 +21,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 20),
+              SizedBox(height: 40),
               Center(
                 child: Column(
                   children: [
@@ -64,13 +64,13 @@ class _PantallaInicioState extends State<PantallaInicio> {
               SizedBox(height: 20),
               Text(
                 'Ofertas de la semana',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
               Column(
                 children: [
                   Container(
-                    height: 180, // Incrementar altura para productos más grandes
+                    height: 200, // Incrementar altura para productos más grandes
                     child: PageView.builder(
                       controller: _pageController,
                       itemCount: 10, // Número de productos
@@ -186,17 +186,11 @@ class _PantallaInicioState extends State<PantallaInicio> {
         margin: EdgeInsets.all(16), // Separación del borde de la pantalla
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(30), // Bordes redondeados
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-            ),
-          ],
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.blue, width: 1),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 6.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
