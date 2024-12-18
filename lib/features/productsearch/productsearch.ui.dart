@@ -65,6 +65,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
   final ProductoService productoService = ProductoService();
   List<int> alergenosSeleccionados = [];
+  List<String> tiendasSeleccionadas = [];
   ListaCompra listaCompra = ListaCompra(
       id: '1', usuario: 'usuario_demo', productos: []);
   ListaFavoritos listaFavoritos = ListaFavoritos(
@@ -91,14 +92,17 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       final productos = await searcher.searchProducts(_searchController.text);
 
       /* Filtramos los productos por alérgenos */
-      List<Producto> productosFiltrados = productoService.sinAlergenos(
+      List<Producto> productosSinAlergenos = productoService.sinAlergenos(
           productos.expand((x) => x).toList(),
           alergenosSeleccionados
       );
 
+      /* Filtrar los productos por tiendas */
+      List<Producto> productoEnTienda = productoService.conTienda(productosSinAlergenos, tiendasSeleccionadas);
+
       /* Ahora que tenemos una lista de productos filtrados, la pasamos a la función 'ordenaPrioridadCategoria' */
       /* Vamos a crear listas separadas por supermercado, pero antes debemos 'aplanar' las listas para no tener problemas con el tipo. */
-      List<(List<Producto>, List<Producto>)> listasSeparadas = productosFiltrados.map((productosSuper) {
+      List<(List<Producto>, List<Producto>)> listasSeparadas = productoEnTienda.map((productosSuper) {
         return ordenaPrioridadCategoria([productosSuper]);  /* Aquí el 'productosSuper' ya es una lista de productos */
       }).toList();
 
@@ -108,7 +112,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         _productos = listaCategoria;
         _productosRestantes = listaRestante;
       });
-      if (productosFiltrados.isEmpty) {
+      if (productoEnTienda.isEmpty) {
         print("No se encontraron productos para la consulta: ${_searchController.text}");
       }
     } catch (e) {
@@ -132,7 +136,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     );
   }
   void _navigateToFilterList() async {
-    // Llamamos a la pantalla del filtro pasando la lista de alérgenos seleccionados
+    /* Llamamos a la pantalla del filtro pasando la lista de alérgenos seleccionados */
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -142,12 +146,12 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       ),
     );
 
-    // Si el usuario cambió los alérgenos, actualizamos la lista
+    /* Si el usuario cambió los alérgenos, actualizamos la lista */
     if (result != null) {
       setState(() {
         alergenosSeleccionados = result;
       });
-      // Llamamos a la búsqueda nuevamente con los filtros aplicados
+      /* Llamamos a la búsqueda nuevamente con los filtros aplicados */
       _searchProducts();
     }
   }
