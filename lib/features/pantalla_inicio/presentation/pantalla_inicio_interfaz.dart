@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '/features/productsearch/productsearch.ui.dart';
 
 class PantallaInicio extends StatefulWidget {
   @override
@@ -200,7 +201,12 @@ class _PantallaInicioState extends State<PantallaInicio> {
               ),
               IconButton(
                 icon: Icon(Icons.search, color: Colors.grey),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProductSearchScreen()),
+                  );
+                },
               ),
               IconButton(
                 icon: Icon(Icons.list, color: Colors.grey),
