@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
+import 'features/pantalla_inicio/presentation/barra_navegacion.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
@@ -19,7 +19,7 @@ class Prizo extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false, // Opcional, para quitar la etiqueta de debug
         title: 'Prizo App',
-        home: PantallaInicio(), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
+        home: BarraNavegacion(), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '/features/productsearch/productsearch.ui.dart';
 
 class PantallaInicio extends StatefulWidget {
   @override
@@ -179,11 +178,17 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   },
                 ),
               ),
+              SizedBox(
+                height: 80, // Espacio para la barra de navegación flotante
+              ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: Container(
+
+
+
+      /* bottomNavigationBar: Container(
         margin: EdgeInsets.all(16), // Separación del borde de la pantalla
         decoration: BoxDecoration(
           color: Colors.white,
@@ -219,7 +224,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
             ],
           ),
         ),
-      ),
+      ), */
     );
   }
 }
