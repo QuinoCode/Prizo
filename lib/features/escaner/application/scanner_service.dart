@@ -83,7 +83,7 @@ AlertDialog createAlertDialog(List<Producto?> products, Uint8List image){
           Text("${product!.tienda}:"),
           TextButton(
             onPressed: (){
-              //TODO: addItem
+              //TODO: addItem to lista compra
               //TODO: close stuff
             },
             child:
