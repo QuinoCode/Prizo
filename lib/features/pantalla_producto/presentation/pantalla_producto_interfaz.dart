@@ -5,6 +5,7 @@ import '../../lista_favoritos/application/lista_favoritos_service.dart';
 import '../../../shared/data_entities/lista_compra.dart';
 import '../../../shared/data_entities/lista_favoritos.dart';
 import '../../pantalla_producto/application/pantalla_producto_service.dart';
+import '../../distancia_tienda/shop_distance.dart';
 
 class DetallesProducto extends StatelessWidget {
   final Producto producto;
@@ -14,6 +15,7 @@ class DetallesProducto extends StatelessWidget {
   final ListaFavoritos listaFavoritos;
   final List<Producto> productosRelacionados = [];
   final PantallaProductoService pantallaProductoService = PantallaProductoService();
+  final ShopDistance shopDistance = ShopDistance();
 
   DetallesProducto({
     Key? key,
@@ -80,7 +82,7 @@ class DetallesProducto extends StatelessWidget {
             const SizedBox(height: 6),
 
             Text(
-              producto.tienda,
+              '${producto.tienda}',
               style: const TextStyle(fontSize: 18),
               textAlign: TextAlign.center,
             ),
@@ -160,6 +162,29 @@ class DetallesProducto extends StatelessWidget {
                   ),
                   child: Icon(
                     Icons.favorite,
+                    size: 40,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(width: 10),
+
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      shopDistance.launchMapQuery(producto.tienda);
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error al mostrar el mapa')),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),
+                    padding: EdgeInsets.all(20),
+                  ),
+                  child: Icon(
+                    Icons.place,
                     size: 40,
                     color: Colors.white,
                   ),
