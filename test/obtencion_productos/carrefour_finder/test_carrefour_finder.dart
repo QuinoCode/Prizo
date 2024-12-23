@@ -7,7 +7,7 @@ void main() async {
   group('Carrefour_Finder Integration Test', () {
     test('should fetch products and map them correctly', () async {
       CarrefourFinderService finder = CarrefourFinderService();
-      String query = "ketchup";
+      String query = "arandano";
       List<Producto> result = await finder.getProductList(query);
       expect(result, isA<List<Producto>>());
     });

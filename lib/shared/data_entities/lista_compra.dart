@@ -4,7 +4,7 @@ class ListaCompra
 {
   final String id;
   final String usuario;
-  final List<Producto> productos;
+  final List<(Producto, int)> productos;
 
   ListaCompra({
     required this.id,

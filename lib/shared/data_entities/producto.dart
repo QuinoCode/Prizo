@@ -16,8 +16,9 @@ class Producto
   double precioMedida;
   final String tienda;
   final String marca;
-  bool oferta = false;
-  double precioOferta = 0.0;
+  bool oferta;
+  double precioOferta;
+  final String categoria;
   
   Producto({
     required this.id,
@@ -28,6 +29,9 @@ class Producto
     required this.precioMedida,
     required this.tienda,
     required this.marca, 
+    required this.categoria,
+    required this.oferta,
+    required this.precioOferta,
   });
 
   @override

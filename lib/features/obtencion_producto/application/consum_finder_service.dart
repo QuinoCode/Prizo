@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:io';
 import '../../../shared/data_entities/producto.dart';
+import 'obtencion_producto_service.dart';
 
 class ConsumFinderService {
   final String marketUri = "https://tienda.consum.es/api/rest/V1.0/catalog/searcher/products?q=%s&limit=20&showRecommendations=false";
@@ -11,6 +13,7 @@ class ConsumFinderService {
   }
 
   Future<List<Producto>> fetchProductsFromApi(String query) async {
+    HttpOverrides.global = MyHttpOverrides();
     try {
       final url = getMarketUri(query);
       final response = await http.get(url);
@@ -31,35 +34,41 @@ class ConsumFinderService {
 
   Future<List<Producto>> _parseProductList(List productsJsonList) async {
     final List<Producto> productList = [];
-//crear lista de productos
+/*crear lista de productos */
     for (var productJson in productsJsonList) {
       final currProduct = productJson["productData"];
       final marca = currProduct["brand"];
       final priceMap = productJson["priceData"];
       final priceObj = priceMap["prices"];
       final priceVal = priceObj[0]["value"];
+      final categoria = productJson["categories"][0]["name"];
 
 
-//crear producto
+/*crear producto */
       final product = Producto(
           id: currProduct["id"] ?? "",
           tienda: "CONSUM",
           marca: marca["name"] ?? "-",
           precio: priceVal["centAmount"],
           precioMedida: priceVal["centUnitAmount"],
-          nombre: currProduct["name"],
+          nombre: ObtencionProductoService.limpiarNombreProducto(currProduct["name"], marca["name"] ?? "-", "Consum"),
           foto: productJson["media"][0]["url"],
           alergenos: [false, false, false],
+          categoria: categoria,
+          oferta: priceObj.length > 1,
+          precioOferta: priceObj.length > 1 ? priceObj[1]["value"]["centAmount"] : priceVal["centAmount"],
       );
-
-      if (priceObj.length > 1){
-        product.oferta = true;
-        product.precioOferta = priceObj[1]["value"]["centAmount"];
-      }
-
 
       productList.add(product);
     }
     return productList;
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }

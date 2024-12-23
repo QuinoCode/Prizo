@@ -7,7 +7,7 @@ void main() async {
     test('should fetch products and map them correctly', () async {
       // Arrange
       DiaFinderService finder = DiaFinderService();
-      String query = "arroz";
+      String query = "coca cola";
 
       // Act
       List<Producto> products = await finder.getProductList(query);

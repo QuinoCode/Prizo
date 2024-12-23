@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:prizo/shared/data_entities/producto.dart';
 import 'package:prizo/features/obtencion_producto/domain/response_api_carrefour_data_model.dart';
+import 'obtencion_producto_service.dart';
 
 class CarrefourFinderService {
   static int sessionCounter = 0;
@@ -59,7 +60,7 @@ class CarrefourFinderService {
         CarrefourProduct placeHolder = CarrefourProduct(
           active_price: (item['active_price']).toDouble(),
           app_price: (item['app_price']).toDouble(),
-          average_weight: item['average_weight'] ?? -1,
+          average_weight: (item['average_weight'] ?? -1.0).toDouble(),
           brand: item['brand'] ?? "",
           catalog_ref_id: item['catalog_ref_id'],
           color_rollup: item['color_rollup'],
@@ -70,7 +71,7 @@ class CarrefourFinderService {
           info_tags: item['info_tags'],
           list_price: (item['list_price'] ?? -1.0).toDouble(), 
           measure_unit: item['measure_unit'] ?? "",
-          num_images: item['num_images'],
+          num_images: item['num_images'] ?? 0,
           price_per_unit_text: item['price_per_unit_text'] ?? "",
           product_id: item['product_id'],
           section: item['section'],
@@ -89,17 +90,18 @@ class CarrefourFinderService {
     List<Producto> productos = [];
     for (CarrefourProduct carrefourProduct in carrefourProducts){
       Producto producto = Producto(
-        id: "${carrefourProduct.ean13}C4",
-        nombre: carrefourProduct.display_name,
+        id: carrefourProduct.ean13 + "C4",
+        nombre: ObtencionProductoService.limpiarNombreProducto(carrefourProduct.display_name, carrefourProduct.brand ?? "Marca blanca", "Carrefour"),
         alergenos: extractAlergens(carrefourProduct) ?? [true, true, true],
         precio: carrefourProduct.list_price,
         precioMedida: parsePrecioMedida(carrefourProduct.price_per_unit_text),
         tienda: "Carrefour",
         marca: carrefourProduct.brand ?? "Marca blanca",
         foto: carrefourProduct.image_path,
+        categoria: carrefourProduct.display_name.split(' ')[0],
+        oferta: carrefourProduct.has_offers ?? false,
+        precioOferta: carrefourProduct.active_price,
        );
-        producto.oferta = carrefourProduct.has_offers ?? false;
-        producto.precioOferta = carrefourProduct.active_price;
        productos.add(producto);
     }
     return productos;
@@ -132,4 +134,3 @@ class CarrefourFinderService {
     return url.replaceFirst("%s", session);
   }
 }
-
