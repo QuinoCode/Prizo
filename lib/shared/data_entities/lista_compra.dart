@@ -11,4 +11,11 @@ class ListaCompra
     required this.usuario,
     required this.productos,
   });
+
+  Map<String, dynamic> toMap(){
+    return {
+      "id": id,
+      "usuario": usuario,
+    };
+  }
 }
