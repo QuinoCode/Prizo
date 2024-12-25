@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../shared/data_entities/producto.dart';
+import '../../../shared/data_entities/models/producto.dart';
 import 'obtencion_producto_service.dart';
 
 class DiaFinderService {
@@ -43,7 +43,7 @@ class DiaFinderService {
         for (var productJson in productsJsonList) {
           final pricesObj = productJson["prices"];
           final product = Producto(
-            id: productJson["object_id"] ?? "",
+            id: productJson["object_id"] != null ? productJson["object_id"] + "DIA" : "",
             tienda: "DIA",
             marca: productJson["brand"] ?? "-",
             precio: pricesObj["strikethrough_price"].toDouble(),

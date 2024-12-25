@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:prizo/shared/data_entities/DAO/lista_compra_DAO.dart';
+import 'package:prizo/shared/data_entities/DAO/lista_favoritos_DAO.dart';
+import 'package:prizo/shared/data_entities/DAO/producto_DAO.dart';
+import 'package:prizo/shared/data_entities/models/lista_compra.dart';
+import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:provider/provider.dart';
-import './features/productsearch/productsearch.ui.dart'; // Asegúrate de que la ruta sea correcta
+import 'package:prizo/features/productsearch/productsearch.ui.dart'; 
+import 'package:prizo/shared/database/database_operations.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseOperations.instance.openOrCreateDB();
   runApp(const Prizo());
 }
 
