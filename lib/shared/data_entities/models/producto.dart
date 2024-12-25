@@ -39,6 +39,23 @@ class Producto
     return 'Producto{id: $id, nombre: $nombre, precio: $precio, imagen: $foto, marca: $marca, glutenFree: ${alergenos[0]}, lactoseFree: ${alergenos[1]}, nutsFree: ${alergenos[2]}}';
   }
 
+  //fromMap is a type of constructor that will create a Producto when provided with a map (which is quite useful since it's what comes from select querys in sqlite(our database model))
+  factory Producto.fromMap(Map<String, dynamic> map){
+    return Producto(
+      id: map['id'],
+      nombre: map['nombre'],
+      foto: map['foto'],
+      alergenos: map['alergenos'],
+      precio: map['precio'],
+      precioMedida: map['precioMedida'],
+      tienda: map['tienda'],
+      marca: map['marca'],
+      categoria: map['categoria'],
+      oferta: map['oferta'] == 1,
+      precioOferta: map['precioOferta'],
+    );
+  }
+
   //toMap tiene que tener a la izquierda del mapa exactament el mismo nombre que las columnas de la base de datos
   Map<String, dynamic> toMap(){
     return {
@@ -55,4 +72,6 @@ class Producto
       "precioOferta": precioOferta
     };
   }
+
+  
 }

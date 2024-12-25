@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import '../../../shared/data_entities/producto.dart';
+import '../../../shared/data_entities/models/producto.dart';
 import 'obtencion_producto_service.dart';
 
 class ConsumFinderService {

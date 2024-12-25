@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/features/obtencion_producto/domain/response_api_carrefour_data_model.dart';
 import 'obtencion_producto_service.dart';
 

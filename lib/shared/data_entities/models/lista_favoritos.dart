@@ -1,4 +1,4 @@
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 
 class ListaFavoritos
 {

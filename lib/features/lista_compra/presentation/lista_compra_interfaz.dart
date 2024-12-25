@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prizo/shared/data_entities/lista_compra.dart';
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/lista_compra.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/shared/application/producto_service.dart';
 

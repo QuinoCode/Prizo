@@ -1,4 +1,4 @@
-import '../../../shared/data_entities/producto.dart';
+import '../../../shared/data_entities/models/producto.dart';
 import '../../obtencion_producto/application/consum_finder_service.dart';
 import '../../obtencion_producto/application/dia_finder_service.dart';
 import '../../comparacion_productos/application/comparacion_producto.dart';
