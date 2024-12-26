@@ -19,6 +19,7 @@ MobileScanner createScanner(BuildContext context, EanFinder eanFinder) {
       if (lockOpen){
         lockOpen = false;
         await detected(capture, context, eanFinder);
+        print("------------Successfully scanned!--------------------");
         lockOpen = true;
       }
     }

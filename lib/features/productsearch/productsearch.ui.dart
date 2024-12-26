@@ -112,9 +112,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ScannerInterface(
-             title: "Titulin", 
-            ),
+            ScannerInterface(),
       ),
     );
   }
