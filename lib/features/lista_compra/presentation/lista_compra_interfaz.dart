@@ -104,7 +104,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     return Scaffold(
       key: _scaffoldClave,
       appBar: AppBar(
-        title: Text('Tu Lista de la Compra'),
+        title: const Text('Tu Lista de la Compra'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

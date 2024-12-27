@@ -45,7 +45,7 @@ class MultiMarketProductSearcher implements ProductSearcher {
 }
 
 class ProductSearchScreen extends StatefulWidget {
-  const ProductSearchScreen({Key? key}) : super(key: key);
+  const ProductSearchScreen({super.key});
 
   @override
   ProductSearchScreenState createState() => ProductSearchScreenState();
@@ -215,7 +215,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               decoration: InputDecoration(
                 labelText: 'Busca un producto',
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: _searchProducts,
                 ),
               ),
@@ -225,9 +225,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                 _searchProducts(); // Llamamos a la función de búsqueda al presionar "Enter"
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _isLoading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : Expanded(
               child: SingleChildScrollView(
                 child: Column(

@@ -69,7 +69,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tu Lista de Favoritos'),
+        title: const Text('Tu Lista de Favoritos'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

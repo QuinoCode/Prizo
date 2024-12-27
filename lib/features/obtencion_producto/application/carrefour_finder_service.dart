@@ -116,9 +116,9 @@ class CarrefourFinderService implements FinderWrapper{
     return productos;
   }
 
-  double parsePrecioMedida(String price_per_unit_text){
-    if (price_per_unit_text == "") return -1.0;
-    String splittedPrice = price_per_unit_text.split(' ')[0];
+  double parsePrecioMedida(String pricePerUnitText){
+    if (pricePerUnitText == "") return -1.0;
+    String splittedPrice = pricePerUnitText.split(' ')[0];
     String doubleFormattedPrice = splittedPrice.replaceAll(",", ".");
     return double.parse(doubleFormattedPrice);
   }
