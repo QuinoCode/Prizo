@@ -1,10 +1,12 @@
-import 'package:prizo/shared/data_entities/lista_compra.dart';
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
+import 'package:prizo/shared/data_entities/models/lista_compra.dart';
+import 'package:prizo/shared/application/producto_service.dart';
 
 class ListaCompraService {
   final int LIMITE = 99;
+  final ProductoService productoService = new ProductoService();
 
-  void addProduct(ListaCompra list, Producto product) {
+  void annadirProducto(ListaCompra list, Producto product) {
     /* lista vacía */
     if (list.productos.isEmpty) {
       list.productos.add((product, 1));
@@ -12,11 +14,11 @@ class ListaCompraService {
     }
 
     /* Buscar producto en la lista existente */
-    int index = searchProducto(list, product);
+    int index = buscarProducto(list, product);
 
     /* El producto existe en la lista */
     if(index != -1) {
-      setProductQuantityAux(index, list, product, list.productos[index].$2 + 1);
+      setCantidadProductoAux(index, list, product, list.productos[index].$2 + 1);
       return; /* fin ejecución */
     }
 
@@ -24,9 +26,9 @@ class ListaCompraService {
     list.productos.add((product, 1));
   }
 
-  void removeProduct(ListaCompra list, Producto product) {
+  void quitarProducto(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
-    int index = searchProducto(list, product);
+    int index = buscarProducto(list, product);
 
     /* El producto existe en la lista */
     if(index != -1) {
@@ -35,51 +37,51 @@ class ListaCompraService {
   }
 
   /** El Producto product debe existir en la lista para invocar este método */
-  void addInstance(ListaCompra list, Producto product) {
+  void annadirInstancia(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
-    int index = searchProducto(list, product);
+    int index = buscarProducto(list, product);
 
     /* El producto existe en la lista */
     if(index != -1) {
-      setProductQuantityAux(index, list, product, list.productos[index].$2 + 1);
+      setCantidadProductoAux(index, list, product, list.productos[index].$2 + 1);
     }
   }
 
-  void removeInstance(ListaCompra list, Producto product) {
+  void quitarInstancia(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
-    int index = searchProducto(list, product);
+    int index = buscarProducto(list, product);
 
     /* El producto existe en la lista */
     if(index != -1) {
-      setProductQuantityAux(index, list, product, list.productos[index].$2 - 1);
+      setCantidadProductoAux(index, list, product, list.productos[index].$2 - 1);
     }
   }
 
-  /** Devuelve -1 si no existe el product */
-  int getProductQuantity(ListaCompra list, Producto product) {
+  /** Devuelve 0 si no existe el product */
+  int getCantidadProducto(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
-    int index = searchProducto(list, product);
+    int index = buscarProducto(list, product);
 
     /* El producto existe en la lista */
     if(index != -1) {
       return list.productos[index].$2;
     }
-    return -1;
+    return 0;
   }
 
   /** El Producto product debe existir en la lista para invocar este método y quantity mayor a 0 */
-  void setProductQuantity(ListaCompra list, Producto product, int quantity) {
+  void setCantidadProducto(ListaCompra list, Producto product, int quantity) {
     /* Buscar producto en la lista existente */
-    int index = searchProducto(list, product);
+    int index = buscarProducto(list, product);
 
     /* El producto existe en la lista */
     if(index != -1) {
-      setProductQuantityAux(index, list, list.productos[index].$1, quantity);
+      setCantidadProductoAux(index, list, list.productos[index].$1, quantity);
     }
   }
 
   /** index debe ser distinto de -1 */
-  void setProductQuantityAux(int index, ListaCompra list, Producto product, int quantity) {
+  void setCantidadProductoAux(int index, ListaCompra list, Producto product, int quantity) {
     int newQuantity = list.productos[index].$2;
     if(quantity > 0) {
       if(quantity > LIMITE) {
@@ -91,53 +93,35 @@ class ListaCompraService {
     list.productos[index] = (product /* se mete para obtener oferta actualizada */, newQuantity);
   }
 
-  /** Si el producto no existe, devuelve -1.0 */
-  double getPrice(ListaCompra list, Producto product) {
+  /** Si el producto no existe, devuelve 0.0 */
+  double getPrecio(ListaCompra list, Producto product) {
     /* Buscar producto en la lista existente */
-    int index = searchProducto(list, product);
+    int index = buscarProducto(list, product);
 
     /* El producto existe en la lista */
     if (index != -1) {
-      /* Ver si tiene precioOferta */
-      if (list.productos[index].$1.oferta) {
-        return list.productos[index].$1.precioOferta * list.productos[index].$2;
-      }
-      return list.productos[index].$1.precio * list.productos[index].$2;
+      return productoService.getPrecio(list.productos[index].$1) * list.productos[index].$2;
     }
 
-    return -1.0;
+    return 0.0;
   }
 
   /** Si no hay productos en la lista, devuelve 0.0 */
-  double getTotalPrice(ListaCompra list) {
+  double getPrecioTotal(ListaCompra list) {
     double totalPrice = 0.0;
     for (var producto in list.productos) {
-      /* Ver si tiene precioOferta */
-      if (producto.$1.oferta) {
-        totalPrice += producto.$1.precioOferta * producto.$2;
-      } else {
-        totalPrice += producto.$1.precio * producto.$2;
-      }
+      totalPrice += productoService.getPrecio(producto.$1) * producto.$2;
     }
     return totalPrice;
   }
 
-  int searchProducto(ListaCompra list, Producto product) {
+  int buscarProducto(ListaCompra list, Producto product) {
     /* Si el producto existe, devuelve el índice*/
     for (int index = 0; index < list.productos.length; index++) {
-      if (sameProduct(list.productos[index].$1, product)) {
+      if (productoService.mismoProducto(list.productos[index].$1, product)) {
         return index; /* fin ejecución */
       }
     }
     return -1;
-  }
-
-  bool sameProduct(Producto productA, Producto productB) {
-    /* Solo comparo los atributos que nunca cambian */
-    return        productA.id == productB.id &&
-              productA.nombre == productB.nombre &&
-           productA.alergenos == productB.alergenos &&
-              productA.tienda == productB.tienda &&
-               productA.marca == productB.marca;
   }
 }

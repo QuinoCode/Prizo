@@ -1,6 +1,7 @@
 import 'package:prizo/features/escaner/application/scanner_service.dart';
 import 'package:flutter/material.dart';
 import 'package:prizo/features/obtencion_producto/application/ean_finder.dart';
+import 'package:prizo/features/productsearch/productsearch.ui.dart';
 
 
 
@@ -155,11 +156,17 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
                   Positioned(
                     child: Align(
                       alignment: const Alignment(0.8, 0.55),
-                      child: DiagonalCrossButton(
-                        size: MediaQuery.of(context).size.width * 0.07,
-                        strokeWidth: 2.5,
-                        color: Colors.black,
-                        onPressed: (){print("Works");},
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.084,
+                        height: MediaQuery.of(context).size.width * 0.084,
+                        child: DiagonalCrossButton(
+                          size: MediaQuery.of(context).size.width * 0.070,
+                          strokeWidth: 2.5,
+                          color: Colors.black,
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
                       ),
                     ),
@@ -352,6 +359,7 @@ class DiagonalCrossButton extends StatelessWidget {
 class DiagonalCrossPainter extends CustomPainter {
   final double strokeWidth;
   final Color color;
+  late Size _size;
 
   DiagonalCrossPainter({
     required this.strokeWidth,
@@ -360,25 +368,39 @@ class DiagonalCrossPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    _size = size;
     Paint paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round; // Ensures rounded ends for the lines
+    Paint paintBG = Paint()..color = Colors.transparent;
+
+    canvas.drawRect(Rect.fromLTRB(0, 0, size.width, size.height), paintBG);
 
     // Draw diagonal cross from top-left to bottom-right
     canvas.drawLine(
-      const Offset(0, 0), // Start at top-left
-      Offset(size.width, size.height), // End at bottom-right
+      Offset(size.width*0.2, size.height *0.2), // Start at top-left
+      Offset(size.width*0.8, size.height *0.8), // End at bottom-right
       paint,
     );
 
     // Draw diagonal cross from top-right to bottom-left
     canvas.drawLine(
-      Offset(size.width, 0), // Start at top-right
-      Offset(0, size.height), // End at bottom-left
+      Offset(size.width *0.8, size.width*0.2), // Start at top-right
+      Offset(size.width*0.2, size.height *0.8), // End at bottom-left
       paint,
     );
   }
+   @override
+  bool hitTest(Offset position) {
+    // Check if the tap is inside the bounds of the shape
+    double size = _size.width; // Example size, use your own logic for this
+    if (position.dx >= 0 && position.dx <= size && position.dy >= 0 && position.dy <= size) {
+      return true;
+    }
+    return false;
+  }
+
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../shared/data_entities/producto.dart';
+import '../../../shared/data_entities/models/producto.dart';
 import '../../lista_compra/application/lista_compra_service.dart';
 import '../../lista_favoritos/application/lista_favoritos_service.dart';
-import '../../../shared/data_entities/lista_compra.dart';
-import '../../../shared/data_entities/lista_favoritos.dart';
+import '../../../shared/data_entities/models/lista_compra.dart';
+import '../../../shared/data_entities/models/lista_favoritos.dart';
 import '../../pantalla_producto/application/pantalla_producto_service.dart';
 
 class DetallesProducto extends StatelessWidget {
@@ -94,7 +94,7 @@ class DetallesProducto extends StatelessWidget {
                   onPressed: () async {
                     try {
                       // Llamar al servicio para añadir a la lista de compra
-                      listaCompraService.addProduct(listaCompra, producto);
+                      listaCompraService.annadirProducto(listaCompra, producto);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('${producto.nombre} añadido a la lista de compra')),
                       );
@@ -121,7 +121,7 @@ class DetallesProducto extends StatelessWidget {
                   onPressed: () async {
                     try {
                       // Verificar si el producto ya está en favoritos
-                      if (listaFavoritosService.isProductInFavorites(listaFavoritos, producto)) {
+                      if (listaFavoritosService.productoEnFavoritos(listaFavoritos, producto)) {
                         // Mostrar un diálogo si el producto ya está en favoritos
                         showDialog(
                           context: context,
@@ -142,7 +142,7 @@ class DetallesProducto extends StatelessWidget {
                         );
                       } else {
                         // Añadir a favoritos si no está ya en la lista
-                        listaFavoritosService.addProduct(listaFavoritos, producto);
+                        listaFavoritosService.annadirProducto(listaFavoritos, producto);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('${producto.nombre} añadido a favoritos')),
                         );

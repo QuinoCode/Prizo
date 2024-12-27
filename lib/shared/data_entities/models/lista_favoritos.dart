@@ -1,4 +1,4 @@
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 
 class ListaFavoritos
 {
@@ -11,4 +11,11 @@ class ListaFavoritos
     required this.usuario,
     required this.productos,
   });
+
+  Map<String, dynamic> toMap(){
+    return {
+      "id": id,
+      "usuario": usuario,
+    };
+  }
 }

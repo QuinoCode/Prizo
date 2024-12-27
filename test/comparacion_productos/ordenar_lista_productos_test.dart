@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prizo/features/comparacion_productos/application/comparacion_producto.dart';  // Import the file with the function
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 
 void main() {
   test('debe ordenar productos por precio de menor a mayor', () {

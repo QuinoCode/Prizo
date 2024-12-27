@@ -5,8 +5,7 @@ import 'package:prizo/features/obtencion_producto/application/carrefour_finder_s
 import 'package:prizo/features/obtencion_producto/application/consum_finder_service.dart';
 import 'package:prizo/features/obtencion_producto/application/dia_finder_service.dart';
 import 'package:prizo/features/obtencion_producto/application/finder_wrapper.dart';
-import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 
 class EanFinder {
   final String marketUri = "https://world.openfoodfacts.net/api/v2/product/%q";

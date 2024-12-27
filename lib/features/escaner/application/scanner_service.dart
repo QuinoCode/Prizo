@@ -1,11 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:prizo/features/obtencion_producto/application/ean_finder.dart';
-import 'package:prizo/features/obtencion_producto/application/finder_wrapper.dart';
-import 'package:prizo/shared/data_entities/producto.dart';
-import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 
 
 MobileScanner createScanner(BuildContext context, EanFinder eanFinder) {

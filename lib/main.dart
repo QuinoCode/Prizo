@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './features/productsearch/productsearch.ui.dart'; // Asegúrate de que la ruta sea correcta
-import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
+import 'package:prizo/features/productsearch/productsearch.ui.dart'; 
+import 'package:prizo/shared/database/database_operations.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseOperations.instance.openOrCreateDB();
   runApp(const Prizo());
 }
 

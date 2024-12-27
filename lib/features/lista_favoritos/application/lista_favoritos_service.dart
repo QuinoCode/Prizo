@@ -1,50 +1,28 @@
-import 'package:prizo/shared/data_entities/lista_favoritos.dart';
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
+import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
+import 'package:prizo/shared/application/producto_service.dart';
 
 class ListaFavoritosService {
+  final ProductoService productoService = new ProductoService();
 
-  void removeProduct(ListaFavoritos list, Producto product) {
+  void quitarProducto(ListaFavoritos list, Producto product) {
     list.productos.remove(product);
   }
 
-  void addProduct(ListaFavoritos list, Producto product) {
-    int index = list.productos.indexWhere((p) => sameProduct(p, product));
+  void annadirProducto(ListaFavoritos list, Producto product) {
+    int index = list.productos.indexWhere((p) => productoService.mismoProducto(p, product));
 
     if (index != -1) {
-      /* El producto existe, verificamos si está actualizado */
-      if (updatedProduct(list.productos[index], product)) {
-        /* Reemplazar el producto existente con el nuevo */
-        list.productos[index] = product;
-      }
+      /* Se mete para obtener oferta actualizada */
+      list.productos[index] = product ;
     } else {
       /* Si no existe, se agrega el nuevo producto */
       list.productos.add(product);
     }
   }
 
-  bool sameProduct(Producto productA, Producto productB) {
-    /* Solo comparo los atributos que nunca cambian */
-    return     productA.id == productB.id &&
-           productA.nombre == productB.nombre &&
-        productA.alergenos == productB.alergenos &&
-           productA.tienda == productB.tienda &&
-            productA.marca == productB.marca;
-  }
-
-  bool updatedProduct(Producto productA, Producto productB) {
-    return      productA.foto != productB.foto ||
-              productA.precio != productB.precio ||
-        productA.precioMedida != productB.precioMedida ||
-              productA.oferta != productB.oferta ||
-        productA.precioOferta != productB.precioOferta;
-  }
-
-  bool isProductInFavorites(ListaFavoritos list, Producto product) {
-    return list.productos.any((p) =>
-    p.id == product.id &&
-        p.nombre == product.nombre &&
-        p.tienda == product.tienda &&
-        p.marca == product.marca);
+  bool productoEnFavoritos(ListaFavoritos list, Producto product) {
+    return list.productos.indexWhere((p) => productoService.mismoProducto(p, product)) != -1;
   }
 
 }

@@ -4,9 +4,9 @@ import '../../features/obtencion_producto/application/carrefour_finder_service.d
 import '../../features/obtencion_producto/application/consum_finder_service.dart';
 import '../../features/obtencion_producto/application/dia_finder_service.dart';
 import '../../features/comparacion_productos/application/comparacion_producto.dart';
-import '../../../shared/data_entities/lista_compra.dart';
-import '../../../shared/data_entities/lista_favoritos.dart';
-import '../../../shared/data_entities/producto.dart';
+import '../../shared/data_entities/models/lista_compra.dart';
+import '../../shared/data_entities/models/lista_favoritos.dart';
+import '../../shared/data_entities/models/producto.dart';
 import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
@@ -112,7 +112,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ScannerInterface(),
+            const ScannerInterface(),
       ),
     );
   }
@@ -135,6 +135,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         builder: (context) =>
             ListaFavoritosInterfaz(
               listaFavoritos: listaFavoritos,
+              listaCompra: listaCompra,
             ),
       ),
     );
@@ -153,7 +154,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: const Text('Lista de Compra'),
               onPressed: () {
                 setState(() {
-                  listaCompraService.addProduct(listaCompra, producto);
+                  listaCompraService.annadirProducto(listaCompra, producto);
                 });
                 Navigator.of(context).pop();
                 /*ScaffoldMessenger.of(context).showSnackBar(
@@ -165,7 +166,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               child: const Text('Favoritos'),
               onPressed: () {
                 setState(() {
-                  listaFavoritosService.addProduct(listaFavoritos, producto);
+                  listaFavoritosService.annadirProducto(listaFavoritos, producto);
                 });
                 Navigator.of(context).pop();
                 /*ScaffoldMessenger.of(context).showSnackBar(

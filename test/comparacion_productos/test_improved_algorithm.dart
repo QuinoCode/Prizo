@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/features/comparacion_productos/application/comparacion_producto.dart';
 import 'package:prizo/features/obtencion_producto/application/dia_finder_service.dart';
 import 'package:prizo/features/obtencion_producto/application/carrefour_finder_service.dart';
