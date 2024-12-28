@@ -5,9 +5,11 @@ import 'package:prizo/features/lista_compra/application/lista_compra_service.dar
 import 'package:prizo/shared/application/producto_service.dart';
 
 class ListaCompraInterfaz extends StatefulWidget {
-  final ListaCompra listaCompra;
+  ListaCompra listaCompra;
+  final List<String> tiendasSeleccionadas;
+  final ListaCompra original;
 
-  ListaCompraInterfaz({super.key, required this.listaCompra});
+  ListaCompraInterfaz({super.key, required this.listaCompra, required this.tiendasSeleccionadas, required this.original});
 
   @override
   _ListaCompraInterfazState createState() => _ListaCompraInterfazState();
@@ -21,6 +23,27 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   Map<String, TextEditingController> _mapaControladorCantidad = {};
   String? _mensajeAdvertencia;
   GlobalKey<ScaffoldMessengerState> _scaffoldClave = GlobalKey<ScaffoldMessengerState>();
+
+  void _toggleTienda(String tienda) {
+    setState(() {
+      if (widget.tiendasSeleccionadas.contains(tienda)) {
+        widget.tiendasSeleccionadas.remove(tienda);
+      } else {
+        widget.tiendasSeleccionadas.add(tienda);
+      }
+      List<(Producto, int)> productosFiltrados = [];
+      if (widget.original.productos.isNotEmpty && widget.tiendasSeleccionadas.isNotEmpty) {
+        for (var producto in widget.original.productos) {
+          if (widget.tiendasSeleccionadas.contains(producto.$1.tienda)) {
+            productosFiltrados.add(producto);
+          }
+        }
+      } else {
+        productosFiltrados = widget.original.productos;
+      }
+      widget.listaCompra = new ListaCompra(id: widget.original.id, usuario: widget.original.usuario, productos: productosFiltrados);
+    });
+  }
 
   Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
     return showDialog<void>(
@@ -99,6 +122,9 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
 
   @override
   Widget build(BuildContext context) {
+    bool tieneDia = widget.tiendasSeleccionadas.contains("DIA");
+    bool tieneConsum = widget.tiendasSeleccionadas.contains("CONSUM");
+    bool tieneCarrefour = widget.tiendasSeleccionadas.contains("Carrefour");
     double precioTotal = listaCompraService.getPrecioTotal(widget.listaCompra);
 
     return Scaffold(
@@ -108,11 +134,39 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: widget.listaCompra.productos.isEmpty
-            ? Center(child: Text('Tu lista de la compra está vacía.'))
-            : Column(
+        child: Column(
           children: [
-            /* Mostrar el mensaje de advertencia (si existe) */
+            /* Fila de botones "Día", "Consum", "Carrefour" siempre visibles */
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () { _toggleTienda("DIA"); },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: tieneDia ? Colors.lightBlueAccent : Colors.white,
+                    side: BorderSide(color: Colors.lightBlueAccent),
+                  ),
+                  child: const Text('Día'),
+                ),
+                ElevatedButton(
+                  onPressed: () { _toggleTienda("CONSUM"); },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: tieneConsum ? Colors.lightBlueAccent : Colors.white,
+                    side: BorderSide(color: Colors.lightBlueAccent),
+                  ),
+                  child: const Text('Consum'),
+                ),
+                ElevatedButton(
+                  onPressed: () { _toggleTienda("Carrefour"); },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: tieneCarrefour ? Colors.lightBlueAccent : Colors.white,
+                    side: BorderSide(color: Colors.lightBlueAccent),
+                  ),
+                  child: const Text('Carrefour'),
+                ),
+              ],
+            ),
+            // Mostrar el mensaje de advertencia (si existe)
             if (_mensajeAdvertencia != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
@@ -121,9 +175,11 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                   style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
               ),
-            /* Lista de productos */
+            // Lista de productos (solo se muestra si la lista no está vacía)
             Expanded(
-              child: ListView.builder(
+              child: widget.listaCompra.productos.isEmpty
+                  ? Center(child: Text('Tu lista de la compra está vacía.'))
+                  : ListView.builder(
                 itemCount: widget.listaCompra.productos.length,
                 itemBuilder: (context, index) {
                   final producto = widget.listaCompra.productos[index].$1;
@@ -134,7 +190,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          /* Mostrar detalles del producto al hacer clic en la imagen */
+                          // Mostrar detalles del producto al hacer clic en la imagen
                           setState(() {
                             _esImagenPulsada = !_esImagenPulsada;
                             _productoSeleccionado = producto;
@@ -155,16 +211,13 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              /* Botón "-" para eliminar una instancia con confirmación */
                               IconButton(
                                 icon: Icon(Icons.remove_circle_outline),
                                 onPressed: () {
                                   if (cantidad > 1) {
-                                    /* Disminuir una instancia del producto */
                                     setState(() {
-                                      /* Actualizamos la cantidad utilizando el método correspondiente */
                                       listaCompraService.quitarInstancia(widget.listaCompra, producto);
-                                      /* Actualizamos el controlador para reflejar el cambio */
+                                      listaCompraService.quitarInstancia(widget.original, producto);
                                       actualizarCantidadController(producto);
                                     });
                                   } else {
@@ -172,7 +225,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                   }
                                 },
                               ),
-                              /* Campo de cantidad con un TextField para editar */
                               Container(
                                 width: 50,
                                 child: TextField(
@@ -186,13 +238,10 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                   ),
                                   textAlign: TextAlign.center,
                                   onSubmitted: (value) {
-                                    /* Al hacer "Hecho" o "Enter", actualizar la cantidad */
                                     int nuevaCantidad = int.tryParse(value) ?? cantidad;
-                                    if(nuevaCantidad > 0) {
+                                    if (nuevaCantidad > 0) {
                                       setState(() {
-                                        /* Actualizar la cantidad usando el método de listaCompraService */
                                         listaCompraService.setCantidadProducto(widget.listaCompra, producto, nuevaCantidad);
-                                        /* Actualizamos el TextField con la nueva cantidad */
                                         actualizarCantidadController(producto);
                                       });
                                     } else {
@@ -201,24 +250,19 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                   },
                                 ),
                               ),
-                              /* Botón "+" para agregar una instancia */
                               IconButton(
                                 icon: Icon(Icons.add_circle_outline),
                                 onPressed: () {
                                   setState(() {
-                                    /* Actualizamos la cantidad utilizando el método correspondiente */
                                     listaCompraService.annadirInstancia(widget.listaCompra, producto);
-                                    /* Actualizamos el controlador para reflejar el cambio */
                                     actualizarCantidadController(producto);
                                   });
                                 },
                               ),
-                              /* Precio total del producto */
                               Text(
                                 '${totalPriceForProduct.toStringAsFixed(2)} €',
                                 style: TextStyle(fontSize: 20),
                               ),
-                              /* Botón de papelera para eliminar el producto completo */
                               IconButton(
                                 icon: Icon(Icons.delete),
                                 onPressed: () {
@@ -229,7 +273,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                           ),
                         ),
                       ),
-                      /* Mostrar el nombre y el precio debajo de la imagen */
+                      // Mostrar el nombre y el precio debajo de la imagen
                       if (_esImagenPulsada && _productoSeleccionado == producto)
                         Column(
                           children: [
@@ -249,7 +293,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                 },
               ),
             ),
-            /* Muestra el precio total de todos los productos */
+            // Muestra el precio total de todos los productos
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Row(

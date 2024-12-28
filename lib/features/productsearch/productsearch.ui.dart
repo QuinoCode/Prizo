@@ -12,6 +12,7 @@ import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 import '../lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/features/filtro_busqueda/filtro_busqueda.dart';
 import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 
 abstract class ProductSearcher {
@@ -65,13 +66,23 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       id: '1', usuario: 'usuario_demo', productos: []);
   ListaFavoritos listaFavoritos = ListaFavoritos(
       id: '1', usuario: 'usuario_demo', productos: []);
+  List<int> alergenosSeleccionados = [];
+  List<String> tiendasSeleccionadas = [];
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
-
+  void _toggleTienda(String tienda) {
+    setState(() {
+      if (tiendasSeleccionadas.contains(tienda)) {
+        tiendasSeleccionadas.remove(tienda);
+      } else {
+        tiendasSeleccionadas.add(tienda);
+      }
+    });
+  }
   void _searchProducts() async {
     setState(() {
       _isLoading = true;
@@ -86,8 +97,41 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     try {
       final productos = await searcher.searchProducts(_searchController.text);
 
+      List<List<Producto>> sinAlergenos = [];
+      if (alergenosSeleccionados.isNotEmpty && productos.isNotEmpty) {
+        for (var lista in productos) {
+          List<Producto> listaAuxiliar = [];
+          for (var producto in lista) {
+            bool meter = true;
+            for (var indice in alergenosSeleccionados) {
+              if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
+                meter = false;
+                break;
+              }
+            }
+            if (meter) {
+              listaAuxiliar.add(producto);
+            }
+          }
+          sinAlergenos.add(listaAuxiliar);
+        }
+      } else {
+        sinAlergenos = productos;
+      }
+
+      List<List<Producto>> porTiendas = [];
+      if (tiendasSeleccionadas.isNotEmpty && sinAlergenos.isNotEmpty) {
+        for (var lista in sinAlergenos) {
+          if (lista.isNotEmpty && tiendasSeleccionadas.contains(lista[0].tienda)) {
+            porTiendas.add(lista);
+          }
+        }
+      } else {
+        porTiendas = sinAlergenos;
+      }
+
       // Por cada súper separa los productos en dos listas
-      List<(List<Producto>, List<Producto>)> listasSeparadas = productos.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
+      List<(List<Producto>, List<Producto>)> listasSeparadas = porTiendas.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
 
       // Combina las primeras listas de cada supermercado y las segundas de cada supermercado entre ellas
       final (List<Producto> listaCategoria, List<Producto> listaRestante) = combinaListasSupers(listasSeparadas);
@@ -95,7 +139,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         _productos = listaCategoria;
         _productosRestantes = listaRestante;
       });
-      if (productos.isEmpty) {
+      if (porTiendas.isEmpty) {
         print("No se encontraron productos para la consulta: ${_searchController.text}");
       }
     } catch (e) {
@@ -105,6 +149,18 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  void _navigateToFilterList() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            FiltroProductosInterfaz(
+              alergenos: alergenosSeleccionados,
+            ),
+      ),
+    );
   }
 
   void _navigateToListaEscaner() {
@@ -117,25 +173,51 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     );
   }
   void _navigateToListaCompra() {
+    List<(Producto, int)> productosFiltrados = [];
+    if (listaCompra.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
+      for (var producto in listaCompra.productos) {
+        if (tiendasSeleccionadas.contains(producto.$1.tienda)) {
+          productosFiltrados.add(producto);
+        }
+      }
+    } else {
+      productosFiltrados = listaCompra.productos;
+    }
+    ListaCompra comprasFiltradas = new ListaCompra(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltrados);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
             ListaCompraInterfaz(
-              listaCompra: listaCompra,
+              listaCompra: comprasFiltradas,
+              tiendasSeleccionadas : tiendasSeleccionadas,
+              original: listaCompra,
             ),
       ),
     );
   }
 
   void _navigateToListaFavoritos() {
+    List<Producto> productosFiltrados = [];
+    if (listaFavoritos.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
+      for (var producto in listaFavoritos.productos) {
+        if(tiendasSeleccionadas.contains(producto.tienda)) {
+          productosFiltrados.add(producto);
+        }
+      }
+    } else {
+      productosFiltrados = listaFavoritos.productos;
+    }
+    ListaFavoritos favoritosFiltrados = new ListaFavoritos(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltrados);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
             ListaFavoritosInterfaz(
-              listaFavoritos: listaFavoritos,
-              listaCompra: listaCompra,
+                listaFavoritos: favoritosFiltrados,
+                listaCompra: listaCompra,
+                tiendasSeleccionadas : tiendasSeleccionadas,
+                original: listaFavoritos,
             ),
       ),
     );
@@ -188,6 +270,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool tieneDia = tiendasSeleccionadas.contains("DIA");
+    bool tieneConsum = tiendasSeleccionadas.contains("CONSUM");
+    bool tieneCarrefour = tiendasSeleccionadas.contains("Carrefour");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Busqueda producto'),
@@ -203,6 +288,10 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
           IconButton(
             icon: const Icon(Icons.favorite),
             onPressed: _navigateToListaFavoritos,
+          ),
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: _navigateToFilterList,
           ),
         ],
       ),
@@ -224,6 +313,46 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               onSubmitted: (query) {
                 _searchProducts(); // Llamamos a la función de búsqueda al presionar "Enter"
               },
+            ),
+            SizedBox(height: 10),
+            /* Botones para Dia, Consum y Carrefour */
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _toggleTienda("DIA");
+                    _searchProducts();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: tieneDia ? Colors.lightBlueAccent : Colors.white,
+                    side: BorderSide(color: Colors.lightBlueAccent),
+                  ),
+                  child: const Text("Día"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _toggleTienda("CONSUM");
+                    _searchProducts();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: tieneConsum ? Colors.lightBlueAccent : Colors.white,
+                    side: BorderSide(color: Colors.lightBlueAccent),
+                  ),
+                  child: const Text("Consum"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _toggleTienda("Carrefour");
+                    _searchProducts();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: tieneCarrefour ? Colors.lightBlueAccent : Colors.white,
+                    side: BorderSide(color: Colors.lightBlueAccent),
+                  ),
+                  child: const Text("Carrefour"),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             _isLoading
