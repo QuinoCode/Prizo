@@ -30,7 +30,9 @@ class DetallesProducto extends StatelessWidget {
     final precioMedida = producto.precioMedida > 0 ? '${producto.precioMedida.toStringAsFixed(2)}€/kg' : '';
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Detalles del producto'),
       ),
       body: Padding(

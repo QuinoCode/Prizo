@@ -290,7 +290,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     bool tieneConsum = tiendasSeleccionadas.contains("CONSUM");
     bool tieneCarrefour = tiendasSeleccionadas.contains("Carrefour");
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Busqueda producto'),
         actions: [
           IconButton(

@@ -168,8 +168,10 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     double precioTotal = listaCompraService.getPrecioTotal(widget.listaCompra);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       key: _scaffoldClave,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Tu Lista de la Compra'),
       ),
       body: Padding(
