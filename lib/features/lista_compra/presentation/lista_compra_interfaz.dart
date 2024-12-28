@@ -24,6 +24,44 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   String? _mensajeAdvertencia;
   GlobalKey<ScaffoldMessengerState> _scaffoldClave = GlobalKey<ScaffoldMessengerState>();
 
+  void _mostrarPopUpBolsa(BuildContext context) {
+    /// Código de guardar lista de la compra
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.shopping_bag, // Icono de bolsa de compras
+                size: 100,
+                color: Colors.blueAccent,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Recuerda coger tu bolsa!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _toggleTienda(String tienda) {
     setState(() {
       if (widget.tiendasSeleccionadas.contains(tienda)) {
@@ -310,6 +348,16 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                 ],
               ),
             ),
+            if (widget.original.productos.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _mostrarPopUpBolsa(context);
+                  },
+                  child: Text('Guardar lista'),
+                ),
+              ),
           ],
         ),
       ),
