@@ -95,7 +95,9 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
     bool tieneCarrefour = widget.tiendasSeleccionadas.contains("Carrefour");
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Tu Lista de Favoritos'),
       ),
       body: Padding(

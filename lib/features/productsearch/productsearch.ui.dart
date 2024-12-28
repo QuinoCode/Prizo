@@ -96,42 +96,58 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
 
     try {
       final productos = await searcher.searchProducts(_searchController.text);
-
-      List<List<Producto>> sinAlergenos = [];
-      if (alergenosSeleccionados.isNotEmpty && productos.isNotEmpty) {
-        for (var lista in productos) {
-          List<Producto> listaAuxiliar = [];
-          for (var producto in lista) {
-            bool meter = true;
-            for (var indice in alergenosSeleccionados) {
-              if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
-                meter = false;
-                break;
+      List<List<Producto>> productosFiltrados = [];
+      if (productos.isNotEmpty) {
+        if (tiendasSeleccionadas.isNotEmpty && alergenosSeleccionados.isNotEmpty) {
+          for (var lista in productos) {
+            if (lista.isNotEmpty && tiendasSeleccionadas.contains(lista[0].tienda)) {
+              List<Producto> listaAuxiliar = [];
+              for (var producto in lista) {
+                bool meter = true;
+                for (var indice in alergenosSeleccionados) {
+                  if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
+                    meter = false;
+                    break;
+                  }
+                }
+                if (meter) {
+                  listaAuxiliar.add(producto);
+                }
+              }
+              if (listaAuxiliar.isNotEmpty) {
+                productosFiltrados.add(listaAuxiliar);
               }
             }
-            if (meter) {
-              listaAuxiliar.add(producto);
+          }
+        } else if (tiendasSeleccionadas.isNotEmpty) {
+          for (var lista in productos) {
+            if (lista.isNotEmpty && tiendasSeleccionadas.contains(lista[0].tienda)) {
+              productosFiltrados.add(lista);
             }
           }
-          sinAlergenos.add(listaAuxiliar);
-        }
-      } else {
-        sinAlergenos = productos;
-      }
-
-      List<List<Producto>> porTiendas = [];
-      if (tiendasSeleccionadas.isNotEmpty && sinAlergenos.isNotEmpty) {
-        for (var lista in sinAlergenos) {
-          if (lista.isNotEmpty && tiendasSeleccionadas.contains(lista[0].tienda)) {
-            porTiendas.add(lista);
+        } else if (alergenosSeleccionados.isNotEmpty) {
+          for (var lista in productos) {
+            if (lista.isNotEmpty) {
+              List<Producto> listaAuxiliar = [];
+              for (var producto in lista) {
+                for (var indice in alergenosSeleccionados) {
+                  if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
+                    listaAuxiliar.add(producto);
+                  }
+                }
+              }
+              if (listaAuxiliar.isNotEmpty) {
+                productosFiltrados.add(listaAuxiliar);
+              }
+            }
           }
+        } else {
+          productosFiltrados = productos;
         }
-      } else {
-        porTiendas = sinAlergenos;
       }
 
       // Por cada súper separa los productos en dos listas
-      List<(List<Producto>, List<Producto>)> listasSeparadas = porTiendas.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
+      List<(List<Producto>, List<Producto>)> listasSeparadas = productosFiltrados.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
 
       // Combina las primeras listas de cada supermercado y las segundas de cada supermercado entre ellas
       final (List<Producto> listaCategoria, List<Producto> listaRestante) = combinaListasSupers(listasSeparadas);
@@ -139,7 +155,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         _productos = listaCategoria;
         _productosRestantes = listaRestante;
       });
-      if (porTiendas.isEmpty) {
+      if (productosFiltrados.isEmpty) {
         print("No se encontraron productos para la consulta: ${_searchController.text}");
       }
     } catch (e) {
@@ -274,7 +290,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     bool tieneConsum = tiendasSeleccionadas.contains("CONSUM");
     bool tieneCarrefour = tiendasSeleccionadas.contains("Carrefour");
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Busqueda producto'),
         actions: [
           IconButton(
