@@ -138,7 +138,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                 child: Text(
                   _mensajeAdvertencia!,
                   style: TextStyle(
-                    color: Colors.lightBlueAccent,
+                    color: Colors.red,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -159,7 +159,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                       listaFavoritosService.quitarProducto(widget.listaFavoritos, producto);
                     },
                     background: Container(
-                      color: Colors.red,
+                      color: Colors.lightBlueAccent,
                       alignment: Alignment.centerLeft,
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Icon(Icons.delete, color: Colors.white),
