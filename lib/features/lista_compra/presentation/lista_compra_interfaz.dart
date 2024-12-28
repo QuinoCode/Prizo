@@ -45,12 +45,46 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     });
   }
 
+  void _mostrarPopUpBolsa(BuildContext context) {
+    /// Código de guardar lista de la compra
+    //ListaCompraDAO listaCompraDAO = new ListaCompraDAO(null);
+    //listaCompraDAO.insertListaCompra(widget.listaCompra);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.shopping_bag, // Icono de bolsa de compras
+                size: 100,
+                color: Colors.blueAccent,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Recuerda coger tu bolsa!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, /* Evita cerrar el diálogo tocando fuera de él */
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: Text('¿Eliminar producto?'),
           content: Text('¿Estás seguro de que deseas eliminar el producto ${producto.nombre}?'),
           actions: <Widget>[
@@ -132,7 +166,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
       key: _scaffoldClave,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Tu Lista de la Compra'),
+        title: const Text('Lista de la Compra'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -266,7 +300,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                 style: TextStyle(fontSize: 20),
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete),
+                                icon: Icon(Icons.circle_outlined),
                                 onPressed: () {
                                   _ventanaConfirmacion(context, producto);
                                 },
@@ -312,6 +346,16 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                 ],
               ),
             ),
+            if (widget.original.productos.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _mostrarPopUpBolsa(context);
+                  },
+                  child: Text('Guardar lista'),
+                ),
+              ),
           ],
         ),
       ),
