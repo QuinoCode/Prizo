@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
+import 'package:prizo/shared/data_entities/DAO/lista_compra_DAO.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/shared/application/producto_service.dart';
 
@@ -25,7 +26,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   GlobalKey<ScaffoldMessengerState> _scaffoldClave = GlobalKey<ScaffoldMessengerState>();
 
   void _mostrarPopUpBolsa(BuildContext context) {
-    /// Código de guardar lista de la compra
+    //ListaCompraDAO listaCompraDAO = new ListaCompraDAO(null);
+    //listaCompraDAO.insertListaCompra(widget.listaCompra);
     showDialog(
       context: context,
       builder: (BuildContext context) {
