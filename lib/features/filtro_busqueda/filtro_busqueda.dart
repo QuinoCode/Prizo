@@ -5,7 +5,8 @@ class FiltroProductosInterfaz extends StatefulWidget {
   FiltroProductosInterfaz({super.key, required this.alergenos});
 
   @override
-  _FiltroProductosInterfazState createState() => _FiltroProductosInterfazState();
+  _FiltroProductosInterfazState createState() =>
+      _FiltroProductosInterfazState();
 }
 
 class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
@@ -36,6 +37,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Desactiva la flecha de la izquierda
         backgroundColor: Colors.white,
         title: const Text('Filtrar'),
         centerTitle: true,
