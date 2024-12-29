@@ -244,6 +244,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: const Text('Añadir producto'),
           content: const Text(
               '¿Deseas añadir este producto a la lista de compra o a favoritos?'),
