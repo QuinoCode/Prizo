@@ -69,7 +69,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     ),
                     Text(
                       '¿Qué quieres comprar hoy?',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(fontSize: 16, color: Color(0xFF504F4F)),
                     ),
                   ],
                 ),
@@ -190,7 +190,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 ],
               ),
               SizedBox(height: 20),
-              Divider(color: Colors.blue),
+              Divider(color: Color(0xFF95B3FF)),
               SizedBox(height: 20),
               Center(
                 child: Text(
@@ -204,7 +204,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 children: ['L', 'M', 'X', 'J', 'V', 'S', 'D']
                     .map((day) => CircleAvatar(
                   backgroundColor: day == currentDay[0].toUpperCase()
-                      ? Colors.blue
+                      ? Color(0xFF95B3FF)
                       : Colors.grey[300],
                   child: Text(
                     day,
@@ -230,7 +230,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     Text(
                       '¡Recuerda llevarte tu bolsa\nde tela!',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(fontSize: 18, color: Color(0xFF504F4F)),
                     ),
                   ],
                 ),

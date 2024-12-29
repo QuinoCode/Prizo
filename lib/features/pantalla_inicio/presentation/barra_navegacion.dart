@@ -43,7 +43,7 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(50), // Forma ovalada
                 border: Border.all(
-                  color: Colors.blueAccent,
+                  color: Color(0xFF95B3FF),
                   width: 2,
                 ),
               ),
@@ -73,7 +73,7 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
                   ],
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
-                  selectedItemColor: Colors.blueAccent, // Color del ícono seleccionado
+                  selectedItemColor: Color(0xFF95B3FF), // Color del ícono seleccionado
                   unselectedItemColor: Colors.grey, // Color del ícono no seleccionado
                   elevation: 0, // Sin sombra
                   backgroundColor: Colors.transparent, // Fondo transparente
