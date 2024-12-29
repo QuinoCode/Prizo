@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../shared/data_entities/producto.dart';
+import '../../../shared/data_entities/models/producto.dart';
 import '../../lista_compra/application/lista_compra_service.dart';
 import '../../lista_favoritos/application/lista_favoritos_service.dart';
-import '../../../shared/data_entities/lista_compra.dart';
-import '../../../shared/data_entities/lista_favoritos.dart';
+import '../../../shared/data_entities/models/lista_compra.dart';
+import '../../../shared/data_entities/models/lista_favoritos.dart';
 import '../../pantalla_producto/application/pantalla_producto_service.dart';
 import '../../distancia_tienda/shop_distance.dart';
 
@@ -30,7 +30,9 @@ class DetallesProducto extends StatelessWidget {
     final precioMedida = producto.precioMedida > 0 ? '${producto.precioMedida.toStringAsFixed(2)}€/kg' : '';
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Detalles del producto'),
       ),
       body: Padding(

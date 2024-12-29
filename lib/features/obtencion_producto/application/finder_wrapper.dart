@@ -1,10 +1,7 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:prizo/features/obtencion_producto/application/carrefour_finder_service.dart';
 import 'package:prizo/features/obtencion_producto/application/consum_finder_service.dart';
 import 'package:prizo/features/obtencion_producto/application/dia_finder_service.dart';
-import 'package:prizo/shared/data_entities/producto.dart';
-import 'obtencion_producto_service.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 
 abstract class FinderWrapper {
   final String marketUri = "https://world.openfoodfacts.net/api/v2/product/%q";

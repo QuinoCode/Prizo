@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:prizo/features/obtencion_producto/application/finder_wrapper.dart';
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/features/obtencion_producto/domain/response_api_carrefour_data_model.dart';
 import 'obtencion_producto_service.dart';
 
 class CarrefourFinderService implements FinderWrapper{
   static int sessionCounter = 0;
+  static int httpTrys = 0;
   @override
   final String marketUri = "https://www.carrefour.es/search-api/query/v1/search?query=%q&scope=tablet&lang=es&session=%s&rows=24&start=0&origin=default&f.op=OR";
 
@@ -14,14 +15,15 @@ class CarrefourFinderService implements FinderWrapper{
   Future<List<Producto>> getProductList(String query) async {
     List<Producto> productsList = [];
     http.Response? response;
-    while (response == null) response = await doHttpRequest(query);
-    var unprocessedItems = getItemsFromHttpReply(response);
+    response = await doHttpRequest(query);
+    if (response == null) return [];
+    var unprocessedItems = getItemsFromHttpReply(response!);
     List<CarrefourProduct> processedItems = convertListOfItemsIntoCarrefourProducts(unprocessedItems);
     productsList = convertCarrefourProductIntoProducto(processedItems);
     return productsList;
   }
 
-  Future<http.Response?> doHttpRequest(String query) async{
+  Future<http.Response?> doHttpRequest(String query) async {
       try {
         http.Response response;
         String url;
@@ -42,9 +44,15 @@ class CarrefourFinderService implements FinderWrapper{
           },
           );
         }
+        httpTrys = 0;
         return response;
       } catch (e) {
-          print("EXCEPTION WHEN DOING AN HTTP REQUEST: " + e.toString());
+          httpTrys++;  
+          if (httpTrys < 5 ) {doHttpRequest(query);}
+          else {
+            print("EXCEPTION WHEN DOING AN HTTP REQUEST: " + e.toString());
+            //TODO show error message here
+          }
       }
       return null;
   }
@@ -108,9 +116,9 @@ class CarrefourFinderService implements FinderWrapper{
     return productos;
   }
 
-  double parsePrecioMedida(String price_per_unit_text){
-    if (price_per_unit_text == "") return -1.0;
-    String splittedPrice = price_per_unit_text.split(' ')[0];
+  double parsePrecioMedida(String pricePerUnitText){
+    if (pricePerUnitText == "") return -1.0;
+    String splittedPrice = pricePerUnitText.split(' ')[0];
     String doubleFormattedPrice = splittedPrice.replaceAll(",", ".");
     return double.parse(doubleFormattedPrice);
   }

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prizo/features/comparacion_productos/application/comparacion_producto.dart';  // Import the file with the function
-import 'package:prizo/shared/data_entities/producto.dart';  // Import the file with the function
+import 'package:prizo/shared/data_entities/models/producto.dart';  // Import the file with the function
 
 void main() {
   test('My function should return correct output', () {
@@ -48,11 +48,11 @@ void main() {
     precioOferta: 0.0,
   );
 
-    List<Producto> product_list = [producto1, producto2, producto3];
+    List<Producto> productList = [producto1, producto2, producto3];
     var expectedOutput = 0.8;
 
     // Act
-    var result = obtenerProductoMasBarato(product_list)?.precio;
+    var result = obtenerProductoMasBarato(productList)?.precio;
 
     // Assert
     expect(result, expectedOutput);
