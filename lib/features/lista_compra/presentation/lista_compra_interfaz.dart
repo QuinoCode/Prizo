@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
-import 'package:prizo/shared/data_entities/DAO/lista_compra_DAO.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/shared/application/producto_service.dart';
 
@@ -25,45 +24,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   String? _mensajeAdvertencia;
   GlobalKey<ScaffoldMessengerState> _scaffoldClave = GlobalKey<ScaffoldMessengerState>();
 
-  void _mostrarPopUpBolsa(BuildContext context) {
-    //ListaCompraDAO listaCompraDAO = new ListaCompraDAO(null);
-    //listaCompraDAO.insertListaCompra(widget.listaCompra);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.shopping_bag, // Icono de bolsa de compras
-                size: 100,
-                color: Colors.blueAccent,
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Recuerda coger tu bolsa!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cerrar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _toggleTienda(String tienda) {
     setState(() {
       if (widget.tiendasSeleccionadas.contains(tienda)) {
@@ -85,12 +45,46 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     });
   }
 
+  void _mostrarPopUpBolsa(BuildContext context) {
+    /// Código de guardar lista de la compra
+    //ListaCompraDAO listaCompraDAO = new ListaCompraDAO(null);
+    //listaCompraDAO.insertListaCompra(widget.listaCompra);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.shopping_bag, // Icono de bolsa de compras
+                size: 100,
+                color: Colors.blueAccent,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Recuerda coger tu bolsa!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, /* Evita cerrar el diálogo tocando fuera de él */
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: Text('¿Eliminar producto?'),
           content: Text('¿Estás seguro de que deseas eliminar el producto ${producto.nombre}?'),
           actions: <Widget>[
@@ -159,7 +153,16 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
       });
     }
   }
-
+  String truncarNombre(String input) {
+    // Verifica si el string tiene más de 16 caracteres
+    if (input.length > 16) {
+      // Devuelve los primeros 16 caracteres seguidos de "..."
+      return input.substring(0, 16) + '...';
+    } else {
+      // Devuelve el string original si tiene 16 o menos caracteres
+      return input;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     bool tieneDia = widget.tiendasSeleccionadas.contains("DIA");
@@ -172,18 +175,20 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
       key: _scaffoldClave,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Tu Lista de la Compra'),
+        title: const Text('Lista de la Compra'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            /* Fila de botones "Día", "Consum", "Carrefour" siempre visibles */
+            // Fila de botones "Día", "Consum", "Carrefour" siempre visibles
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(
-                  onPressed: () { _toggleTienda("DIA"); },
+                  onPressed: () {
+                    _toggleTienda("DIA");
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: tieneDia ? Colors.lightBlueAccent : Colors.white,
                     side: BorderSide(color: Colors.lightBlueAccent),
@@ -191,7 +196,9 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                   child: const Text('Día'),
                 ),
                 ElevatedButton(
-                  onPressed: () { _toggleTienda("CONSUM"); },
+                  onPressed: () {
+                    _toggleTienda("CONSUM");
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: tieneConsum ? Colors.lightBlueAccent : Colors.white,
                     side: BorderSide(color: Colors.lightBlueAccent),
@@ -199,7 +206,9 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                   child: const Text('Consum'),
                 ),
                 ElevatedButton(
-                  onPressed: () { _toggleTienda("Carrefour"); },
+                  onPressed: () {
+                    _toggleTienda("Carrefour");
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: tieneCarrefour ? Colors.lightBlueAccent : Colors.white,
                     side: BorderSide(color: Colors.lightBlueAccent),
@@ -250,72 +259,104 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                             },
                           )
                               : Icon(Icons.image_not_supported),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              IconButton(
-                                icon: Icon(Icons.remove_circle_outline),
-                                onPressed: () {
-                                  if (cantidad > 1) {
-                                    setState(() {
-                                      listaCompraService.quitarInstancia(widget.listaCompra, producto);
-                                      listaCompraService.quitarInstancia(widget.original, producto);
-                                      actualizarCantidadController(producto);
-                                    });
-                                  } else {
-                                    _ventanaConfirmacion(context, producto);
-                                  }
-                                },
-                              ),
+                              // Barra vertical azul entre la imagen y el conjunto derecho
                               Container(
-                                width: 50,
-                                child: TextField(
-                                  controller: _crearCantidadController(producto),
-                                  keyboardType: TextInputType.number,
-                                  onChanged: _manejadorTextField,
-                                  decoration: InputDecoration(
-                                    hintText: cantidad.toString(),
-                                    border: OutlineInputBorder(),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  onSubmitted: (value) {
-                                    int nuevaCantidad = int.tryParse(value) ?? cantidad;
-                                    if (nuevaCantidad > 0) {
-                                      setState(() {
-                                        listaCompraService.setCantidadProducto(widget.listaCompra, producto, nuevaCantidad);
-                                        actualizarCantidadController(producto);
-                                      });
-                                    } else {
-                                      _ventanaConfirmacion(context, producto);
-                                    }
-                                  },
+                                width: 2,  // Esto define el tamaño de la barra
+                                height: 60,  // Asegúrate de que sea lo suficientemente alto para que se vea
+                                color: Colors.blue,  // Establece el color de la barra como azul
+                              ),
+                              // Conjunto derecho (nombre del producto, tienda y precio)
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      truncarNombre(producto.nombre),
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      '${producto.tienda}',
+                                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                                    ),
+                                    Text(
+                                      // Mismo estilo que el nombre
+                                      '${totalPriceForProduct.toStringAsFixed(2)} €',
+                                      style: TextStyle(fontSize: 16), // Estilo igual al nombre
+                                    ),
+                                  ],
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(Icons.add_circle_outline),
-                                onPressed: () {
-                                  setState(() {
-                                    listaCompraService.annadirInstancia(widget.listaCompra, producto);
-                                    actualizarCantidadController(producto);
-                                  });
-                                },
-                              ),
-                              Text(
-                                '${totalPriceForProduct.toStringAsFixed(2)} €',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  _ventanaConfirmacion(context, producto);
-                                },
+                              // Conjunto izquierdo (botón círculo, botones - y +)
+                              Column(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.circle_outlined, color: Colors.blue),
+                                    onPressed: () {
+                                      _ventanaConfirmacion(context, producto);
+                                    },
+                                  ),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.remove),
+                                        onPressed: () {
+                                          if (cantidad > 1) {
+                                            setState(() {
+                                              listaCompraService.quitarInstancia(widget.listaCompra, producto);
+                                              actualizarCantidadController(producto);
+                                            });
+                                          } else {
+                                            _ventanaConfirmacion(context, producto);
+                                          }
+                                        },
+                                      ),
+                                      Container(
+                                        width: 50,
+                                        child: TextField(
+                                          controller: _crearCantidadController(producto),
+                                          keyboardType: TextInputType.number,
+                                          onChanged: _manejadorTextField,
+                                          decoration: InputDecoration(
+                                            hintText: cantidad.toString(),
+                                            border: InputBorder.none,
+                                            contentPadding: EdgeInsets.zero,
+                                          ),
+                                          style: TextStyle(fontSize: 16, color: Colors.black),
+                                          textAlign: TextAlign.center,
+                                          onSubmitted: (value) {
+                                            int nuevaCantidad = int.tryParse(value) ?? cantidad;
+                                            if (nuevaCantidad > 0) {
+                                              setState(() {
+                                                listaCompraService.setCantidadProducto(widget.listaCompra, producto, nuevaCantidad);
+                                                actualizarCantidadController(producto);
+                                              });
+                                            } else {
+                                              _ventanaConfirmacion(context, producto);
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.add),
+                                        onPressed: () {
+                                          setState(() {
+                                            listaCompraService.annadirInstancia(widget.listaCompra, producto);
+                                            actualizarCantidadController(producto);
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
                       ),
-                      // Mostrar el nombre y el precio debajo de la imagen
+                      // Mostrar el nombre y el precio debajo de la imagen si la imagen ha sido pulsada
                       if (_esImagenPulsada && _productoSeleccionado == producto)
                         Column(
                           children: [
@@ -352,7 +393,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                 ],
               ),
             ),
-            if (widget.original.productos.isNotEmpty)
+            if (widget.listaCompra.productos.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: ElevatedButton(
