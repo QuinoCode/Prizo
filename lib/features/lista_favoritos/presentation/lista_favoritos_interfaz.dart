@@ -98,7 +98,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Tu Lista de Favoritos'),
+        title: const Text('Lista de Favoritos'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

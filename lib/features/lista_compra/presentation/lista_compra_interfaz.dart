@@ -244,11 +244,13 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                             },
                           )
                               : Icon(Icons.image_not_supported),
+                          title: Text(producto.nombre),
+                          subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(2)}'),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.remove_circle_outline),
+                                icon: Icon(Icons.remove),
                                 onPressed: () {
                                   if (cantidad > 1) {
                                     setState(() {
@@ -269,8 +271,14 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                   onChanged: _manejadorTextField,
                                   decoration: InputDecoration(
                                     hintText: cantidad.toString(),
-                                    border: OutlineInputBorder(),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                                    // Quitar borde
+                                    border: InputBorder.none,
+                                    // Sin padding extra
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 16,  // Ajusta el tamaño de fuente para que luzca como texto normal
+                                    color: Colors.black,  // Color del texto
                                   ),
                                   textAlign: TextAlign.center,
                                   onSubmitted: (value) {
@@ -287,7 +295,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                 ),
                               ),
                               IconButton(
-                                icon: Icon(Icons.add_circle_outline),
+                                icon: Icon(Icons.add),
                                 onPressed: () {
                                   setState(() {
                                     listaCompraService.annadirInstancia(widget.listaCompra, producto);
@@ -300,7 +308,10 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                 style: TextStyle(fontSize: 20),
                               ),
                               IconButton(
-                                icon: Icon(Icons.circle_outlined),
+                                icon: Icon(
+                                  Icons.circle_outlined,
+                                  color: Colors.blue,
+                                ),
                                 onPressed: () {
                                   _ventanaConfirmacion(context, producto);
                                 },
