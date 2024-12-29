@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:prizo/shared/data_entities/DAO/lista_favoritos_DAO.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
+import 'package:prizo/shared//database/database_operations.dart';
+
 
 class PantallaInicio extends StatefulWidget {
   @override
@@ -9,6 +13,40 @@ class PantallaInicio extends StatefulWidget {
 class _PantallaInicioState extends State<PantallaInicio> {
   final PageController _pageController = PageController();
   int currentIndex = 0;
+  final ListaFavoritosDAO listaFavoritosDAO = ListaFavoritosDAO(DatabaseOperations.instance.prizoDatabase);
+  List<Producto> productosEnOferta = [];
+  bool cargandoOfertas = true;
+
+  @override
+  void initState() {
+    super.initState();
+    cargarProductosEnOferta();
+  }
+
+  Future<void> cargarProductosEnOferta() async {
+    try {
+      // Obtén el ID de la lista de favoritos
+      final String? idListaFavoritos = await listaFavoritosDAO.getIdListaFavoritosPorUsuario('usuario_actual');
+      if (idListaFavoritos != null) {
+        // Obtén los productos en oferta de esa lista
+        final productos = await listaFavoritosDAO.getProductosEnOfertaDeFavoritos(idListaFavoritos);
+        setState(() {
+          productosEnOferta = productos;
+          cargandoOfertas = false; // Datos cargados
+        });
+      } else {
+        // Si no hay lista de favoritos
+        setState(() {
+          cargandoOfertas = false; // No hay nada que mostrar
+        });
+      }
+    } catch (e) {
+      print("Error cargando productos en oferta: $e");
+      setState(() {
+        cargandoOfertas = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,44 +107,86 @@ class _PantallaInicioState extends State<PantallaInicio> {
               SizedBox(height: 10),
               Column(
                 children: [
-                  Container(
-                    height: 200, // Incrementar altura para productos más grandes
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: 10, // Número de productos
-                      onPageChanged: (index) {
-                        setState(() {
-                          currentIndex = index;
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Container(
-                            width: 150,
-                            height: 150,
-                            decoration: BoxDecoration(
-                              color: Colors.blue[100],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(10, (index) => Container(
-                      margin: EdgeInsets.symmetric(horizontal: 4),
-                      width: currentIndex == index ? 12 : 8,
-                      height: currentIndex == index ? 12 : 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: currentIndex == index ? Colors.blue : Colors.grey,
+                  if (cargandoOfertas) // Muestra un indicador de carga
+                    Center(child: CircularProgressIndicator())
+                  else if (productosEnOferta.isEmpty) // Si no hay productos en oferta
+                    Center(
+                      child: Text(
+                        'No hay productos en oferta en tu lista de favoritos.',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
-                    )),
-                  ),
+                    )
+                  else
+                    Container(
+                      height: 200, // Altura para productos más grandes
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: productosEnOferta.length,
+                        onPageChanged: (index) {
+                          setState(() {
+                            currentIndex = index;
+                          });
+                        },
+                        itemBuilder: (context, index) {
+                          final producto = productosEnOferta[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Image.network(
+                                      producto.foto,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      errorBuilder: (context, error, stackTrace) =>
+                                          Icon(Icons.image_not_supported),
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    producto.nombre,
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    '\$${producto.precioOferta.toStringAsFixed(2)}',
+                                    style: TextStyle(fontSize: 14, color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  SizedBox(height: 10),
+                  if (productosEnOferta.isNotEmpty)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        productosEnOferta.length,
+                            (index) => Container(
+                          margin: EdgeInsets.symmetric(horizontal: 4),
+                          width: currentIndex == index ? 12 : 8,
+                          height: currentIndex == index ? 12 : 8,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: currentIndex == index ? Colors.blue : Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
               SizedBox(height: 20),
@@ -185,46 +265,6 @@ class _PantallaInicioState extends State<PantallaInicio> {
           ),
         ),
       ),
-
-
-
-      /* bottomNavigationBar: Container(
-        margin: EdgeInsets.all(16), // Separación del borde de la pantalla
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: Colors.blue, width: 1),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: Icon(Icons.home, color: Colors.blue),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.search, color: Colors.grey),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProductSearchScreen()),
-                  );
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.list, color: Colors.grey),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.person, color: Colors.grey),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-      ), */
     );
   }
 }

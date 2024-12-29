@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'features/pantalla_inicio/presentation/barra_navegacion.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:prizo/shared//database/database_operations.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Asegura la inicialización antes de ejecutar la app
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseOperations.instance.openOrCreateDB();
   await initializeDateFormatting('es_ES', null);
   runApp(const Prizo());
 }
