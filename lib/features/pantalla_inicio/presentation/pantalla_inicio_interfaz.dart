@@ -221,7 +221,11 @@ class _PantallaInicioState extends State<PantallaInicio> {
               Center(
                 child: Column(
                   children: [
-                    Icon(Icons.shopping_bag, size: 150, color: Colors.grey),
+                    Image.asset(
+                      'assets/images/Bolsa_de_tela.png',
+                      width: 200,
+                      height: 200,
+                    ),
                     SizedBox(height: 10),
                     Text(
                       '¡Recuerda llevarte tu bolsa\nde tela!',
