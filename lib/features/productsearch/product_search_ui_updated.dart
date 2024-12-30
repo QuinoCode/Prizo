@@ -4,19 +4,16 @@ import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import '../../../shared/data_entities/models/producto.dart';
 import '../../shared/data_entities/models/lista_compra.dart';
 
-import 'package:customizable_counter/customizable_counter.dart';
-
 import '../../features/obtencion_producto/application/carrefour_finder_service.dart';
 import '../../features/obtencion_producto/application/consum_finder_service.dart';
 import '../../features/obtencion_producto/application/dia_finder_service.dart';
 
 import '../../features/comparacion_productos/application/comparacion_producto.dart';
-import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import 'package:add_to_cart_button/add_to_cart_button.dart';
 
 import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
-import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
-import '../lista_favoritos/application/lista_favoritos_service.dart';
+import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 
 import '../../features/escaner/presentation/interfaz_scanner.dart';
 
@@ -80,11 +77,12 @@ class ProductSearchScreen extends StatefulWidget {
   State<ProductSearchScreen> createState() => _ProductSearchScreenState();
 }
 
-class _ProductSearchScreenState extends State<ProductSearchScreen> {
+class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTickerProviderStateMixin{
   final ConsumFinderService consumService = ConsumFinderService();
   final DiaFinderService diaService = DiaFinderService();
   final CarrefourFinderService carrefourService = CarrefourFinderService();
   final TextEditingController _searchController = TextEditingController();
+  late TabController _tabController;
   List<Producto> _productos = [];
   List<Producto> _productosRestantes = [];
   bool _isLoading = false;
@@ -92,7 +90,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
   
   //replace with a list of recents from db
   List<String> values = ['Queso','Tomate','Plátanos','Macarrones','Azúcar'];
-  List<bool> _toggled = [true, false, true, false, true];
 
   final ListaCompraService listaCompraService = ListaCompraService();
   ListaCompra listaCompra = ListaCompra(
@@ -102,6 +99,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
 
   @override
   void dispose() {
+    _tabController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -109,7 +107,8 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
   @override
   void initState() {
     super.initState();
-
+    
+    _tabController = TabController(length: 2, vsync: this);
     // Add a listener to check when the text becomes empty
     _searchController.addListener(() {
       if (_searchController.text.isEmpty && _isSearching) {
@@ -126,6 +125,16 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
       MaterialPageRoute(
         builder: (context) =>
             const ScannerInterface(),
+      ),
+    );
+  }
+
+  void _navigateToProductInfo(Producto producto) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+          DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos,),
       ),
     );
   }
@@ -340,7 +349,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 10), // Add some spacing
+        const SizedBox(height: 20), // Add some spacing
         // Scrollable list
         Expanded(
           child: SingleChildScrollView(
@@ -422,19 +431,26 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
 
   Widget _buildProductTile (Producto producto) {
     final imageUrl = producto.foto;
+    int init = listaCompraService.getCantidadProducto(listaCompra, producto);
     return Column(
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal:5),
-              child: Image.network(
-                  imageUrl,
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.scaleDown
-              ),
+            GestureDetector(
+              onTap: () {
+                _navigateToProductInfo(producto);
+              },
+              child:
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal:5),
+                  child: Image.network(
+                      imageUrl,
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.scaleDown
+                  ),
+                ),
             ),
             SizedBox(
               height: 90,
@@ -445,89 +461,106 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
             ),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width:120,
-                    child:
-                      Text(
-                        producto.nombre,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                              fontFamily: 'Inter',
-                              color: Color.fromARGB(255,33,33,33),
-                              fontSize: 16,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                      )
-                  ),
-                  SizedBox(height:3),
-                  Text(
-                    producto.tienda,
-                    style: TextStyle(
-                          fontFamily: 'Inter',
-                          color: Color.fromARGB(255,33,33,33),
-                          fontSize: 12,
-                          letterSpacing: 0.0,
-                        ),
-                  ),
-                  SizedBox(height:5),
-                  Row(
+              child: 
+              GestureDetector(
+                onTap: () {
+                  _navigateToProductInfo(producto);
+                },
+                child:
+                  Column(
                     mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(
+                        width:120,
+                        child:
+                          Text(
+                            producto.nombre,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  color: Color.fromARGB(255,33,33,33),
+                                  fontSize: 16,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          )
+                      ),
+                      SizedBox(height:3),
                       Text(
-                        '${producto.precio.toString()}€',
+                        producto.tienda,
                         style: TextStyle(
                               fontFamily: 'Inter',
                               color: Color.fromARGB(255,33,33,33),
-                              fontSize: 15,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        '${producto.precioMedida.toString()}€/kilo',
-                        style: TextStyle(
-                              fontFamily: 'Inter',
-                              color: Color.fromARGB(255,33,33,33),
-                              fontSize: 14,
+                              fontSize: 12,
                               letterSpacing: 0.0,
                             ),
                       ),
-                    ]
+                      SizedBox(height:5),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            '${producto.precio.toString()}€',
+                            style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  color: Color.fromARGB(255,33,33,33),
+                                  fontSize: 15,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            '${producto.precioMedida.toString()}€/kilo',
+                            style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  color: Color.fromARGB(255,33,33,33),
+                                  fontSize: 14,
+                                  letterSpacing: 0.0,
+                                ),
+                          ),
+                        ]
+                      ),
+                    ],
                   ),
-                ],
-              ),
+              )
             ),
             Spacer(),
-            SizedBox(
-              width:80,
+            Container(
+              decoration: BoxDecoration(  
+                color: Color.fromARGB(255,145,176,243),
+                borderRadius: BorderRadius.circular(20),
+                shape: BoxShape.rectangle
+              ),
               child:
-                CustomizableCounter(
-                  borderWidth: 0,
-                  borderRadius: 23,
-                  backgroundColor: Color.fromARGB(255, 240, 240, 240),
-                  buttonText: 'Añadir',
-                  textColor: Colors.black,
-                  textSize: 11,
-                  count: listaCompraService.getCantidadProducto(listaCompra, producto).toDouble(),
-                  minCount: 0,
-                  maxCount: 20,
-                  onCountChange: (value) {
-                    listaCompraService.setCantidadProducto(listaCompra, producto, value.toInt());
-                  },
-                  step: 1,
-                )
-            )
+                AddToCartCounterButton(
+                  initNumber: init, 
+                  counterCallback: (int count) {}, 
+                  decreaseCallback: () {
+                    listaCompraService.quitarProducto(listaCompra, producto);
+                    setState(() {
+                      init = listaCompraService.getCantidadProducto(listaCompra, producto);
+                    });
+                  }, 
+                  increaseCallback: () {
+                    listaCompraService.annadirProducto(listaCompra, producto);
+                    setState(() {
+                      init = listaCompraService.getCantidadProducto(listaCompra, producto);
+                    });
+                  }, 
+                  minNumber: 0, 
+                  maxNumber: 10, 
+                  backgroundColor: Colors.white, 
+                  buttonIconColor: Color.fromARGB(255, 80, 79, 79), 
+                  buttonFillColor: Color.fromARGB(255, 149, 179, 252)
+                ),
+            ),
           ],
         ),
-        SizedBox(height:30)
+        SizedBox(height:25)
       ]
     );
   }

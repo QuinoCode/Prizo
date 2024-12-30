@@ -14,6 +14,14 @@ packages:
     description: dart
     source: sdk
     version: "0.3.2"
+  add_to_cart_button:
+    dependency: "direct main"
+    description:
+      name: add_to_cart_button
+      sha256: "7a6c01b29870a07412cb8415fd7e211bdf021ede2afc3b6525c4e5ef4bfc96b2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   analyzer:
     dependency: transitive
     description:
@@ -102,14 +110,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
-  customizable_counter:
-    dependency: "direct main"
-    description:
-      name: customizable_counter
-      sha256: b9fd2052295ce9b61be167713211661541d4212fbcf6367731095fad3c38554f
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
   diacritic:
     dependency: "direct main"
     description:
@@ -134,6 +134,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
+  flip_card:
+    dependency: "direct main"
+    description:
+      name: flip_card
+      sha256: "5d4aa58f3983cced0782f4ce45826b7eea36e8e464964d9209dcbc7a87b2292f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
   flutter:
     dependency: "direct main"
     description: flutter

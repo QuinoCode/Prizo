@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prizo/shared/data_entities/producto.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/features/obtencion_producto/application/ean_finder.dart';
 
 void main() async {
