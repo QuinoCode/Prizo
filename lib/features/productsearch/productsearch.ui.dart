@@ -15,6 +15,7 @@ import '../lista_favoritos/application/lista_favoritos_service.dart';
 import 'package:prizo/features/filtro_busqueda/filtro_busqueda.dart';
 import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 import 'package:prizo/features/lista/presentation/lista_interfaz.dart';
+import 'package:prizo/features/perfil/perfil.dart';
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
@@ -186,6 +187,14 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       MaterialPageRoute(
         builder: (context) =>
             const ScannerInterface(),
+      ),
+    );
+  }
+  void _navigateToPerfilInterfaz() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PerfilInterfaz(),
       ),
     );
   }
