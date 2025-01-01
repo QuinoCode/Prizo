@@ -224,7 +224,7 @@ class DetallesProducto extends StatelessWidget {
               // Productos relacionados
               Text(
                 'Productos relacionados',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 16),
 
@@ -241,7 +241,7 @@ class DetallesProducto extends StatelessWidget {
                   } else {
                     List<Producto> productosRelacionados = snapshot.data!;
                     return SizedBox(
-                      height: 175,
+                      height: 200, // Altura ajustada para espacio adicional
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: productosRelacionados.length,
@@ -263,7 +263,26 @@ class DetallesProducto extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(right: 16.0),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start, // Alinear a la izquierda
                                 children: [
+                                  // Nombre del supermercado centrado a la izquierda
+                                  SizedBox(
+                                    width: 95,
+                                    child: Text(
+                                      productoRelacionado.tienda,
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.left, // Centrado a la izquierda
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+
+                                  // Imagen del producto
                                   Image.network(
                                     productoRelacionado.foto,
                                     width: 60,
@@ -274,6 +293,8 @@ class DetallesProducto extends StatelessWidget {
                                     },
                                   ),
                                   const SizedBox(height: 8),
+
+                                  // Nombre del producto
                                   SizedBox(
                                     width: 95,
                                     child: Text(
@@ -285,6 +306,8 @@ class DetallesProducto extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
+
+                                  // Precio del producto
                                   Text(
                                     '${productoRelacionado.precio.toStringAsFixed(2)}€',
                                     style: const TextStyle(fontSize: 12),
