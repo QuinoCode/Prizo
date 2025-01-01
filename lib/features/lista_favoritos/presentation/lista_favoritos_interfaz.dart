@@ -8,9 +8,9 @@ import 'package:prizo/features/lista_favoritos/application/lista_favoritos_servi
 
 class ListaFavoritosInterfaz extends StatefulWidget {
   ListaFavoritos listaFavoritos;
+  final ListaFavoritos original;
   final ListaCompra listaCompra;
   final List<String> tiendasSeleccionadas;
-  final ListaFavoritos original;
 
   ListaFavoritosInterfaz({super.key, required this.listaFavoritos, required this.listaCompra, required this.tiendasSeleccionadas, required this.original});
 
@@ -159,6 +159,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                     direction: DismissDirection.startToEnd,
                     onDismissed: (direction) {
                       listaFavoritosService.quitarProducto(widget.listaFavoritos, producto);
+                      listaFavoritosService.quitarProducto(widget.original, producto);
                     },
                     background: Container(
                       color: Colors.lightBlueAccent,

@@ -6,8 +6,8 @@ import 'package:prizo/shared/application/producto_service.dart';
 
 class ListaCompraInterfaz extends StatefulWidget {
   ListaCompra listaCompra;
-  final List<String> tiendasSeleccionadas;
   final ListaCompra original;
+  final List<String> tiendasSeleccionadas;
 
   ListaCompraInterfaz({super.key, required this.listaCompra, required this.tiendasSeleccionadas, required this.original});
 
@@ -102,6 +102,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                 /* Eliminar el producto completo de la lista */
                 setState(() {
                   listaCompraService.quitarProducto(widget.listaCompra, producto);
+                  listaCompraService.quitarProducto(widget.original, producto);
                 });
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
@@ -306,6 +307,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                           if (cantidad > 1) {
                                             setState(() {
                                               listaCompraService.quitarInstancia(widget.listaCompra, producto);
+                                              listaCompraService.quitarInstancia(widget.original, producto);
                                               actualizarCantidadController(producto);
                                             });
                                           } else {
@@ -331,6 +333,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                             if (nuevaCantidad > 0) {
                                               setState(() {
                                                 listaCompraService.setCantidadProducto(widget.listaCompra, producto, nuevaCantidad);
+                                                listaCompraService.setCantidadProducto(widget.original, producto, nuevaCantidad);
                                                 actualizarCantidadController(producto);
                                               });
                                             } else {
@@ -344,6 +347,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                         onPressed: () {
                                           setState(() {
                                             listaCompraService.annadirInstancia(widget.listaCompra, producto);
+                                            listaCompraService.annadirInstancia(widget.original, producto);
                                             actualizarCantidadController(producto);
                                           });
                                         },

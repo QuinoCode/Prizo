@@ -14,7 +14,7 @@ import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz
 import '../lista_favoritos/application/lista_favoritos_service.dart';
 import 'package:prizo/features/filtro_busqueda/filtro_busqueda.dart';
 import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
-import 'package:prizo/features/lista/lista_interfaz/lista_interfaz.dart';
+import 'package:prizo/features/lista/presentation/lista_interfaz.dart';
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
