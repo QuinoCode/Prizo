@@ -24,6 +24,12 @@ var recentElementC = 'Plátanos';
 var recentElementD = 'Macarrones';
 var recentElementE = 'Azúcar';
 
+final ListaCompraService listaCompraService = ListaCompraService();
+ListaCompra listaCompra = ListaCompra(
+    id: '1', usuario: 'usuario_demo', productos: []);
+ListaFavoritos listaFavoritos = ListaFavoritos(
+    id: '1', usuario: 'usuario_demo', productos: []);
+
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
 }
@@ -91,11 +97,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   //replace with a list of recents from db
   List<String> values = ['Queso','Tomate','Plátanos','Macarrones','Azúcar'];
 
-  final ListaCompraService listaCompraService = ListaCompraService();
-  ListaCompra listaCompra = ListaCompra(
-      id: '1', usuario: 'usuario_demo', productos: []);
-  ListaFavoritos listaFavoritos = ListaFavoritos(
-      id: '1', usuario: 'usuario_demo', productos: []);
 
   @override
   void dispose() {
@@ -125,16 +126,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
       MaterialPageRoute(
         builder: (context) =>
             const ScannerInterface(),
-      ),
-    );
-  }
-
-  void _navigateToProductInfo(Producto producto) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-          DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos,),
       ),
     );
   }
@@ -290,281 +281,111 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   }
   
   Widget _buildSearchResults() {
-  return Expanded(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Row of buttons
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                _searchController.text = recentElementA;
-                _searchProducts();
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                foregroundColor: Color.fromARGB(255,80,79,79),
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23),
-                  side: const BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
-                ),
-              ),
-              child: const Text("Día"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _searchController.text = recentElementB;
-                _searchProducts();
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                foregroundColor: Color.fromARGB(255,80,79,79),
-                backgroundColor: const Color.fromARGB(255, 149, 179, 252),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23),
-                  side: const BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
-                ),
-              ),
-              child: const Text("Carrefour"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _searchController.text = recentElementC;
-                _searchProducts();
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                foregroundColor: Color.fromARGB(255,80,79,79),
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23),
-                  side: const BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
-                ),
-              ),
-              child: const Text("Consum"),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20), // Add some spacing
-        // Scrollable list
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Display the first list of products
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _productos.length,
-                  itemBuilder: (context, index) {
-                    final producto = _productos[index];
-                    return _buildProductTile(producto);
-                  },
-                ),
-                // Display the second list if there are remaining products
-                if (_productosRestantes.isNotEmpty) ...[
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Quizás estabas buscando...',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Row of buttons
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  _searchController.text = recentElementA;
+                  _searchProducts();
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  foregroundColor: Color.fromARGB(255,80,79,79),
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(23),
+                    side: const BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
                   ),
+                ),
+                child: const Text("Día"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _searchController.text = recentElementB;
+                  _searchProducts();
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  foregroundColor: Color.fromARGB(255,80,79,79),
+                  backgroundColor: const Color.fromARGB(255, 149, 179, 252),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(23),
+                    side: const BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
+                  ),
+                ),
+                child: const Text("Carrefour"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _searchController.text = recentElementC;
+                  _searchProducts();
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  foregroundColor: Color.fromARGB(255,80,79,79),
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(23),
+                    side: const BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
+                  ),
+                ),
+                child: const Text("Consum"),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20), // Add some spacing
+          // Scrollable list
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Display the first list of products
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _productosRestantes.length,
+                    itemCount: _productos.length,
                     itemBuilder: (context, index) {
-                      final producto = _productosRestantes[index];
-                      return _buildProductTile(producto);
+                      final producto = _productos[index];
+                      return _buildProductTile(context, producto);
                     },
                   ),
+                  // Display the second list if there are remaining products
+                  if (_productosRestantes.isNotEmpty) ...[
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Quizás estabas buscando...',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _productosRestantes.length,
+                      itemBuilder: (context, index) {
+                        final producto = _productosRestantes[index];
+                        return _buildProductTile(context, producto);
+                      },
+                    ),
+                  ],
                 ],
-              ],
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-  //todo formatting
-  /*Widget _buildProductTile(Producto producto) {
-    final imageUrl = producto.foto;
-    final precioMedida = producto.precioMedida > 0 ? ' (${producto.precioMedida.toStringAsFixed(2)}€/kg)' : '';
-    return ListTile(
-      title: Text(producto.nombre),
-      subtitle: Text('${producto.tienda}'),
-
-      
-      leading: producto.foto.isNotEmpty
-          ? Image.network(
-        imageUrl,
-        width: 50,
-        height: 50,
-        errorBuilder: (context, error, stackTrace) {
-          print('Error loading image: $error');
-          return Icon(Icons.broken_image);
-        },
-      )
-          : Icon(Icons.image_not_supported),
-      // Al pulsar producto, se abre la pantalla de este
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetallesProducto(
-              producto: producto, // El producto seleccionado
-              listaCompra: listaCompra, // Pasamos la instancia de ListaCompra
-              listaFavoritos: listaFavoritos,
-            ),
-          ),
-        );
-      },
-    );
-  }*/
-
-
-  Widget _buildProductTile (Producto producto) {
-    final imageUrl = producto.foto;
-    int init = listaCompraService.getCantidadProducto(listaCompra, producto);
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () {
-                _navigateToProductInfo(producto);
-              },
-              child:
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal:5),
-                  child: Image.network(
-                      imageUrl,
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.scaleDown
-                  ),
-                ),
-            ),
-            SizedBox(
-              height: 90,
-              child: VerticalDivider(
-                thickness: 1,
-                color: Color.fromARGB(255,175,198,255),
               ),
             ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
-              child: 
-              GestureDetector(
-                onTap: () {
-                  _navigateToProductInfo(producto);
-                },
-                child:
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width:120,
-                        child:
-                          Text(
-                            producto.nombre,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  color: Color.fromARGB(255,33,33,33),
-                                  fontSize: 16,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          )
-                      ),
-                      SizedBox(height:3),
-                      Text(
-                        producto.tienda,
-                        style: TextStyle(
-                              fontFamily: 'Inter',
-                              color: Color.fromARGB(255,33,33,33),
-                              fontSize: 12,
-                              letterSpacing: 0.0,
-                            ),
-                      ),
-                      SizedBox(height:5),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            '${producto.precio.toString()}€',
-                            style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  color: Color.fromARGB(255,33,33,33),
-                                  fontSize: 15,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                          ),
-                          SizedBox(width: 5),
-                          Text(
-                            '${producto.precioMedida.toString()}€/kilo',
-                            style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  color: Color.fromARGB(255,33,33,33),
-                                  fontSize: 14,
-                                  letterSpacing: 0.0,
-                                ),
-                          ),
-                        ]
-                      ),
-                    ],
-                  ),
-              )
-            ),
-            Spacer(),
-            Container(
-              decoration: BoxDecoration(  
-                color: Color.fromARGB(255,145,176,243),
-                borderRadius: BorderRadius.circular(20),
-                shape: BoxShape.rectangle
-              ),
-              child:
-                AddToCartCounterButton(
-                  initNumber: init, 
-                  counterCallback: (int count) {}, 
-                  decreaseCallback: () {
-                    listaCompraService.quitarProducto(listaCompra, producto);
-                    setState(() {
-                      init = listaCompraService.getCantidadProducto(listaCompra, producto);
-                    });
-                  }, 
-                  increaseCallback: () {
-                    listaCompraService.annadirProducto(listaCompra, producto);
-                    setState(() {
-                      init = listaCompraService.getCantidadProducto(listaCompra, producto);
-                    });
-                  }, 
-                  minNumber: 0, 
-                  maxNumber: 10, 
-                  backgroundColor: Colors.white, 
-                  buttonIconColor: Color.fromARGB(255, 80, 79, 79), 
-                  buttonFillColor: Color.fromARGB(255, 149, 179, 252)
-                ),
-            ),
-          ],
-        ),
-        SizedBox(height:25)
-      ]
+          ),
+        ],
+      ),
     );
   }
 
+  Widget _buildProductTile(BuildContext context, Producto producto) {
+    return StatefulStoreItem(producto: producto);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -660,6 +481,204 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
           ),
         ],
       ),
+    );
+  }
+}
+
+class StatefulStoreItem extends StatefulWidget {
+  final Producto producto;
+  const StatefulStoreItem({required this.producto});
+
+  @override
+  _ProductTileItemState createState() => _ProductTileItemState();
+}
+
+class _ProductTileItemState extends State<StatefulStoreItem> {
+  bool _showButton = true;
+  int _counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _counter = listaCompraService.getCantidadProducto(listaCompra, widget.producto);
+  }
+
+  void _navigateToProductInfo(Producto producto) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+          DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos,),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => _navigateToProductInfo(widget.producto),
+                child: Image.network(
+                  widget.producto.foto,
+                  width: 80,
+                  height: 80,
+                ),
+              ),
+              SizedBox(width: 10), 
+              SizedBox(
+                height: 90,
+                child: VerticalDivider(
+                  thickness: 1,
+                  color: Color.fromARGB(255,175,198,255),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    _navigateToProductInfo(widget.producto);
+                  },
+                  child:
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width:120,
+                          child:
+                            Text(
+                              widget.producto.nombre,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: Color.fromARGB(255,33,33,33),
+                                    fontSize: 15,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            )
+                        ),
+                        SizedBox(height:3),
+                        Text(
+                          widget.producto.tienda,
+                          style: TextStyle(
+                                fontFamily: 'Inter',
+                                color: Color.fromARGB(255,33,33,33),
+                                fontSize: 12,
+                                letterSpacing: 0.0,
+                              ),
+                        ),
+                        SizedBox(height:8),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(
+                              '${widget.producto.precio}€',
+                              style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: Color.fromARGB(255,33,33,33),
+                                    fontSize: 16,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              '${widget.producto.precioMedida}€/kilo',
+                              style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: Color.fromARGB(255,33,33,33),
+                                    fontSize: 10,
+                                    letterSpacing: 0.0,
+                                  ),
+                            ),
+                          ]
+                        ),
+                      ],
+                    ),
+                )
+              ),
+              SizedBox(
+                child:
+                _showButton
+                  ? Container(
+                      height: 35,
+                      width: 65,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 149, 179, 252),
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      child:
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _showButton = false;
+                            _counter = listaCompraService.getCantidadProducto(listaCompra, widget.producto);
+                          });
+                        },
+                        color: Color.fromARGB(255, 80, 79, 79),
+                        icon: Icon(Icons.shopping_basket)
+                      )
+                    )
+                  : Container(
+                      height: 35,
+                      width: 95,
+                      padding: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 240, 240, 240),
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            iconSize: 12,
+                            icon: Icon(Icons.remove),
+                            onPressed: () {
+                              setState(() {
+                                if (_counter > 0) {
+                                  listaCompraService.quitarProducto(listaCompra, widget.producto);
+                                  _counter--;
+                                } else {
+                                  _showButton = true;
+                                }
+                              });
+                            },
+                          ),
+                          Padding(
+                            padding: EdgeInsets.zero,
+                            child: Text('$_counter', style: TextStyle(fontSize: 14)),
+                            
+                          ),
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            iconSize: 12,
+                            icon: Icon(Icons.add),
+                            onPressed: () {
+                              listaCompraService.annadirProducto(listaCompra, widget.producto);
+                              setState(() {
+                                _counter++;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                )
+            ],
+          ),
+        ),
+      ]
     );
   }
 }
