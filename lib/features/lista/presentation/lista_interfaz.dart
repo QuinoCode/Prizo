@@ -29,6 +29,39 @@ class ListaInterfaz extends StatefulWidget {
 class _ListaState extends State<ListaInterfaz> {
   ListaService listaService = ListaService();
 
+  Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, /* Evita cerrar el diálogo tocando fuera de él */
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text('¿Eliminar producto?'),
+          content: Text('¿Estás seguro de que deseas eliminar el producto ${producto.nombre}?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                /* Cerrar el diálogo sin hacer nada */
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                /* Eliminar el producto completo de la lista */
+                setState(() {
+                  listaService.borrarComprado(widget.listaCompra, widget.listaCompraOriginal, producto);
+                });
+                Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
+              },
+              child: Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,13 +183,7 @@ class _ListaState extends State<ListaInterfaz> {
               child: IconButton(
                 icon: const Icon(Icons.circle_outlined, color: Colors.blue),
                 onPressed: () {
-                  setState(() {
-                    listaService.borrarComprado(
-                      widget.listaCompra,
-                      widget.listaCompraOriginal,
-                      producto,
-                    );
-                  });
+                  _ventanaConfirmacion(context, producto);
                 },
               ),
             ),
