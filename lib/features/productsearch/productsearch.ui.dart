@@ -14,6 +14,7 @@ import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz
 import '../lista_favoritos/application/lista_favoritos_service.dart';
 import 'package:prizo/features/filtro_busqueda/filtro_busqueda.dart';
 import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
+import 'package:prizo/features/lista/presentation/lista_interfaz.dart';
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
@@ -188,52 +189,37 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       ),
     );
   }
-  void _navigateToListaCompra() {
-    List<(Producto, int)> productosFiltrados = [];
+  void _navigateToLista() {
+    List<(Producto, int)> productosFiltradosCom = [];
+    List<Producto> productosFiltradosFav = [];
     if (listaCompra.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
       for (var producto in listaCompra.productos) {
         if (tiendasSeleccionadas.contains(producto.$1.tienda)) {
-          productosFiltrados.add(producto);
+          productosFiltradosCom.add(producto);
         }
       }
     } else {
-      productosFiltrados = listaCompra.productos;
+      productosFiltradosCom = listaCompra.productos;
     }
-    ListaCompra comprasFiltradas = new ListaCompra(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltrados);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            ListaCompraInterfaz(
-              listaCompra: comprasFiltradas,
-              tiendasSeleccionadas : tiendasSeleccionadas,
-              original: listaCompra,
-            ),
-      ),
-    );
-  }
-
-  void _navigateToListaFavoritos() {
-    List<Producto> productosFiltrados = [];
     if (listaFavoritos.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
       for (var producto in listaFavoritos.productos) {
         if(tiendasSeleccionadas.contains(producto.tienda)) {
-          productosFiltrados.add(producto);
+          productosFiltradosFav.add(producto);
         }
       }
     } else {
-      productosFiltrados = listaFavoritos.productos;
+      productosFiltradosFav = listaFavoritos.productos;
     }
-    ListaFavoritos favoritosFiltrados = new ListaFavoritos(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltrados);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ListaFavoritosInterfaz(
-              listaFavoritos: favoritosFiltrados,
-              listaCompra: listaCompra,
+            ListaInterfaz(
               tiendasSeleccionadas : tiendasSeleccionadas,
-              original: listaFavoritos,
+              listaCompra : new ListaCompra(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltradosCom),
+              listaCompraOriginal : listaCompra,
+              listaFavoritos : new ListaFavoritos(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltradosFav),
+              listaFavoritosOriginal : listaFavoritos,
             ),
       ),
     );
@@ -301,12 +287,8 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
             onPressed: _navigateToListaEscaner,
           ),
           IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: _navigateToListaCompra,
-          ),
-          IconButton(
-            icon: const Icon(Icons.favorite),
-            onPressed: _navigateToListaFavoritos,
+            icon: const Icon(Icons.list),
+            onPressed: _navigateToLista,
           ),
           IconButton(
             icon: const Icon(Icons.filter_list),
