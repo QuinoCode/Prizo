@@ -13,7 +13,6 @@ class DetallesProducto extends StatelessWidget {
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
   final ListaCompra listaCompra;
   final ListaFavoritos listaFavoritos;
-  final List<Producto> productosRelacionados = [];
   final PantallaProductoService pantallaProductoService = PantallaProductoService();
   final ShopDistance shopDistance = ShopDistance();
 
@@ -33,275 +32,275 @@ class DetallesProducto extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Detalles del producto'),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: null, // Eliminar título del AppBar
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: imageUrl.isNotEmpty
-                  ? Image.network(
-                imageUrl,
-                width: 185,
-                height: 185,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.broken_image, size: 100);
-                },
-              )
-                  : const Icon(Icons.image_not_supported, size: 100),
-            ),
-            const SizedBox(height: 16),
-
-            Text(
-              producto.nombre,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.left,
-            ),
-            const SizedBox(height: 8),
-
-            Text(
-              '${producto.precio.toStringAsFixed(2)}€',
-              style: const TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 4),
-
-            Text(
-              precioMedida,
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-
-            Text(
-              producto.marca,
-              style: const TextStyle(fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 6),
-
-            Text(
-              '${producto.tienda}',
-              style: const TextStyle(fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 40),
-
-            // Botones para agregar a la lista de compra o favoritos
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      // Llamar al servicio para añadir a la lista de compra
-                      listaCompraService.annadirProducto(listaCompra, producto);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${producto.nombre} añadido a la lista de compra')),
-                      );
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error al añadir a la lista de compra')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),
-                    padding: EdgeInsets.all(20),
-                  ),
-                  child: Icon(
-                    Icons.shopping_cart,
-                    size: 40,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(width: 10), //Espacio entre los botones
-
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      // Verificar si el producto ya está en favoritos
-                      if (listaFavoritosService.productoEnFavoritos(listaFavoritos, producto)) {
-                        // Mostrar un diálogo si el producto ya está en favoritos
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Producto ya en favoritos'),
-                              content: Text('${producto.nombre} ya se encuentra en tu lista de favoritos.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // Cierra el diálogo
-                                  },
-                                  child: Text('Ok'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        // Añadir a favoritos si no está ya en la lista
-                        listaFavoritosService.annadirProducto(listaFavoritos, producto);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('${producto.nombre} añadido a favoritos')),
-                        );
-                      }
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error al añadir a favoritos')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),
-                    padding: EdgeInsets.all(20),
-                  ),
-                  child: Icon(
-                    Icons.favorite,
-                    size: 40,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(width: 10),
-
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      shopDistance.launchMapQuery(producto.tienda);
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error al mostrar el mapa')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),
-                    padding: EdgeInsets.all(20),
-                  ),
-                  child: Icon(
-                    Icons.place,
-                    size: 40,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-
-            // Aquí usar un Spacer para tomar el espacio disponible
-            Spacer(),
-
-            // Lista horizontal de productos relacionados con altura fija
-            Container(
-              height: 175, // Altura fija para la sección de productos relacionados
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Nombre del supermercado
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Productos relacionados',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        producto.tienda,
+                        style: const TextStyle(fontSize: 20, color: Colors.grey),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 8),
-
-                  // FutureBuilder para manejar el Future<List<Producto>>
-                  FutureBuilder<List<Producto>>(
-                    future: pantallaProductoService.obtenerProductosSimilares(
-                        PantallaProductoService.limpiarNombreProducto(producto.nombre), producto),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        // Mientras se obtiene la respuesta, icono de carga
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 50.0), // Mover hacia abajo
-                          child: Center(child: CircularProgressIndicator()),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error al cargar productos relacionados.'));
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(child: Text('No hay productos relacionados.'));
-                      } else {
-                        List<Producto> productosRelacionados = snapshot.data!;
-
-                        return Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: productosRelacionados.map((productoRelacionado) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    // Navegar a la pantalla de detalles del producto seleccionado
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DetallesProducto(
-                                          producto: productoRelacionado,
-                                          listaCompra: listaCompra,
-                                          listaFavoritos: listaFavoritos,
-                                        ),
+                  Row(
+                    children: [
+                      // Botón de favoritos
+                      GestureDetector(
+                        onTap: () async {
+                          try {
+                            if (listaFavoritosService.productoEnFavoritos(listaFavoritos, producto)) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Producto ya en favoritos'),
+                                    content: Text('${producto.nombre} ya se encuentra en tu lista de favoritos.'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Ok'),
                                       ),
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 16.0),
-                                    child: Column(
-                                      children: [
-                                        Image.network(
-                                          productoRelacionado.foto,
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return const Icon(Icons.broken_image, size: 100);
-                                          },
-                                        ),
-                                        const SizedBox(height: 8),
-                                        SizedBox(
-                                          width: 95,
-                                          child: Text(
-                                            productoRelacionado.nombre,
-                                            style: const TextStyle(fontSize: 10),
-                                            softWrap: true,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Expanded(
-                                          child: Text(
-                                            productoRelacionado.tienda,
-                                            style: const TextStyle(fontSize: 12, color: Colors.grey),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Align(
-                                          alignment: Alignment.topCenter,
-                                          child: Text(
-                                            '${productoRelacionado.precio.toStringAsFixed(2)}€',
-                                            style: const TextStyle(fontSize: 12),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else {
+                              listaFavoritosService.annadirProducto(listaFavoritos, producto);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('${producto.nombre} añadido a favoritos')),
+                              );
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Error al añadir a favoritos')),
+                            );
+                          }
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xFF95B3FF),
                           ),
-                        );
-                      }
-                    },
+                          child: const Icon(Icons.favorite_border, color: Colors.black),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+
+                      // Botón de distancia
+                      GestureDetector(
+                        onTap: () async {
+                          try {
+                            shopDistance.launchMapQuery(producto.tienda);
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Error al mostrar el mapa')),
+                            );
+                          }
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xFF95B3FF),
+                          ),
+                          child: const Icon(Icons.place_outlined, color: Colors.black),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+
+              // Imagen del producto
+              Center(
+                child: imageUrl.isNotEmpty
+                    ? Image.network(
+                  imageUrl,
+                  width: 250,
+                  height: 250,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.broken_image, size: 100);
+                  },
+                )
+                    : const Icon(Icons.image_not_supported, size: 100),
+              ),
+              const SizedBox(height: 16),
+
+              // Nombre del producto
+              Text(
+                producto.nombre,
+                style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 6),
+
+              // Marca
+              Text(
+                producto.marca,
+                style: const TextStyle(fontSize: 17, color: Colors.black),
+              ),
+              const SizedBox(height: 8),
+
+              // Precio y botón de añadir al carrito
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${producto.precio.toStringAsFixed(2)}€',
+                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        precioMedida,
+                        style: const TextStyle(fontSize: 15, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  // Botón añadir al carrito
+                  GestureDetector(
+                    onTap: () async {
+                      try {
+                        listaCompraService.annadirProducto(listaCompra, producto);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('${producto.nombre} añadido a la lista de compra')),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Error al añadir a la lista de compra')),
+                        );
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF95B3FF),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Icon(Icons.add_shopping_cart, color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 50),
+
+              // Barra azul de separación
+              Container(
+                height: 2,
+                color: Color(0xFF95B3FF),
+              ),
+              const SizedBox(height: 50),
+
+              // Productos relacionados
+              Text(
+                'Productos relacionados',
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+
+              FutureBuilder<List<Producto>>(
+                future: pantallaProductoService.obtenerProductosSimilares(
+                    PantallaProductoService.limpiarNombreProducto(producto.nombre), producto),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return const Center(child: Text('Error al cargar productos relacionados.'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No hay productos relacionados.'));
+                  } else {
+                    List<Producto> productosRelacionados = snapshot.data!;
+                    return SizedBox(
+                      height: 175,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: productosRelacionados.length,
+                        itemBuilder: (context, index) {
+                          Producto productoRelacionado = productosRelacionados[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetallesProducto(
+                                    producto: productoRelacionado,
+                                    listaCompra: listaCompra,
+                                    listaFavoritos: listaFavoritos,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: Column(
+                                children: [
+                                  Image.network(
+                                    productoRelacionado.foto,
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(Icons.broken_image, size: 60);
+                                    },
+                                  ),
+                                  const SizedBox(height: 8),
+                                  SizedBox(
+                                    width: 95,
+                                    child: Text(
+                                      productoRelacionado.nombre,
+                                      style: const TextStyle(fontSize: 10),
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${productoRelacionado.precio.toStringAsFixed(2)}€',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
