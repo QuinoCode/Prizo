@@ -75,7 +75,7 @@ class PerfilInterfaz extends StatelessWidget {
         Widget? trailing,
         Color? titleColor}) {
     return ListTile(
-      leading: Icon(icon, color: Colors.blue),
+      leading: Icon(icon, color: Color(0xFF95B3FF)),
       title: Text(
         title,
         style: TextStyle(color: titleColor ?? Colors.black, fontSize: 16),

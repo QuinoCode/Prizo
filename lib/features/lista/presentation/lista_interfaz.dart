@@ -176,7 +176,7 @@ class _ListaState extends State<ListaInterfaz> {
                   Container(
                     height: 80,  // Altura de la línea (ajústala según el tamaño de las imágenes)
                     width: 2,    // Ancho de la línea
-                    color: Colors.blue, // Color de la línea
+                    color: Color(0xFF95B3FF), // Color de la línea
                   ),
               ],
             ),
@@ -211,7 +211,7 @@ class _ListaState extends State<ListaInterfaz> {
           // Icono debajo del nombre
           if (isCompra)
             IconButton(
-              icon: const Icon(Icons.circle_outlined, color: Colors.blue),
+              icon: const Icon(Icons.circle_outlined, color: Color(0xFF95B3FF)),
               onPressed: () {
                 _ventanaConfirmacion(context, producto);
               },

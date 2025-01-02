@@ -102,10 +102,10 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
       onPressed: () => _toggleOrder(index),
       style: ElevatedButton.styleFrom(
         backgroundColor: selectedOrders.contains(index)
-            ? Colors.blue
+            ? Color(0xFF95B3FF)
             : Colors.white,
         foregroundColor: Colors.black,
-        side: const BorderSide(color: Colors.blue),
+        side: const BorderSide(color: Color(0xFF95B3FF)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
@@ -119,9 +119,9 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
     return ElevatedButton(
       onPressed: () => _toggleAlergeno(index),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? Colors.blue : Colors.white,
+        backgroundColor: isSelected ? Color(0xFF95B3FF) : Colors.white,
         foregroundColor: Colors.black,
-        side: const BorderSide(color: Colors.blue),
+        side: const BorderSide(color: Color(0xFF95B3FF)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),

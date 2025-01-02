@@ -121,24 +121,24 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                 ElevatedButton(
                   onPressed: () { _toggleTienda("DIA"); },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneDia ? Colors.lightBlueAccent : Colors.white,
-                    side: BorderSide(color: Colors.lightBlueAccent),
+                    backgroundColor: tieneDia ? Color(0xFF95B3FF) : Colors.white,
+                    side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text('Día'),
                 ),
                 ElevatedButton(
                   onPressed: () { _toggleTienda("CONSUM"); },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneConsum ? Colors.lightBlueAccent : Colors.white,
-                    side: BorderSide(color: Colors.lightBlueAccent),
+                    backgroundColor: tieneConsum ? Color(0xFF95B3FF) : Colors.white,
+                    side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text('Consum'),
                 ),
                 ElevatedButton(
                   onPressed: () { _toggleTienda("Carrefour"); },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneCarrefour ? Colors.lightBlueAccent : Colors.white,
-                    side: BorderSide(color: Colors.lightBlueAccent),
+                    backgroundColor: tieneCarrefour ? Color(0xFF95B3FF) : Colors.white,
+                    side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text('Carrefour'),
                 ),
@@ -171,7 +171,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                       listaFavoritosService.quitarProducto(widget.listaFavoritos, producto);
                     },
                     background: Container(
-                      color: Colors.lightBlueAccent,
+                      color: Color(0xFF95B3FF),
                       alignment: Alignment.centerLeft,
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Image.memory(papeleraImage, width: 30, height: 30),
