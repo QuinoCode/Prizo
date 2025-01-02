@@ -191,8 +191,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                     _toggleTienda("DIA");
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneDia ? Colors.lightBlueAccent : Colors.white,
-                    side: BorderSide(color: Colors.lightBlueAccent),
+                    backgroundColor: tieneDia ? Color(0xFF95B3FF) : Colors.white,
+                    side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text('Día'),
                 ),
@@ -201,8 +201,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                     _toggleTienda("CONSUM");
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneConsum ? Colors.lightBlueAccent : Colors.white,
-                    side: BorderSide(color: Colors.lightBlueAccent),
+                    backgroundColor: tieneConsum ? Color(0xFF95B3FF) : Colors.white,
+                    side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text('Consum'),
                 ),
@@ -211,8 +211,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                     _toggleTienda("Carrefour");
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneCarrefour ? Colors.lightBlueAccent : Colors.white,
-                    side: BorderSide(color: Colors.lightBlueAccent),
+                    backgroundColor: tieneCarrefour ? Color(0xFF95B3FF) : Colors.white,
+                    side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text('Carrefour'),
                 ),

@@ -68,7 +68,7 @@ class _ListaState extends State<ListaInterfaz> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Lista de Productos'),
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -96,14 +96,15 @@ class _ListaState extends State<ListaInterfaz> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 35),
           ),
           IconButton(
             icon: const Icon(Icons.arrow_forward),
+            iconSize: 36,
             onPressed: onTap,
           ),
         ],
@@ -139,6 +140,25 @@ class _ListaState extends State<ListaInterfaz> {
     return _buildHorizontalList(productosFavoritos, isCompra: false);
   }
 
+  String obtenerSubcadena(String input) {
+    String result;
+
+    // Verificamos si la longitud es suficiente para acceder al carácter 17
+    if (input.length >= 17 && input[16] == ' ') {
+      result = input.substring(0, 16);
+    } else {
+      result = input.substring(0, 8);
+    }
+
+    // Comprobamos si el resultado es diferente al original
+    if (result.length < input.length) {
+      result += "\n" + input.substring(result.length, 17) + "...";  // Agregamos "..." si el resultado es más corto que el original
+    }
+
+    return result;
+  }
+
+
   Widget _buildHorizontalList(List<Producto> productos, {required bool isCompra}) {
     return SizedBox(
       height: 150,
@@ -147,7 +167,20 @@ class _ListaState extends State<ListaInterfaz> {
         itemCount: productos.length,
         itemBuilder: (context, index) {
           final producto = productos[index];
-          return _buildProductCard(producto, isCompra);
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              children: [
+                _buildProductCard(producto, isCompra),  // El producto
+                if (index < productos.length - 1)   // Solo muestra la línea si no es el último producto
+                  Container(
+                    height: 80,  // Altura de la línea (ajústala según el tamaño de las imágenes)
+                    width: 2,    // Ancho de la línea
+                    color: Color(0xFF95B3FF), // Color de la línea
+                  ),
+              ],
+            ),
+          );
         },
       ),
     );
@@ -156,36 +189,32 @@ class _ListaState extends State<ListaInterfaz> {
   Widget _buildProductCard(Producto producto, bool isCompra) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Stack(
+      child: Column(
         children: [
-          Column(
-            children: [
-              Image.network(
-                producto.foto,
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                const Icon(Icons.image_not_supported, size: 80),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                producto.nombre,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 14),
-              ),
-            ],
+          // Imagen del producto
+          Image.network(
+            producto.foto,
+            width: 80,
+            height: 80,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported, size: 80),
           ),
+          const SizedBox(height: 8),
+          // Nombre del producto
+          Text(
+            obtenerSubcadena(producto.nombre),
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 14),
+          ),
+          // Espacio entre el nombre y el icono
+          const SizedBox(height: 8),
+          // Icono debajo del nombre
           if (isCompra)
-            Positioned(
-              top: 0,
-              right: 0,
-              child: IconButton(
-                icon: const Icon(Icons.circle_outlined, color: Colors.blue),
-                onPressed: () {
-                  _ventanaConfirmacion(context, producto);
-                },
-              ),
+            IconButton(
+              icon: const Icon(Icons.circle_outlined, color: Color(0xFF95B3FF)),
+              onPressed: () {
+                _ventanaConfirmacion(context, producto);
+              },
             ),
         ],
       ),
