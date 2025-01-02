@@ -186,7 +186,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            const ScannerInterface(),
+        const ScannerInterface(),
       ),
     );
   }
@@ -433,9 +433,9 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => DetallesProducto(
-          producto: producto, // El producto seleccionado
-          listaCompra: listaCompra, // Pasamos la instancia de ListaCompra
-          listaFavoritos: listaFavoritos,
+              producto: producto, // El producto seleccionado
+              listaCompra: listaCompra, // Pasamos la instancia de ListaCompra
+              listaFavoritos: listaFavoritos,
             ),
           ),
         );
