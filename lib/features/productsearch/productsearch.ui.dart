@@ -71,6 +71,43 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   List<int> alergenosSeleccionados = [];
   List<String> tiendasSeleccionadas = [];
 
+  List<List<Producto>> filtrar_tienda(List<List<Producto>> productos) {
+    if (productos.isEmpty) { return productos; }
+    if (tiendasSeleccionadas.isEmpty) { return productos; }
+    List<List<Producto>> productosFiltrados = [];
+    for (List<Producto> lista in productos) {
+      if (lista.isNotEmpty && tiendasSeleccionadas.contains(lista[0].tienda)) {
+        productosFiltrados.add(lista);
+      }
+    }
+    return productosFiltrados;
+  }
+
+  List<List<Producto>> filtrar_alergeno(List<List<Producto>> productos) {
+    if (productos.isEmpty) { return productos; }
+    if (alergenosSeleccionados.isEmpty) { return productos; }
+    List<List<Producto>> productosFiltrados = [];
+    for (List<Producto> lista in productos) {
+      List<Producto> listaAuxiliar = [];
+      for (Producto producto in lista) {
+        if(!tieneAlergeno(producto)) {
+          listaAuxiliar.add(producto);
+        }
+      }
+      productosFiltrados.add(listaAuxiliar);
+    }
+    return productosFiltrados;
+  }
+
+  bool tieneAlergeno(Producto producto) {
+    for (int indice in alergenosSeleccionados) {
+      if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -98,58 +135,11 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
 
     try {
       final productos = await searcher.searchProducts(_searchController.text);
-      List<List<Producto>> productosFiltrados = [];
-      if (productos.isNotEmpty) {
-        if (tiendasSeleccionadas.isNotEmpty && alergenosSeleccionados.isNotEmpty) {
-          for (var lista in productos) {
-            if (lista.isNotEmpty && tiendasSeleccionadas.contains(lista[0].tienda)) {
-              List<Producto> listaAuxiliar = [];
-              for (var producto in lista) {
-                bool meter = true;
-                for (var indice in alergenosSeleccionados) {
-                  if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
-                    meter = false;
-                    break;
-                  }
-                }
-                if (meter) {
-                  listaAuxiliar.add(producto);
-                }
-              }
-              if (listaAuxiliar.isNotEmpty) {
-                productosFiltrados.add(listaAuxiliar);
-              }
-            }
-          }
-        } else if (tiendasSeleccionadas.isNotEmpty) {
-          for (var lista in productos) {
-            if (lista.isNotEmpty && tiendasSeleccionadas.contains(lista[0].tienda)) {
-              productosFiltrados.add(lista);
-            }
-          }
-        } else if (alergenosSeleccionados.isNotEmpty) {
-          for (var lista in productos) {
-            if (lista.isNotEmpty) {
-              List<Producto> listaAuxiliar = [];
-              for (var producto in lista) {
-                for (var indice in alergenosSeleccionados) {
-                  if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
-                    listaAuxiliar.add(producto);
-                  }
-                }
-              }
-              if (listaAuxiliar.isNotEmpty) {
-                productosFiltrados.add(listaAuxiliar);
-              }
-            }
-          }
-        } else {
-          productosFiltrados = productos;
-        }
-      }
+      List<List<Producto>> filtrado_por_tienda = filtrar_tienda(productos);
+      List<List<Producto>> filtrado_por_alergeno = filtrar_alergeno(filtrado_por_tienda);
 
       // Por cada súper separa los productos en dos listas
-      List<(List<Producto>, List<Producto>)> listasSeparadas = productosFiltrados.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
+      List<(List<Producto>, List<Producto>)> listasSeparadas = filtrado_por_alergeno.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
 
       // Combina las primeras listas de cada supermercado y las segundas de cada supermercado entre ellas
       final (List<Producto> listaCategoria, List<Producto> listaRestante) = combinaListasSupers(listasSeparadas);
@@ -157,7 +147,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         _productos = listaCategoria;
         _productosRestantes = listaRestante;
       });
-      if (productosFiltrados.isEmpty) {
+      if (filtrado_por_alergeno.isEmpty) {
         print("No se encontraron productos para la consulta: ${_searchController.text}");
       }
     } catch (e) {
