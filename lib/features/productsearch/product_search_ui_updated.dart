@@ -9,7 +9,6 @@ import '../../features/obtencion_producto/application/consum_finder_service.dart
 import '../../features/obtencion_producto/application/dia_finder_service.dart';
 
 import '../../features/comparacion_productos/application/comparacion_producto.dart';
-import 'package:add_to_cart_button/add_to_cart_button.dart';
 
 import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
@@ -17,12 +16,29 @@ import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz
 
 import '../../features/escaner/presentation/interfaz_scanner.dart';
 
-//to be made into a list fetched from db
-var recentElementA = 'Queso';
-var recentElementB = 'Tomate';
-var recentElementC = 'Plátanos'; 
-var recentElementD = 'Macarrones';
-var recentElementE = 'Azúcar';
+
+var recentElementA = "Queso", recentElementB = "Tomate", recentElementC = "Plátanos", recentElementD = "Macarrones", recentElementE = "Azúcar";
+
+//add a db access because ughhhhhhhhhhhhhhhhhhhh
+/*Future<void> assignRecents(Database db, String usuario) async {
+  // Query to get the 5 most recent products for the user
+  var result = await db.rawQuery('''
+    SELECT p.producto_id, p.name, p.description
+    FROM Lista_Recientes_Producto lrp
+    JOIN Producto p ON lrp.producto_id = p.id
+    WHERE lrp.lista_id = (SELECT id FROM Lista_Recientes WHERE usuario = ?)
+    ORDER BY lrp.created_at DESC
+    LIMIT 5
+  ''', [usuario]);
+  
+  recentElementA = result.isNotEmpty ? result[0].toString() : "Queso";
+  recentElementB = result.length > 1 ? result[1].toString() : "Tomate";
+  recentElementC = result.length > 2 ? result[2].toString() : "Plátanos";
+  recentElementD = result.length > 3 ? result[3].toString() : "Macarrones";
+  recentElementE = result.length > 4 ? result[4].toString() : "Azúcar";
+}
+*/
+
 
 final ListaCompraService listaCompraService = ListaCompraService();
 ListaCompra listaCompra = ListaCompra(
@@ -45,6 +61,7 @@ class MultiMarketProductSearcher implements ProductSearcher {
     required this.carrefourService,
   });
 
+  //make the get products list use stores for a return, remove override
   @override
   Future<List<List<Producto>>> searchProducts(String query) async {
     try {
@@ -93,10 +110,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   List<Producto> _productosRestantes = [];
   bool _isLoading = false;
   bool _isSearching = false;
-  
-  //replace with a list of recents from db
-  List<String> values = ['Queso','Tomate','Plátanos','Macarrones','Azúcar'];
-
 
   @override
   void dispose() {
@@ -120,6 +133,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     });
   }
 
+  //cambios de pantalla
   void _navigateToScanner() {
     Navigator.push(
       context,
@@ -142,16 +156,20 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     );
   }
 
+  //falta navegar a filtros
   void _navigateToFilters() {
-    /*Navigator.push(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-          ScannerInterface(),
+            ListaCompraInterfaz(
+              listaCompra: listaCompra,
+            ),
       ),
-    );*/
+    );
   }
 
+  //Llamar a búsqueda 
   void _searchProducts() async {
     setState(() {
       _isLoading = true;
@@ -193,6 +211,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     }
   }
 
+  //Construye pantalla de recientes, faltan recientes 
   Widget _buildRecents() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,6 +299,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     );
   }
   
+  //Construye la búsqueda, faltan botones tienda
   Widget _buildSearchResults() {
     return Expanded(
       child: Column(
@@ -439,13 +459,13 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.tune),
-                      onPressed: () => _navigateToFilters(),
+                      onPressed: () => _navigateToFilters(), // Botón de filtros
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 20), 
-              _isSearching
+              _isSearching //Decide si mostrar recientes o si mostrar resultados de busqueda
                 ? _isLoading
                   ? const Center( heightFactor: 12, child: CircularProgressIndicator(), )
                   : _buildSearchResults()
@@ -485,6 +505,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   }
 }
 
+//Declaración de un nuevo statefulWidget para instanciar los elementos de producto, falta que el contador tome de la lista de compra
 class StatefulStoreItem extends StatefulWidget {
   final Producto producto;
   const StatefulStoreItem({required this.producto});
@@ -606,8 +627,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 )
               ),
               SizedBox(
-                child:
-                _showButton
+                child: _showButton
                   ? Container(
                       height: 35,
                       width: 65,
@@ -629,47 +649,59 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                     )
                   : Container(
                       height: 35,
-                      width: 95,
+                      width: 65,
                       padding: EdgeInsets.zero,
                       decoration: BoxDecoration(
                         color: Color.fromARGB(255, 240, 240, 240),
                         borderRadius: BorderRadius.circular(20)
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      child: Stack(
                         children: [
-                          IconButton(
-                            padding: EdgeInsets.zero,
-                            iconSize: 12,
-                            icon: Icon(Icons.remove),
-                            onPressed: () {
-                              setState(() {
-                                if (_counter > 0) {
-                                  listaCompraService.quitarProducto(listaCompra, widget.producto);
-                                  _counter--;
-                                } else {
-                                  _showButton = true;
-                                }
-                              });
-                            },
+                          Positioned(
+                            top: 0,
+                            bottom: 0,
+                            right: 25,
+                            child: IconButton(
+                              iconSize: 19,
+                              padding: EdgeInsets.zero,
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,  
+                              icon: Icon(Icons.remove),
+                              onPressed: () {
+                                setState(() {
+                                  if (_counter > 0) {
+                                    listaCompraService.quitarProducto(listaCompra, widget.producto);
+                                    _counter--;
+                                  } else {
+                                    _showButton = true;
+                                  }
+                                });
+                              },
+                            ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.zero,
-                            child: Text('$_counter', style: TextStyle(fontSize: 14)),
-                            
+                          Positioned(
+                            left: 27,
+                            top: 4,
+                            bottom: 0,
+                            child: Text('$_counter', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500)),
                           ),
-                          IconButton(
-                            padding: EdgeInsets.zero,
-                            iconSize: 12,
-                            icon: Icon(Icons.add),
-                            onPressed: () {
-                              listaCompraService.annadirProducto(listaCompra, widget.producto);
-                              setState(() {
-                                _counter++;
-                              });
-                            },
+                          Positioned(
+                            top: 0,
+                            bottom: 0,
+                            left: 25,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,  
+                              iconSize: 19,
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                listaCompraService.annadirProducto(listaCompra, widget.producto);
+                                setState(() {
+                                  _counter++;
+                                });
+                              },
+                            ),
                           ),
                         ],
                       ),

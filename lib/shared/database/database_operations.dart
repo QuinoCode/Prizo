@@ -38,8 +38,6 @@ class DatabaseOperations {
 		await createListaFavoritosTables(db);
 	}
 
-
-
 	Future<void> createProductTable(Database db) async {
 		 await db.execute(
 			"""
@@ -104,6 +102,17 @@ class DatabaseOperations {
 		"""
 		);
 	}
+
+  Future<void> createListaRecientesTables(Database db) async {
+    await db.execute(
+        """
+        CREATE TABLE Lista_Recientes(
+            id TEXT PRIMARY KEY, 
+            busqueda TEXT
+        )
+        """
+    );
+  }
 
 }
 
