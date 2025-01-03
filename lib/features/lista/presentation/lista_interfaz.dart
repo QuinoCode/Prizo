@@ -7,7 +7,6 @@ import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.d
 import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 
 class ListaInterfaz extends StatefulWidget {
-  final List<String> tiendasSeleccionadas;
   final ListaCompra listaCompra;
   final ListaFavoritos listaFavoritos;
   final ListaCompra listaCompraOriginal;
@@ -15,7 +14,6 @@ class ListaInterfaz extends StatefulWidget {
 
   ListaInterfaz({
     super.key,
-    required this.tiendasSeleccionadas,
     required this.listaCompra,
     required this.listaCompraOriginal,
     required this.listaFavoritos,
@@ -228,7 +226,6 @@ class _ListaState extends State<ListaInterfaz> {
         builder: (context) => ListaFavoritosInterfaz(
           listaFavoritos: widget.listaFavoritos,
           listaCompra: widget.listaCompraOriginal,
-          tiendasSeleccionadas: widget.tiendasSeleccionadas,
           original: widget.listaFavoritosOriginal,
         ),
       ),
@@ -241,7 +238,6 @@ class _ListaState extends State<ListaInterfaz> {
       MaterialPageRoute(
         builder: (context) => ListaCompraInterfaz(
           listaCompra: widget.listaCompra,
-          tiendasSeleccionadas: widget.tiendasSeleccionadas,
           original: widget.listaCompraOriginal,
         ),
       ),

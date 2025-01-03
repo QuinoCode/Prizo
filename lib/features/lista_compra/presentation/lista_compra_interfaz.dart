@@ -7,9 +7,8 @@ import 'package:prizo/shared/application/producto_service.dart';
 class ListaCompraInterfaz extends StatefulWidget {
   ListaCompra listaCompra;
   final ListaCompra original;
-  final List<String> tiendasSeleccionadas;
 
-  ListaCompraInterfaz({super.key, required this.listaCompra, required this.tiendasSeleccionadas, required this.original});
+  ListaCompraInterfaz({super.key, required this.listaCompra, required this.original});
 
   @override
   _ListaCompraInterfazState createState() => _ListaCompraInterfazState();
@@ -23,18 +22,19 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   Map<String, TextEditingController> _mapaControladorCantidad = {};
   String? _mensajeAdvertencia;
   GlobalKey<ScaffoldMessengerState> _scaffoldClave = GlobalKey<ScaffoldMessengerState>();
+  List<String> tiendasSeleccionadas = [];
 
   void _toggleTienda(String tienda) {
     setState(() {
-      if (widget.tiendasSeleccionadas.contains(tienda)) {
-        widget.tiendasSeleccionadas.remove(tienda);
+      if (tiendasSeleccionadas.contains(tienda)) {
+        tiendasSeleccionadas.remove(tienda);
       } else {
-        widget.tiendasSeleccionadas.add(tienda);
+        tiendasSeleccionadas.add(tienda);
       }
       List<(Producto, int)> productosFiltrados = [];
-      if (widget.original.productos.isNotEmpty && widget.tiendasSeleccionadas.isNotEmpty) {
+      if (widget.original.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
         for (var producto in widget.original.productos) {
-          if (widget.tiendasSeleccionadas.contains(producto.$1.tienda)) {
+          if (tiendasSeleccionadas.contains(producto.$1.tienda)) {
             productosFiltrados.add(producto);
           }
         }
@@ -166,9 +166,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   }
   @override
   Widget build(BuildContext context) {
-    bool tieneDia = widget.tiendasSeleccionadas.contains("DIA");
-    bool tieneConsum = widget.tiendasSeleccionadas.contains("CONSUM");
-    bool tieneCarrefour = widget.tiendasSeleccionadas.contains("Carrefour");
     double precioTotal = listaCompraService.getPrecioTotal(widget.listaCompra);
 
     return Scaffold(
@@ -191,7 +188,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                     _toggleTienda("DIA");
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneDia ? Color(0xFF95B3FF) : Colors.white,
+                    backgroundColor: tiendasSeleccionadas.contains("DIA") ? Color(0xFF95B3FF) : Colors.white,
                     side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text('Día'),
@@ -201,7 +198,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                     _toggleTienda("CONSUM");
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneConsum ? Color(0xFF95B3FF) : Colors.white,
+                    backgroundColor: tiendasSeleccionadas.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
                     side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text('Consum'),
@@ -211,7 +208,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                     _toggleTienda("Carrefour");
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneCarrefour ? Color(0xFF95B3FF) : Colors.white,
+                    backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
                     side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text('Carrefour'),

@@ -214,7 +214,6 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       MaterialPageRoute(
         builder: (context) =>
             ListaInterfaz(
-              tiendasSeleccionadas : tiendasSeleccionadas,
               listaCompra : new ListaCompra(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltradosCom),
               listaCompraOriginal : listaCompra,
               listaFavoritos : new ListaFavoritos(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltradosFav),
