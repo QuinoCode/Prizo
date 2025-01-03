@@ -18,9 +18,6 @@ import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz
 
 import '../../features/escaner/presentation/interfaz_scanner.dart';
 
-
-var recentElementA = "Queso", recentElementB = "Tomate", recentElementC = "Plátanos", recentElementD = "Macarrones", recentElementE = "Azúcar";
-
 final ListaCompraService listaCompraService = ListaCompraService();
 ListaCompra listaCompra = ListaCompra(
     id: '1', usuario: 'usuario_demo', productos: []);
@@ -92,6 +89,11 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   List<Producto> _productosRestantes = [];
   bool _isLoading = false;
   bool _isSearching = false;
+  var recentElementA = "Queso";
+  var recentElementB = "Tomate";
+  var recentElementC = "Plátanos"; 
+  var recentElementD = "Macarrones";
+  var recentElementE = "Azúcar" ;
 
   @override
   void dispose() {
@@ -193,89 +195,134 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
 
   //Construye pantalla de recientes, faltan recientes 
   Widget _buildRecents() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children:[
-        const Text(
-          'Recientes',
-          style: TextStyle(
-            fontSize: 35,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 13),
-        Wrap(
-          spacing: 8,
-          runSpacing: 2,
-          children: [
-            ElevatedButton(
-              onPressed: () => {_searchController.text = recentElementA, _searchProducts()},
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical:10),
-                foregroundColor: Color.fromARGB(255,80,79,79),
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23),
-                  side: BorderSide(color: Color.fromARGB(255,174,178,189),)
+    return FutureBuilder<List<Map<String, Object?>>>(
+      future: DatabaseOperations.instance.fetchItemsListaRecientes(db),
+      builder: (context, snapshot) {
+        // Check if the future has completed
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        }
+
+        if (snapshot.hasData) {
+          // Extract the result from snapshot
+          var result = snapshot.data!;
+
+          // Ensure the list has 5 elements
+          String recentElementA = result.length > 0 ? result[0]['busqueda'].toString() : 'Queso';
+          String recentElementB = result.length > 1 ? result[1]['busqueda'].toString() : 'Tomate';
+          String recentElementC = result.length > 2 ? result[2]['busqueda'].toString() : 'Plátanos';
+          String recentElementD = result.length > 3 ? result[3]['busqueda'].toString() : 'Macarrones';
+          String recentElementE = result.length > 4 ? result[4]['busqueda'].toString() : 'Azúcar';
+
+          // Build the UI with the fetched data
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Recientes',
+                style: TextStyle(
+                  fontSize: 35,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              child: Text(recentElementA),
-            ),
-            ElevatedButton(
-              onPressed: () => {_searchController.text = recentElementB, _searchProducts()},
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical:10),
-                foregroundColor: Color.fromARGB(255,80,79,79),
-                backgroundColor: Color.fromARGB(255,149,179,252),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23),
-                  side: BorderSide(color: Color.fromARGB(255,174,178,189),)
-                ),
+              const SizedBox(height: 13),
+              Wrap(
+                spacing: 8,
+                runSpacing: 2,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _searchController.text = recentElementA;
+                      _searchProducts();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      foregroundColor: Color.fromARGB(255, 80, 79, 79),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(23),
+                        side: BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
+                      ),
+                    ),
+                    child: Text(recentElementA),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _searchController.text = recentElementB;
+                      _searchProducts();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      foregroundColor: Color.fromARGB(255, 80, 79, 79),
+                      backgroundColor: Color.fromARGB(255, 149, 179, 252),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(23),
+                        side: BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
+                      ),
+                    ),
+                    child: Text(recentElementB),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _searchController.text = recentElementC;
+                      _searchProducts();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      foregroundColor: Color.fromARGB(255, 80, 79, 79),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(23),
+                        side: BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
+                      ),
+                    ),
+                    child: Text(recentElementC),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _searchController.text = recentElementD;
+                      _searchProducts();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      foregroundColor: Color.fromARGB(255, 80, 79, 79),
+                      backgroundColor: Color.fromARGB(255, 149, 179, 252),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(23),
+                        side: BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
+                      ),
+                    ),
+                    child: Text(recentElementD),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _searchController.text = recentElementE;
+                      _searchProducts();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      foregroundColor: Color.fromARGB(255, 80, 79, 79),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(23),
+                        side: BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
+                      ),
+                    ),
+                    child: Text(recentElementE),
+                  ),
+                ],
               ),
-              child: Text(recentElementB),
-            ),
-            ElevatedButton(
-              onPressed: () => {_searchController.text = recentElementC, _searchProducts()},
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical:10),
-                foregroundColor: Color.fromARGB(255,80,79,79),
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23),
-                  side: BorderSide(color: Color.fromARGB(255,174,178,189),)
-                ),
-              ),
-              child: Text(recentElementC),
-            ),
-            ElevatedButton(
-              onPressed: () => {_searchController.text = recentElementD, _searchProducts()},
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical:10),
-                foregroundColor: Color.fromARGB(255,80,79,79),
-                backgroundColor: Color.fromARGB(255,149,179,252),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23),
-                  side: BorderSide(color: Color.fromARGB(255,174,178,189),)
-                ),
-              ),
-              child: Text(recentElementD),
-            ),
-            ElevatedButton(
-              onPressed: () => {_searchController.text = recentElementE, _searchProducts()},
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical:10),
-                foregroundColor: Color.fromARGB(255,80,79,79),
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23),
-                  side: BorderSide(color: Color.fromARGB(255,174,178,189),)
-                ),
-              ),
-              child: Text(recentElementE),
-            ),
-          ],
-        ),
-      ]
+            ],
+          );
+        }
+
+        // Default case: no data available
+        return Center(child: Text('No recent items available'));
+      },
     );
   }
   
@@ -423,7 +470,9 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                           ),
                           textInputAction: TextInputAction.search,
                           onSubmitted: (query) {
-                            DatabaseOperations.instance.registerReciente(db, query);
+                            if (_searchController.text != ""){
+                              DatabaseOperations.instance.registerReciente(db, query);
+                            }
                             _searchProducts(); // Llamamos a la función de búsqueda al presionar "Enter"
                           },
                         )
@@ -607,93 +656,108 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                     ),
                 )
               ),
-              SizedBox(
-                child: _showButton
-                  ? Container(
-                      height: 35,
-                      width: 65,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 149, 179, 252),
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-                      child:
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _showButton = false;
-                          });
-                        },
-                        color: Color.fromARGB(255, 80, 79, 79),
-                        icon: Icon(Icons.shopping_basket)
-                      )
-                    )
-                  : Container(
-                      height: 35,
-                      width: 65,
-                      padding: EdgeInsets.zero,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 240, 240, 240),
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 0,
-                            bottom: 0,
-                            right: 25,
-                            child: IconButton(
-                              iconSize: 19,
-                              padding: EdgeInsets.zero,
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,  
-                              icon: Icon(Icons.remove),
-                              onPressed: () {
-                                setState(() {
-                                  if (_counter > 0) {
-                                    _counter--;
-                                  } else {
-                                    _showButton = true;
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                          _counter < 10 
-                          ? Positioned(
-                              left: 27,
-                              top: 4,
-                              bottom: 0,
-                              child: Text('$_counter', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500)),
-                            )
-                          : Positioned(
-                              left: 23,
-                              top: 6,
-                              bottom: 0,
-                              child: Text('$_counter', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                            ),
-                          Positioned(
-                            top: 0,
-                            bottom: 0,
-                            left: 25,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,  
-                              iconSize: 19,
-                              icon: Icon(Icons.add),
-                              onPressed: () {
-                                if (_counter < 99) {
+                SizedBox(
+                  child: _showButton
+                    ? Container(
+                        height: 35,
+                        width: 65,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 149, 179, 252),
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        child:
+                        IconButton(
+                          onPressed: () {
+                            DatabaseOperations.instance.existsInProductTable(db, widget.producto).then((exists) {
+                              if (exists) {
+                                DatabaseOperations.instance.fetchCantidadListaCompra(db, widget.producto).then((cantidad) {
                                   setState(() {
-                                    _counter++;
+                                    _counter = cantidad;  // Set _counter to the fetched cantidad
+                                    _showButton = false; // Update _showButton only if the product exists in the table
                                   });
-                                }
-                              },
+                                });
+                              } else {
+                                DatabaseOperations.instance.registerIntoProductTable(db, widget.producto).then((_) {});
+                                setState(() {
+                                  _showButton = false; // Update _showButton after inserting the product
+                                });
+                              }
+                            });
+                          },
+                          color: Color.fromARGB(255, 80, 79, 79),
+                          icon: Icon(Icons.shopping_basket)
+                        )
+                      )
+                    : Container(
+                        height: 35,
+                        width: 65,
+                        padding: EdgeInsets.zero,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 240, 240, 240),
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 0,
+                              bottom: 0,
+                              right: 25,
+                              child: IconButton(
+                                iconSize: 19,
+                                padding: EdgeInsets.zero,
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,  
+                                icon: Icon(Icons.remove),
+                                onPressed: () {
+                                  setState(() {
+                                    if (_counter > 0) {
+                                      DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                      _counter--;
+                                    } else {
+                                      DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
+                                      _showButton = true;
+                                    }
+                                  });
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                            _counter < 10 
+                            ? Positioned(
+                                left: 27,
+                                top: 4,
+                                bottom: 0,
+                                child: Text('$_counter', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500)),
+                              )
+                            : Positioned(
+                                left: 23,
+                                top: 6,
+                                bottom: 0,
+                                child: Text('$_counter', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                              ),
+                            Positioned(
+                              top: 0,
+                              bottom: 0,
+                              left: 25,
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,  
+                                iconSize: 19,
+                                icon: Icon(Icons.add),
+                                onPressed: () {
+                                  if (_counter < 99) {
+                                    DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                    setState(() {
+                                      _counter++;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                )
+                  )
             ],
           ),
         ),
