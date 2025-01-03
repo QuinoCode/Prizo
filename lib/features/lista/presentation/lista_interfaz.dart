@@ -7,19 +7,13 @@ import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.d
 import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 
 class ListaInterfaz extends StatefulWidget {
-  final List<String> tiendasSeleccionadas;
   final ListaCompra listaCompra;
   final ListaFavoritos listaFavoritos;
-  final ListaCompra listaCompraOriginal;
-  final ListaFavoritos listaFavoritosOriginal;
 
   ListaInterfaz({
     super.key,
-    required this.tiendasSeleccionadas,
     required this.listaCompra,
-    required this.listaCompraOriginal,
     required this.listaFavoritos,
-    required this.listaFavoritosOriginal,
   });
 
   @override
@@ -50,7 +44,7 @@ class _ListaState extends State<ListaInterfaz> {
               onPressed: () {
                 /* Eliminar el producto completo de la lista */
                 setState(() {
-                  listaService.borrarComprado(widget.listaCompra, widget.listaCompraOriginal, producto);
+                  listaService.borrarComprado(widget.listaCompra, widget.listaCompra, producto);
                 });
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
@@ -227,9 +221,8 @@ class _ListaState extends State<ListaInterfaz> {
       MaterialPageRoute(
         builder: (context) => ListaFavoritosInterfaz(
           listaFavoritos: widget.listaFavoritos,
-          listaCompra: widget.listaCompraOriginal,
-          tiendasSeleccionadas: widget.tiendasSeleccionadas,
-          original: widget.listaFavoritosOriginal,
+          listaCompra: widget.listaCompra,
+          original: widget.listaFavoritos,
         ),
       ),
     );
@@ -241,8 +234,7 @@ class _ListaState extends State<ListaInterfaz> {
       MaterialPageRoute(
         builder: (context) => ListaCompraInterfaz(
           listaCompra: widget.listaCompra,
-          tiendasSeleccionadas: widget.tiendasSeleccionadas,
-          original: widget.listaCompraOriginal,
+          original: widget.listaCompra,
         ),
       ),
     );

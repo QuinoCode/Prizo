@@ -39,7 +39,20 @@ class DatabaseOperations {
 	}
 
 
-
+	Future<void> createFiltroTable(Database db) async {
+		await db.execute(
+				"""
+			CREATE TABLE Filtro(
+				id INTEGER PRIMARY KEY,
+				sinLactosa INTEGER,
+				sinGluten INTEGER,
+				sinFrutosSecos INTEGER
+			)
+			"""
+			//Sqlite no soporta booleanos así que oferta tiene que ser un integer con valor 0 o 1
+			//Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
+		);
+	}
 	Future<void> createProductTable(Database db) async {
 		 await db.execute(
 			"""
@@ -55,6 +68,17 @@ class DatabaseOperations {
 				categoria TEXT, 
 				oferta INTEGER, 
 				precioOferta REAL 
+			)
+			"""
+			//Sqlite no soporta booleanos así que oferta tiene que ser un integer con valor 0 o 1
+			//Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
+		);
+	}
+	Future<void> createListaCompraActual(Database db) async {
+		await db.execute(
+				"""
+			CREATE TABLE Lista_Compra_Actual(
+				id TEXT PRIMARY KEY
 			)
 			"""
 			//Sqlite no soporta booleanos así que oferta tiene que ser un integer con valor 0 o 1
