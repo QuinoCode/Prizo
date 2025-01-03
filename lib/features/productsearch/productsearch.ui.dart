@@ -189,35 +189,13 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     );
   }
   void _navigateToLista() {
-    List<(Producto, int)> productosFiltradosCom = [];
-    List<Producto> productosFiltradosFav = [];
-    if (listaCompra.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
-      for (var producto in listaCompra.productos) {
-        if (tiendasSeleccionadas.contains(producto.$1.tienda)) {
-          productosFiltradosCom.add(producto);
-        }
-      }
-    } else {
-      productosFiltradosCom = listaCompra.productos;
-    }
-    if (listaFavoritos.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
-      for (var producto in listaFavoritos.productos) {
-        if(tiendasSeleccionadas.contains(producto.tienda)) {
-          productosFiltradosFav.add(producto);
-        }
-      }
-    } else {
-      productosFiltradosFav = listaFavoritos.productos;
-    }
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
             ListaInterfaz(
-              listaCompra : new ListaCompra(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltradosCom),
-              listaCompraOriginal : listaCompra,
-              listaFavoritos : new ListaFavoritos(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltradosFav),
-              listaFavoritosOriginal : listaFavoritos,
+              listaCompra : listaCompra,
+              listaFavoritos : listaFavoritos,
             ),
       ),
     );

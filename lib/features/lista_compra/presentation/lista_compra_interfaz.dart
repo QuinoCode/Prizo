@@ -24,6 +24,17 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   GlobalKey<ScaffoldMessengerState> _scaffoldClave = GlobalKey<ScaffoldMessengerState>();
   List<String> tiendasSeleccionadas = [];
 
+  List<(Producto, int)> _filtrarProductos() {
+    if (widget.original.productos.isEmpty) { return widget.original.productos; }
+    if (tiendasSeleccionadas.isEmpty) { return widget.original.productos; }
+    List<(Producto, int)> productosFiltrados = [];
+    for ((Producto, int) tupla in widget.original.productos) {
+      if (tiendasSeleccionadas.contains(tupla.$1.tienda))
+        productosFiltrados.add(tupla);
+    }
+    return productosFiltrados;
+  }
+
   void _toggleTienda(String tienda) {
     setState(() {
       if (tiendasSeleccionadas.contains(tienda)) {
@@ -31,17 +42,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
       } else {
         tiendasSeleccionadas.add(tienda);
       }
-      List<(Producto, int)> productosFiltrados = [];
-      if (widget.original.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
-        for (var producto in widget.original.productos) {
-          if (tiendasSeleccionadas.contains(producto.$1.tienda)) {
-            productosFiltrados.add(producto);
-          }
-        }
-      } else {
-        productosFiltrados = widget.original.productos;
-      }
-      widget.listaCompra = new ListaCompra(id: widget.original.id, usuario: widget.original.usuario, productos: productosFiltrados);
+      widget.listaCompra = new ListaCompra(id: widget.original.id, usuario: widget.original.usuario, productos: _filtrarProductos());
     });
   }
 
