@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
+import 'package:sqflite/sqflite.dart';
 import '../../../shared/data_entities/models/producto.dart';
 import '../../shared/data_entities/models/lista_compra.dart';
 
@@ -9,6 +10,7 @@ import '../../features/obtencion_producto/application/consum_finder_service.dart
 import '../../features/obtencion_producto/application/dia_finder_service.dart';
 
 import '../../features/comparacion_productos/application/comparacion_producto.dart';
+import 'package:prizo/shared/database/database_operations.dart';
 
 import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
@@ -19,32 +21,12 @@ import '../../features/escaner/presentation/interfaz_scanner.dart';
 
 var recentElementA = "Queso", recentElementB = "Tomate", recentElementC = "Plátanos", recentElementD = "Macarrones", recentElementE = "Azúcar";
 
-//add a db access because ughhhhhhhhhhhhhhhhhhhh
-/*Future<void> assignRecents(Database db, String usuario) async {
-  // Query to get the 5 most recent products for the user
-  var result = await db.rawQuery('''
-    SELECT p.producto_id, p.name, p.description
-    FROM Lista_Recientes_Producto lrp
-    JOIN Producto p ON lrp.producto_id = p.id
-    WHERE lrp.lista_id = (SELECT id FROM Lista_Recientes WHERE usuario = ?)
-    ORDER BY lrp.created_at DESC
-    LIMIT 5
-  ''', [usuario]);
-  
-  recentElementA = result.isNotEmpty ? result[0].toString() : "Queso";
-  recentElementB = result.length > 1 ? result[1].toString() : "Tomate";
-  recentElementC = result.length > 2 ? result[2].toString() : "Plátanos";
-  recentElementD = result.length > 3 ? result[3].toString() : "Macarrones";
-  recentElementE = result.length > 4 ? result[4].toString() : "Azúcar";
-}
-*/
-
-
 final ListaCompraService listaCompraService = ListaCompraService();
 ListaCompra listaCompra = ListaCompra(
     id: '1', usuario: 'usuario_demo', productos: []);
 ListaFavoritos listaFavoritos = ListaFavoritos(
     id: '1', usuario: 'usuario_demo', productos: []);
+Database db = DatabaseOperations.instance.prizoDatabase;
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
@@ -121,8 +103,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   @override
   void initState() {
     super.initState();
-    
-    _tabController = TabController(length: 2, vsync: this);
     // Add a listener to check when the text becomes empty
     _searchController.addListener(() {
       if (_searchController.text.isEmpty && _isSearching) {
@@ -443,6 +423,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                           ),
                           textInputAction: TextInputAction.search,
                           onSubmitted: (query) {
+                            DatabaseOperations.instance.registerReciente(db, query);
                             _searchProducts(); // Llamamos a la función de búsqueda al presionar "Enter"
                           },
                         )
@@ -521,7 +502,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
   @override
   void initState() {
     super.initState();
-    _counter = listaCompraService.getCantidadProducto(listaCompra, widget.producto);
+    _counter = 0;
   }
 
   void _navigateToProductInfo(Producto producto) {
@@ -603,22 +584,22 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             Text(
                               '${widget.producto.precio}€',
                               style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    color: Color.fromARGB(255,33,33,33),
-                                    fontSize: 16,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  fontFamily: 'Inter',
+                                  color: Color.fromARGB(255,33,33,33),
+                                  fontSize: 16,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
                             ),
                             SizedBox(width: 5),
                             Text(
                               '${widget.producto.precioMedida}€/kilo',
                               style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    color: Color.fromARGB(255,33,33,33),
-                                    fontSize: 10,
-                                    letterSpacing: 0.0,
-                                  ),
+                                  fontFamily: 'Inter',
+                                  color: Color.fromARGB(255,33,33,33),
+                                  fontSize: 10,
+                                  letterSpacing: 0.0,
+                                ),
                             ),
                           ]
                         ),
@@ -640,7 +621,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                         onPressed: () {
                           setState(() {
                             _showButton = false;
-                            _counter = listaCompraService.getCantidadProducto(listaCompra, widget.producto);
                           });
                         },
                         color: Color.fromARGB(255, 80, 79, 79),
@@ -670,7 +650,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               onPressed: () {
                                 setState(() {
                                   if (_counter > 0) {
-                                    listaCompraService.quitarProducto(listaCompra, widget.producto);
                                     _counter--;
                                   } else {
                                     _showButton = true;
@@ -679,12 +658,19 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               },
                             ),
                           ),
-                          Positioned(
-                            left: 27,
-                            top: 4,
-                            bottom: 0,
-                            child: Text('$_counter', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500)),
-                          ),
+                          _counter < 10 
+                          ? Positioned(
+                              left: 27,
+                              top: 4,
+                              bottom: 0,
+                              child: Text('$_counter', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500)),
+                            )
+                          : Positioned(
+                              left: 23,
+                              top: 6,
+                              bottom: 0,
+                              child: Text('$_counter', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                            ),
                           Positioned(
                             top: 0,
                             bottom: 0,
@@ -696,10 +682,11 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               iconSize: 19,
                               icon: Icon(Icons.add),
                               onPressed: () {
-                                listaCompraService.annadirProducto(listaCompra, widget.producto);
-                                setState(() {
-                                  _counter++;
-                                });
+                                if (_counter < 99) {
+                                  setState(() {
+                                    _counter++;
+                                  });
+                                }
                               },
                             ),
                           ),
