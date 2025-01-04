@@ -256,6 +256,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
              await showDialog(context: context, builder: (context) =>
                 createAlertDialog(products!, context)
              ); 
+              turnFilterOff();
             };
           }
         }
@@ -334,10 +335,6 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
         onTap: (){
           Navigator.of(context).pop();
           //TODO: addItem to lista compra
-          setState(() {
-                  _isBlueFilterVisible = false;
-           }
-          );
         },
         child: Container(
           decoration: BoxDecoration(
