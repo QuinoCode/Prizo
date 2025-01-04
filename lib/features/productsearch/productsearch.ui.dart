@@ -14,6 +14,8 @@ import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz
 import '../lista_favoritos/application/lista_favoritos_service.dart';
 import 'package:prizo/features/filtro_busqueda/filtro_busqueda.dart';
 import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
+import 'package:prizo/features/lista/presentation/lista_interfaz.dart';
+import 'package:prizo/features/perfil/perfil.dart';
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
@@ -69,6 +71,43 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   List<int> alergenosSeleccionados = [];
   List<String> tiendasSeleccionadas = [];
 
+  List<List<Producto>> filtrar_tienda(List<List<Producto>> productos) {
+    if (productos.isEmpty) { return productos; }
+    if (tiendasSeleccionadas.isEmpty) { return productos; }
+    List<List<Producto>> productosFiltrados = [];
+    for (List<Producto> lista in productos) {
+      if (lista.isNotEmpty && tiendasSeleccionadas.contains(lista[0].tienda)) {
+        productosFiltrados.add(lista);
+      }
+    }
+    return productosFiltrados;
+  }
+
+  List<List<Producto>> filtrar_alergeno(List<List<Producto>> productos) {
+    if (productos.isEmpty) { return productos; }
+    if (alergenosSeleccionados.isEmpty) { return productos; }
+    List<List<Producto>> productosFiltrados = [];
+    for (List<Producto> lista in productos) {
+      List<Producto> listaAuxiliar = [];
+      for (Producto producto in lista) {
+        if(!tieneAlergeno(producto)) {
+          listaAuxiliar.add(producto);
+        }
+      }
+      productosFiltrados.add(listaAuxiliar);
+    }
+    return productosFiltrados;
+  }
+
+  bool tieneAlergeno(Producto producto) {
+    for (int indice in alergenosSeleccionados) {
+      if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -96,58 +135,11 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
 
     try {
       final productos = await searcher.searchProducts(_searchController.text);
-      List<List<Producto>> productosFiltrados = [];
-      if (productos.isNotEmpty) {
-        if (tiendasSeleccionadas.isNotEmpty && alergenosSeleccionados.isNotEmpty) {
-          for (var lista in productos) {
-            if (lista.isNotEmpty && tiendasSeleccionadas.contains(lista[0].tienda)) {
-              List<Producto> listaAuxiliar = [];
-              for (var producto in lista) {
-                bool meter = true;
-                for (var indice in alergenosSeleccionados) {
-                  if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
-                    meter = false;
-                    break;
-                  }
-                }
-                if (meter) {
-                  listaAuxiliar.add(producto);
-                }
-              }
-              if (listaAuxiliar.isNotEmpty) {
-                productosFiltrados.add(listaAuxiliar);
-              }
-            }
-          }
-        } else if (tiendasSeleccionadas.isNotEmpty) {
-          for (var lista in productos) {
-            if (lista.isNotEmpty && tiendasSeleccionadas.contains(lista[0].tienda)) {
-              productosFiltrados.add(lista);
-            }
-          }
-        } else if (alergenosSeleccionados.isNotEmpty) {
-          for (var lista in productos) {
-            if (lista.isNotEmpty) {
-              List<Producto> listaAuxiliar = [];
-              for (var producto in lista) {
-                for (var indice in alergenosSeleccionados) {
-                  if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
-                    listaAuxiliar.add(producto);
-                  }
-                }
-              }
-              if (listaAuxiliar.isNotEmpty) {
-                productosFiltrados.add(listaAuxiliar);
-              }
-            }
-          }
-        } else {
-          productosFiltrados = productos;
-        }
-      }
+      List<List<Producto>> filtrado_por_tienda = filtrar_tienda(productos);
+      List<List<Producto>> filtrado_por_alergeno = filtrar_alergeno(filtrado_por_tienda);
 
       // Por cada súper separa los productos en dos listas
-      List<(List<Producto>, List<Producto>)> listasSeparadas = productosFiltrados.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
+      List<(List<Producto>, List<Producto>)> listasSeparadas = filtrado_por_alergeno.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
 
       // Combina las primeras listas de cada supermercado y las segundas de cada supermercado entre ellas
       final (List<Producto> listaCategoria, List<Producto> listaRestante) = combinaListasSupers(listasSeparadas);
@@ -155,7 +147,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         _productos = listaCategoria;
         _productosRestantes = listaRestante;
       });
-      if (productosFiltrados.isEmpty) {
+      if (filtrado_por_alergeno.isEmpty) {
         print("No se encontraron productos para la consulta: ${_searchController.text}");
       }
     } catch (e) {
@@ -188,52 +180,22 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       ),
     );
   }
-  void _navigateToListaCompra() {
-    List<(Producto, int)> productosFiltrados = [];
-    if (listaCompra.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
-      for (var producto in listaCompra.productos) {
-        if (tiendasSeleccionadas.contains(producto.$1.tienda)) {
-          productosFiltrados.add(producto);
-        }
-      }
-    } else {
-      productosFiltrados = listaCompra.productos;
-    }
-    ListaCompra comprasFiltradas = new ListaCompra(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltrados);
+  void _navigateToPerfilInterfaz() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            ListaCompraInterfaz(
-              listaCompra: comprasFiltradas,
-              tiendasSeleccionadas : tiendasSeleccionadas,
-              original: listaCompra,
-            ),
+        builder: (context) => PerfilInterfaz(),
       ),
     );
   }
-
-  void _navigateToListaFavoritos() {
-    List<Producto> productosFiltrados = [];
-    if (listaFavoritos.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
-      for (var producto in listaFavoritos.productos) {
-        if(tiendasSeleccionadas.contains(producto.tienda)) {
-          productosFiltrados.add(producto);
-        }
-      }
-    } else {
-      productosFiltrados = listaFavoritos.productos;
-    }
-    ListaFavoritos favoritosFiltrados = new ListaFavoritos(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltrados);
+  void _navigateToLista() {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ListaFavoritosInterfaz(
-              listaFavoritos: favoritosFiltrados,
-              listaCompra: listaCompra,
-              tiendasSeleccionadas : tiendasSeleccionadas,
-              original: listaFavoritos,
+            ListaInterfaz(
+              listaCompra : listaCompra,
+              listaFavoritos : listaFavoritos,
             ),
       ),
     );
@@ -301,12 +263,8 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
             onPressed: _navigateToListaEscaner,
           ),
           IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: _navigateToListaCompra,
-          ),
-          IconButton(
-            icon: const Icon(Icons.favorite),
-            onPressed: _navigateToListaFavoritos,
+            icon: const Icon(Icons.list),
+            onPressed: _navigateToLista,
           ),
           IconButton(
             icon: const Icon(Icons.filter_list),
