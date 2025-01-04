@@ -205,7 +205,6 @@ class DetallesProducto extends StatelessWidget {
                       ),
                       child: const ImageIcon(
                         AssetImage('assets/icons/cesta_icono.png'),
-                        color: Colors.black,
                         size: 25,
                       ),
                     ),
