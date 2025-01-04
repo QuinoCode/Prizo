@@ -10,8 +10,8 @@ import 'package:prizo/features/lista_favoritos/application/lista_favoritos_servi
 
 class ListaFavoritosInterfaz extends StatefulWidget {
   ListaFavoritos listaFavoritos;
-  final ListaCompra listaCompra;
-  final ListaFavoritos original;
+  ListaCompra listaCompra;
+  ListaFavoritos original;
 
   ListaFavoritosInterfaz({
     super.key,
@@ -64,9 +64,13 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
 
   void _incrementarCantidad(Producto producto) {
     setState(() {
-      _productoCantidad[productoService.generarClave(producto)] =
-          (_productoCantidad[productoService.generarClave(producto)] ?? 0) + 1;
-      listaCompraService.annadirInstancia(widget.listaCompra, producto);
+      final currentCantidad =
+          _productoCantidad[productoService.generarClave(producto)] ?? 0;
+      if (currentCantidad < 99) {
+        _productoCantidad[productoService.generarClave(producto)] =
+            (_productoCantidad[productoService.generarClave(producto)] ?? 0) + 1;
+        listaCompraService.annadirInstancia(widget.listaCompra, producto);
+      }
     });
   }
 
@@ -168,52 +172,81 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                     child: ListTile(
                       leading: producto.foto.isNotEmpty
                           ? Image.network(
-                        imageUrl,
-                        width: 50,
-                        height: 50,
-                        errorBuilder:
-                            (context, error, stackTrace) {
-                          print('Error loading image: $error');
-                          return Icon(Icons.broken_image);
-                        },
+                        imageUrl, width: 50, height: 50,
+                        errorBuilder: (context, error, stackTrace) { print('Error loading image: $error'); return Icon(Icons.broken_image); },
                       )
                           : Icon(Icons.image_not_supported),
-                      title: Text(producto.nombre),
-                      subtitle: Text('${producto.tienda} - €${producto.precio.toStringAsFixed(2)}'),
-                      trailing: _mapaProductoConBotonCarrito[productoService.generarClave(producto)] == true
-                          ? Row(
-                        mainAxisSize: MainAxisSize.min,
+                      //title: Text(listaFavoritosService.obtenerSubcadena(producto.nombre)),
+                      //subtitle: Text('${producto.tienda}-${productoService.getPrecio(producto).toStringAsFixed(2).replaceAll('.', ',')}€ (${producto.precioMedida.toStringAsFixed(2).replaceAll('.', ',')}€/kg)'),
+                      title: Text(
+                        listaFavoritosService.obtenerSubcadena(producto.nombre),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          fontSize: 16.0
+                        ),
+                      ),
+                      subtitle: Column(
                         children: [
-                          IconButton(
-                            icon: Icon(Icons.remove),
-                            onPressed: () {
-                              _decrementarCantidad(producto);
-                            },
+                          Text(
+                            '${producto.tienda}',
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12.0
+                            ),
                           ),
-                          Text('$cantidad',
-                              style: TextStyle(fontSize: 16)),
-                          IconButton(
-                            icon: Icon(Icons.add),
-                            onPressed: () {
-                              _incrementarCantidad(producto);
-                            },
+                          Row(
+                            children: [
+                              Text(
+                                '${productoService.getPrecio(producto).toStringAsFixed(2).replaceAll('.', ',')}€ ',
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                              Text(
+                                '${producto.precioMedida.toStringAsFixed(2).replaceAll('.', ',')}€/kg',
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 11.0
+                                ),
+                              ),
+                            ],
                           ),
                         ],
-                      )
-                          : IconButton(
-                        icon: Image.memory(
-                          bolsaImage,
-                          width: 30,
-                          height: 30,
+                      ),
+                      trailing: Container(
+                        decoration: BoxDecoration(
+                          color: _mapaProductoConBotonCarrito[productoService.generarClave(producto)] == true
+                              ? Colors.grey[200]
+                              : Color(0xFF95B3FF),
+                          borderRadius: BorderRadius.circular(100.0),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _mapaProductoConBotonCarrito[productoService.generarClave(producto)] = true;
-                          });
-                        },
-                        style: IconButton.styleFrom(
-                          backgroundColor: Color(0xFF95B3FF),
-                          padding: EdgeInsets.all(20),
+                        padding: _mapaProductoConBotonCarrito[productoService.generarClave(producto)] == true
+                            ? cantidad < 10
+                              ? const EdgeInsets.symmetric(horizontal: 4.0)
+                              : const EdgeInsets.symmetric(horizontal: 0.0)
+                            : const EdgeInsets.symmetric(horizontal: 31.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: _mapaProductoConBotonCarrito[productoService.generarClave(producto)] == true
+                              ? [
+                            IconButton(
+                              icon: const Icon(Icons.remove, size: 18),
+                              onPressed: () => _decrementarCantidad(producto),
+                            ),
+                            Text('$cantidad', style: const TextStyle(fontSize: 14)),
+                            IconButton(
+                              icon: const Icon(Icons.add, size: 18),
+                              onPressed: () => _incrementarCantidad(producto),
+                            ),
+                          ]
+                              : [
+                            IconButton(
+                              icon: Image.memory(bolsaImage, width: 18, height: 18),
+                              onPressed: () {
+                                setState(() {
+                                  _mapaProductoConBotonCarrito[productoService.generarClave(producto)] = true;
+                                });
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),

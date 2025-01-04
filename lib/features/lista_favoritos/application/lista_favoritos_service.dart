@@ -25,4 +25,21 @@ class ListaFavoritosService {
     return list.productos.indexWhere((p) => productoService.mismoProducto(p, product)) != -1;
   }
 
+  String obtenerSubcadena(String input) {
+    String result;
+
+    // Verificamos si la longitud es suficiente para acceder al carácter 17
+    if (input.length >= 17 && input[16] == ' ') {
+      result = input.substring(0, 16);
+    } else {
+      result = input.substring(0, 8);
+    }
+
+    // Comprobamos si el resultado es diferente al original
+    if (result.length < input.length) {
+      result += input.substring(result.length, 17) + "...";  // Agregamos "..." si el resultado es más corto que el original
+    }
+
+    return result;
+  }
 }
