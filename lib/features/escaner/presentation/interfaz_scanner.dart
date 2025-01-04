@@ -1,7 +1,7 @@
-import 'package:prizo/features/escaner/application/scanner_service.dart';
 import 'package:flutter/material.dart';
 import 'package:prizo/features/obtencion_producto/application/ean_finder.dart';
-import 'package:prizo/features/productsearch/productsearch.ui.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
 
 
 
@@ -15,6 +15,7 @@ class ScannerInterface extends StatefulWidget {
 
 class _ScannerInterfaceState extends State<ScannerInterface> {
   late EanFinder eanFinder;
+  bool _isBlueFilterVisible = false;
   @override
   void initState(){
     super.initState();
@@ -174,6 +175,9 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
               ),
             ),
           ),
+          if(_isBlueFilterVisible)
+            Positioned.fill(child: Container(color: Colors.blue.withOpacity(0.5)))
+          
         ],
       ),
     );
@@ -196,6 +200,164 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
 	);
       },
     );
+  }
+  MobileScanner createScanner(BuildContext context, EanFinder eanFinder) {
+    bool lockOpen = true;
+    MobileScanner scanner = MobileScanner(
+      controller: MobileScannerController(
+      detectionSpeed: DetectionSpeed.normal,
+      returnImage: true
+      ),
+      onDetect:(capture) async{
+        if (lockOpen){
+          lockOpen = false;
+          await detected(capture, context, eanFinder);
+          print("------------Successfully scanned!--------------------");
+          lockOpen = true;
+        }
+      }
+    );
+    return scanner;
+    
+  }
+
+  Future<void> detected(capture, BuildContext context, EanFinder eanFinder) async {
+        final List<Barcode> barcodes = capture.barcodes;
+        List<Producto?>? products;
+        for (final barcode in barcodes) {
+          if (barcode.rawValue != null) { 
+              feedbackSuccessfulScan();
+          }
+          products = await getProductFromScan(context, barcode.rawValue, eanFinder);
+          if (products == null) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("Error"),
+                  content: const Text("No se encontró el artículo"),
+                  actions: [
+                    TextButton(
+                      child: const Text("OK"),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+          else { 
+            showDialog(context: context, builder: (context) =>
+              createAlertDialog(products!, context)
+            ); 
+          };
+          if (products == null) {print("No se encontró el producto en ningún supermercado");}
+        }
+  }
+  void feedbackSuccessfulScan(){
+    setState(() {
+      _isBlueFilterVisible = true;
+    });
+  }
+
+   createAlertDialog(List<Producto?> products, BuildContext context){
+    return products.every((product) => product == null) ? AlertDialog(
+      title: const Text("No se encontró el producto"),
+      content: const Text(":(", textAlign: TextAlign.center,)
+    ) : Dialog(
+        insetPadding: EdgeInsets.zero,
+      child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: MediaQuery.of(context).size.height * 0.37,
+        child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.07,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment(-0.9,0.53),
+                      child: BackButton(
+                        size: MediaQuery.of(context).size.width * 0.070,
+                        color: Colors.black,
+                        strokeWidth: 2.6,
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                    Positioned(
+                      left: MediaQuery.of(context).size.width *0.145,
+                      top: MediaQuery.of(context).size.height *0.025,
+                      child: Text(
+                        "Elegir supermercado",
+                        style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.065, fontWeight: FontWeight.w500),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+              Align(
+                 alignment: Alignment.center,
+                 child: Column (
+                   mainAxisSize: MainAxisSize.min,
+                   children: products
+                     .where((product) => product != null)
+                     .map((product) => _supermarketAddProductButton(context, product!)
+                     ).toList()
+                   .expand((widget) => [widget, SizedBox(height: MediaQuery.of(context).size.height * 0.012,)])
+                   .toList(),
+                 ),
+              ),
+      
+            ],
+        ),
+      )
+      );
+  }
+  Widget _supermarketAddProductButton(BuildContext context, Producto producto){
+    return SizedBox(
+      width: MediaQuery.of(context).size.width*0.71,
+      height: MediaQuery.of(context).size.height*0.06,
+      child: GestureDetector(
+        onTap: (){
+          Navigator.of(context).pop();
+          //TODO: addItem to lista compra
+          setState(() {
+                  _isBlueFilterVisible = false;
+           }
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: Border.all(color: Colors.blue),
+            borderRadius: BorderRadius.circular(30)
+          ),
+          child: Row(
+          
+            children: [
+              SizedBox(width: 15),
+              Expanded(child: Text(producto.tienda.substring(0,1).toUpperCase() + producto.tienda.substring(1).toLowerCase(), style: TextStyle(color:Colors.black, fontSize: MediaQuery.of(context).size.shortestSide *0.045))),
+              Text("${producto.precioOferta}€", style: TextStyle(color:Colors.black54, fontSize: MediaQuery.of(context).size.shortestSide *0.037)),
+              SizedBox(width: 15)
+            ],
+          ),
+        ),
+      ),
+    );
+    
+  }
+
+
+  Future<List<Producto?>?>  getProductFromScan(BuildContext context, String? ean, EanFinder eanFinder) async {
+    if (ean == null) return null;
+    return await eanFinder.getProductList(ean);
   }
 }
 
@@ -409,3 +571,90 @@ class DiagonalCrossPainter extends CustomPainter {
 }
 
 
+
+//Class for the backButton
+class BackButton extends StatelessWidget {
+  final double size;
+  final double strokeWidth;
+  final Color color;
+  final VoidCallback onPressed;
+
+  const BackButton({
+    Key? key,
+    required this.size,
+    required this.strokeWidth,
+    required this.color,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: CustomPaint(
+        size: Size(size, size), // Size of the button
+        painter: BackButtonPainter(
+          strokeWidth: strokeWidth,
+          color: color,
+        ),
+      ),
+    );
+  }
+}
+
+class BackButtonPainter extends CustomPainter {
+  final double strokeWidth;
+  final Color color;
+  late Size _size;
+
+  BackButtonPainter({
+    required this.strokeWidth,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    _size = size;
+    Paint paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round; // Ensures rounded ends for the lines
+    Paint paintBG = Paint()..color = Colors.transparent;
+
+    canvas.drawRect(Rect.fromLTRB(0, 0, size.width, size.height), paintBG);
+
+    // Draw diagonal top line of the arrow
+    canvas.drawLine(
+      Offset(size.width * 0.30, size.height * 0.2), // Start at top-left
+      Offset(size.width * 0.0, size.height * 0.5), // End at bottom-right
+      paint,
+    );
+    // Draw diagonal bottom line of the arrow
+    canvas.drawLine(
+      Offset(size.width * 0.30, size.height * 0.8), // Start at top-left
+      Offset(size.width * 0.0, size.height * 0.5), // End at bottom-right
+      paint,
+    );
+    // Draw horizontal line of the arrow
+    canvas.drawLine(
+      Offset(size.width * 0.0 , size.height * 0.5), // Start at top-right
+      Offset(size.width* 0.8, size.height * 0.5), // End at bottom-left
+      paint,
+    );
+  }
+   @override
+  bool hitTest(Offset position) {
+    // Check if the tap is inside the bounds of the shape
+    double size = _size.width; // Example size, use your own logic for this
+    if (position.dx >= 0 && position.dx <= size && position.dy >= 0 && position.dy <= size) {
+      return true;
+    }
+    return false;
+  }
+
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false; // No need to repaint unless the parameters change
+  }
+}
