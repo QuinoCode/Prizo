@@ -27,3 +27,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/logo_dia.png
+    - assets/images/logo_consum.png
+    - assets/images/logo_carrefour.png

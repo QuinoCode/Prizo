@@ -47,20 +47,12 @@ class DetallesProducto extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Nombre del supermercado
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        producto.tienda,
-                        style: const TextStyle(fontSize: 20, color: Colors.grey),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: pantallaProductoService.obtenerLogoSupermercado(producto),
                   ),
                   Row(
                     children: [
@@ -128,7 +120,7 @@ class DetallesProducto extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: Color(0xFF95B3FF),
                           ),
-                          child: const Icon(Icons.place_outlined, color: Colors.black),
+                          child: const Icon(Icons.map_outlined, color: Colors.black),
                         ),
                       ),
                     ],
@@ -265,20 +257,9 @@ class DetallesProducto extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start, // Alinear a la izquierda
                                 children: [
-                                  // Nombre del supermercado centrado a la izquierda
                                   SizedBox(
-                                    width: 95,
-                                    child: Text(
-                                      productoRelacionado.tienda,
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      textAlign: TextAlign.left, // Centrado a la izquierda
-                                    ),
+                                    width: 40,
+                                    child: pantallaProductoService.obtenerLogoSupermercado(productoRelacionado),
                                   ),
                                   const SizedBox(height: 4),
 
