@@ -19,7 +19,7 @@ import '../../features/filtro_busqueda/filtro_busqueda.dart';
 
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 
-import '../../features/escaner/presentation/interfaz_scanner.dart';
+import '../../features/escaner/presentation/interfaz_scanner.dart' as scanner;
 
 final ListaCompraService listaCompraService = ListaCompraService();
 ListaCompra listaCompra = ListaCompra(
@@ -150,7 +150,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
       context,
       MaterialPageRoute(
         builder: (context) =>
-            const ScannerInterface(),
+            const scanner.ScannerInterface(),
       ),
     );
   }
