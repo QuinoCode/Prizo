@@ -203,7 +203,11 @@ class DetallesProducto extends StatelessWidget {
                         color: Color(0xFF95B3FF),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Icon(Icons.add_shopping_cart, color: Colors.black),
+                      child: const ImageIcon(
+                        AssetImage('assets/icons/cesta_icono.png'),
+                        color: Colors.black,
+                        size: 25,
+                      ),
                     ),
                   ),
                 ],
