@@ -160,15 +160,19 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   }
 
   void _navigateToFilterList() async {
-    Navigator.push(
+    final updatedAlergenos = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            FiltroProductosInterfaz(
-              alergenos: alergenosSeleccionados,
-            ),
+        builder: (context) => FiltroProductosInterfaz(alergenos: alergenosSeleccionados),
       ),
     );
+
+    if (updatedAlergenos != null) {
+      setState(() {
+        alergenosSeleccionados = updatedAlergenos;
+      });
+      _searchProducts(); // Actualiza la búsqueda con los nuevos filtros
+    }
   }
 
   void _navigateToListaEscaner() {
