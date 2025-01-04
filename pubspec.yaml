@@ -31,3 +31,9 @@ flutter:
     - assets/images/logo_dia.png
     - assets/images/logo_consum.png
     - assets/images/logo_carrefour.png
+    - assets/fonts/
+
+  fonts:
+    - family: Geist
+      fonts:
+        - asset: assets/fonts/Geist-VariableFont_wght.ttf

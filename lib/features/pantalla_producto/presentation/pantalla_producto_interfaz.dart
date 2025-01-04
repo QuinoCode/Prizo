@@ -148,7 +148,7 @@ class DetallesProducto extends StatelessWidget {
               // Nombre del producto
               Text(
                 producto.nombre,
-                style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontFamily: 'Geist', fontSize: 26, fontWeight: FontWeight.bold),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -157,7 +157,7 @@ class DetallesProducto extends StatelessWidget {
               // Marca
               Text(
                 producto.marca,
-                style: const TextStyle(fontSize: 17, color: Colors.black),
+                style: const TextStyle(fontFamily: 'Geist', fontSize: 17, color: Colors.black),
               ),
               const SizedBox(height: 8),
 
@@ -170,12 +170,12 @@ class DetallesProducto extends StatelessWidget {
                     children: [
                       Text(
                         '${producto.precio.toStringAsFixed(2)}€',
-                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontFamily: 'Geist', fontSize: 32, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         precioMedida,
-                        style: const TextStyle(fontSize: 15, color: Colors.grey),
+                        style: const TextStyle(fontFamily: 'Geist', fontSize: 15, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -216,7 +216,7 @@ class DetallesProducto extends StatelessWidget {
               // Productos relacionados
               Text(
                 'Productos relacionados',
-                style: const TextStyle(fontSize: 20),
+                style: const TextStyle(fontFamily: 'Geist', fontSize: 20),
               ),
               const SizedBox(height: 16),
 
@@ -280,7 +280,7 @@ class DetallesProducto extends StatelessWidget {
                                     width: 95,
                                     child: Text(
                                       productoRelacionado.nombre,
-                                      style: const TextStyle(fontSize: 10),
+                                      style: const TextStyle(fontFamily: 'Geist', fontSize: 10),
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
@@ -291,7 +291,7 @@ class DetallesProducto extends StatelessWidget {
                                   // Precio del producto
                                   Text(
                                     '${productoRelacionado.precio.toStringAsFixed(2)}€',
-                                    style: const TextStyle(fontSize: 12),
+                                    style: const TextStyle(fontFamily: 'Geist', fontSize: 12),
                                   ),
                                 ],
                               ),
