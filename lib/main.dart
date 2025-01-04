@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:prizo/features/productsearch/productsearch.ui.dart'; 
+import 'package:prizo/features/productsearch/product_search_ui_updated.dart'; 
 import 'package:prizo/shared/database/database_operations.dart';
 
 
