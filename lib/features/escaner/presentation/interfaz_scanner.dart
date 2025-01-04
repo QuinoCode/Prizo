@@ -230,30 +230,34 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
           }
           products = await getProductFromScan(context, barcode.rawValue, eanFinder);
           if (products == null) {
+            turnFilterOff();
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: const Text("Error"),
                   content: const Text("No se encontró el artículo"),
-                  actions: [
-                    TextButton(
-                      child: const Text("OK"),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
-                    ),
-                  ],
                 );
               },
             );
           }
           else { 
-            showDialog(context: context, builder: (context) =>
-              createAlertDialog(products!, context)
-            ); 
-          };
-          if (products == null) {print("No se encontró el producto en ningún supermercado");}
+           bool  every_product_is_null = products.every((product) => product == null);
+           if (every_product_is_null){
+              showDialog(context: context, builder: (context) => 
+                AlertDialog(
+                      title: const Text("No se encontró el producto"),
+                      content: const Text(":(", textAlign: TextAlign.center,)
+                    ),
+              );
+              turnFilterOff();
+           }
+           else {
+             showDialog(context: context, builder: (context) =>
+                createAlertDialog(products!, context)
+             ); 
+            };
+          }
         }
   }
   void feedbackSuccessfulScan(){
@@ -261,12 +265,14 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
       _isBlueFilterVisible = true;
     });
   }
+  void turnFilterOff(){
+    setState(() {
+      _isBlueFilterVisible = false;
+    });
+  }
 
    createAlertDialog(List<Producto?> products, BuildContext context){
-    return products.every((product) => product == null) ? AlertDialog(
-      title: const Text("No se encontró el producto"),
-      content: const Text(":(", textAlign: TextAlign.center,)
-    ) : Dialog(
+    return  Dialog(
         insetPadding: EdgeInsets.zero,
       child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.9,
