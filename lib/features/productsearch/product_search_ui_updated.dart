@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:prizo/shared/database/database_operations.dart';
+
 import '../../../shared/data_entities/models/producto.dart';
 import '../../shared/data_entities/models/lista_compra.dart';
 
@@ -10,10 +12,11 @@ import '../../features/obtencion_producto/application/consum_finder_service.dart
 import '../../features/obtencion_producto/application/dia_finder_service.dart';
 
 import '../../features/comparacion_productos/application/comparacion_producto.dart';
-import 'package:prizo/shared/database/database_operations.dart';
 
 import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
+import '../../features/filtro_busqueda/filtro_busqueda.dart';
+
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 
 import '../../features/escaner/presentation/interfaz_scanner.dart';
@@ -26,7 +29,7 @@ ListaFavoritos listaFavoritos = ListaFavoritos(
 Database db = DatabaseOperations.instance.prizoDatabase;
 
 abstract class ProductSearcher {
-  Future<List<List<Producto>>> searchProducts(String query);
+  Future<List<List<Producto>>> searchProducts(String query, List<String> stores);
 }
 
 class MultiMarketProductSearcher implements ProductSearcher {
@@ -42,13 +45,31 @@ class MultiMarketProductSearcher implements ProductSearcher {
 
   //make the get products list use stores for a return, remove override
   @override
-  Future<List<List<Producto>>> searchProducts(String query) async {
+  Future<List<List<Producto>>> searchProducts(String query, List<String> stores) async {
     try {
+      // Default to all stores if none are selected
+      if (stores.isEmpty) {
+        stores = ["Consum", "Dia", "Carrefour"];
+      }
+
+      // Initialize all futures
       final consumProductsFuture = consumService.getProductList(query);
       final diaProductsFuture = diaService.getProductList(query);
       final carrefourProductsFuture = carrefourService.getProductList(query);
-      final results = await Future.wait([consumProductsFuture, diaProductsFuture, carrefourProductsFuture]);
-      return results; // Devuelve listas de productos separadas por supermercado
+
+      // Selectively await the futures based on the stores
+      List<List<Producto>> results = [];
+      if (stores.contains("Consum")) {
+        results.add(await consumProductsFuture);
+      }
+      if (stores.contains("Dia")) {
+        results.add(await diaProductsFuture);
+      }
+      if (stores.contains("Carrefour")) {
+        results.add(await carrefourProductsFuture);
+      }
+
+      return results; // Return only the results for the selected stores
     } catch (e) {
       print("Error al buscar productos: $e");
       return [];
@@ -87,13 +108,10 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   late TabController _tabController;
   List<Producto> _productos = [];
   List<Producto> _productosRestantes = [];
+  List<String> tiendasSeleccionadas = [];
   bool _isLoading = false;
   bool _isSearching = false;
-  var recentElementA = "Queso";
-  var recentElementB = "Tomate";
-  var recentElementC = "Plátanos"; 
-  var recentElementD = "Macarrones";
-  var recentElementE = "Azúcar" ;
+  var recentElementA, recentElementB, recentElementC, recentElementD, recentElementE;
 
   @override
   void dispose() {
@@ -115,6 +133,17 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     });
   }
 
+  void _toggleTienda(String tienda) {
+    setState(() {
+      if (tiendasSeleccionadas.contains(tienda)) {
+        tiendasSeleccionadas.remove(tienda);
+      } else {
+        tiendasSeleccionadas.add(tienda);
+      }
+    });
+    _searchProducts();
+  }
+
   //cambios de pantalla
   void _navigateToScanner() {
     Navigator.push(
@@ -132,7 +161,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
       MaterialPageRoute(
         builder: (context) =>
             ListaCompraInterfaz(
-              listaCompra: listaCompra,
+              listaCompra: listaCompra, original: listaCompra,
             ),
       ),
     );
@@ -144,8 +173,8 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ListaCompraInterfaz(
-              listaCompra: listaCompra,
+            FiltroProductosInterfaz(
+              alergenos: [],
             ),
       ),
     );
@@ -165,7 +194,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     );
 
     try {
-      final productos = await searcher.searchProducts(_searchController.text);
+      final productos = await searcher.searchProducts(_searchController.text, tiendasSeleccionadas);
 
       // Por cada súper separa los productos en dos listas
       List<(List<Producto>, List<Producto>)> listasSeparadas = productos.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
@@ -240,7 +269,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       _searchProducts();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04, vertical: MediaQuery.of(context).size.height * 0.012,),
                       foregroundColor: Color.fromARGB(255, 80, 79, 79),
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -256,7 +285,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       _searchProducts();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04, vertical: MediaQuery.of(context).size.height * 0.012,),
                       foregroundColor: Color.fromARGB(255, 80, 79, 79),
                       backgroundColor: Color.fromARGB(255, 149, 179, 252),
                       shape: RoundedRectangleBorder(
@@ -272,7 +301,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       _searchProducts();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04, vertical: MediaQuery.of(context).size.height * 0.012,),
                       foregroundColor: Color.fromARGB(255, 80, 79, 79),
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -288,7 +317,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       _searchProducts();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04, vertical: MediaQuery.of(context).size.height * 0.012,),
                       foregroundColor: Color.fromARGB(255, 80, 79, 79),
                       backgroundColor: Color.fromARGB(255, 149, 179, 252),
                       shape: RoundedRectangleBorder(
@@ -304,7 +333,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       _searchProducts();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04, vertical: MediaQuery.of(context).size.height * 0.012,),
                       foregroundColor: Color.fromARGB(255, 80, 79, 79),
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -332,58 +361,33 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Row of buttons
           Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  _searchController.text = recentElementA;
-                  _searchProducts();
-                },
+                onPressed: () => _toggleTienda("Dia"),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  foregroundColor: Color.fromARGB(255,80,79,79),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(23),
-                    side: const BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
-                  ),
+                  backgroundColor: tiendasSeleccionadas.contains("Dia") ? Color(0xFF95B3FF) : Colors.white,
+                  side: BorderSide(color: Color(0xFF95B3FF)),
                 ),
-                child: const Text("Día"),
+                child: const Text('Día'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  _searchController.text = recentElementB;
-                  _searchProducts();
-                },
+                onPressed: () => _toggleTienda("Consum"),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  foregroundColor: Color.fromARGB(255,80,79,79),
-                  backgroundColor: const Color.fromARGB(255, 149, 179, 252),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(23),
-                    side: const BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
-                  ),
+                  backgroundColor: tiendasSeleccionadas.contains("Consum") ? Color(0xFF95B3FF) : Colors.white,
+                  side: BorderSide(color: Color(0xFF95B3FF)),
                 ),
-                child: const Text("Carrefour"),
+                child: const Text('Consum'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  _searchController.text = recentElementC;
-                  _searchProducts();
-                },
+                onPressed: () => _toggleTienda("Carrefour"),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  foregroundColor: Color.fromARGB(255,80,79,79),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(23),
-                    side: const BorderSide(color: Color.fromARGB(255, 174, 178, 189)),
-                  ),
+                  backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
+                  side: BorderSide(color: Color(0xFF95B3FF)),
                 ),
-                child: const Text("Consum"),
+                child: const Text('Carrefour'),
               ),
             ],
           ),
@@ -576,8 +580,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 onTap: () => _navigateToProductInfo(widget.producto),
                 child: Image.network(
                   widget.producto.foto,
-                  width: 80,
-                  height: 80,
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: MediaQuery.of(context).size.width * 0.2,
                 ),
               ),
               SizedBox(width: 10), 
@@ -659,8 +663,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 SizedBox(
                   child: _showButton
                     ? Container(
-                        height: 35,
-                        width: 65,
+                        height: MediaQuery.of(context).size.height * 0.045,
+                        width: MediaQuery.of(context).size.width * 0.17,
                         decoration: BoxDecoration(
                           color: Color.fromARGB(255, 149, 179, 252),
                           borderRadius: BorderRadius.circular(20)
@@ -689,8 +693,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                         )
                       )
                     : Container(
-                        height: 35,
-                        width: 65,
+                        height: MediaQuery.of(context).size.height * 0.045,
+                        width: MediaQuery.of(context).size.width * 0.17,
                         padding: EdgeInsets.zero,
                         decoration: BoxDecoration(
                           color: Color.fromARGB(255, 240, 240, 240),
@@ -723,7 +727,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             ),
                             _counter < 10 
                             ? Positioned(
-                                left: 27,
+                                left: 25,
                                 top: 4,
                                 bottom: 0,
                                 child: Text('$_counter', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500)),

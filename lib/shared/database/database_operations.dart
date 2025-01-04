@@ -198,6 +198,9 @@ class DatabaseOperations {
   }
 
   Future<int> fetchCantidadListaCompra(Database db, Producto producto) async {
+    if (!await existsInListaCompraTable(db, producto)) {
+      registerIntoListaCompraTable(db, producto);
+    }
     var result = await db.rawQuery(
       '''
       SELECT cantidad 
