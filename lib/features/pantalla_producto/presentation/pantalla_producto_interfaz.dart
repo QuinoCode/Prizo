@@ -52,7 +52,11 @@ class DetallesProducto extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: pantallaProductoService.obtenerLogoSupermercado(producto),
+                    child: SizedBox(
+                      width: 80.0,
+                      height: 80.0,
+                      child: pantallaProductoService.obtenerLogoSupermercado(producto),
+                    ),
                   ),
                   Row(
                     children: [
@@ -258,7 +262,7 @@ class DetallesProducto extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start, // Alinear a la izquierda
                                 children: [
                                   SizedBox(
-                                    width: 40,
+                                    width: 35,
                                     child: pantallaProductoService.obtenerLogoSupermercado(productoRelacionado),
                                   ),
                                   const SizedBox(height: 4),
