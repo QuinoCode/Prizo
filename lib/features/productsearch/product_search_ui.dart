@@ -251,17 +251,17 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Recientes',
                 style: TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.w600,
+                  fontSize: MediaQuery.of(context).size.width * 0.097,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 13),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.017),
               Wrap(
-                spacing: 8,
-                runSpacing: 2,
+                spacing: MediaQuery.of(context).size.width * 0.028,
+                runSpacing: MediaQuery.of(context).size.height * 0.003,
                 children: [
                   ElevatedButton(
                     onPressed: () {
@@ -410,10 +410,10 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                   ),
                   // Display the second list if there are remaining products
                   if (_productosRestantes.isNotEmpty) ...[
-                    const SizedBox(height: 20),
-                    const Text(
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.026),
+                    Text(
                       'Quizás estabas buscando...',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05, fontWeight: FontWeight.bold),
                     ),
                     ListView.builder(
                       shrinkWrap: true,
@@ -453,7 +453,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                 children: [
                   Expanded(
                       child: SizedBox(
-                        height: 40,
+                        height: MediaQuery.of(context).size.height * 0.053,
                         child: TextField(
                           textAlignVertical: TextAlignVertical(y: 1),
                           controller: _searchController,
@@ -482,10 +482,10 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                         )
                       )
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: MediaQuery.of(context).size.height * 0.0106),
                   Container(
-                    width:48,
-                    height:40,
+                    width: MediaQuery.of(context).size.width * 0.133,
+                    height: MediaQuery.of(context).size.height * 0.053,
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255,145,176,243),
                       borderRadius: BorderRadius.circular(20),
@@ -498,7 +498,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                   ),
                 ],
               ),
-              const SizedBox(height: 20), 
+              SizedBox(height: MediaQuery.of(context).size.height * 0.026), 
               _isSearching //Decide si mostrar recientes o si mostrar resultados de busqueda
                 ? _isLoading
                   ? const Center( heightFactor: 12, child: CircularProgressIndicator(), )
@@ -580,19 +580,19 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 onTap: () => _navigateToProductInfo(widget.producto),
                 child: Image.network(
                   widget.producto.foto,
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  height: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.222,
+                  height: MediaQuery.of(context).size.width * 0.222,
                 ),
               ),
-              SizedBox(width: 10), 
+              SizedBox(width: MediaQuery.of(context).size.width * 0.028), 
               SizedBox(
-                height: 90,
+                height: MediaQuery.of(context).size.height * 0.119,
                 child: VerticalDivider(
                   thickness: 1,
                   color: Color.fromARGB(255,175,198,255),
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.028), 
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -605,7 +605,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width:120,
+                          width: MediaQuery.of(context).size.width * 0.3352,
                           child:
                             Text(
                               widget.producto.nombre,
@@ -614,23 +614,23 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               style: TextStyle(
                                     fontFamily: 'Inter',
                                     color: Color.fromARGB(255,33,33,33),
-                                    fontSize: 15,
+                                    fontSize: MediaQuery.of(context).size.width * 0.0419,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
                                   ),
                             )
                         ),
-                        SizedBox(height:3),
+                        SizedBox(height: MediaQuery.of(context).size.width * 0.0104),
                         Text(
                           widget.producto.tienda,
                           style: TextStyle(
                                 fontFamily: 'Inter',
                                 color: Color.fromARGB(255,33,33,33),
-                                fontSize: 12,
+                                fontSize: MediaQuery.of(context).size.width * 0.0332,
                                 letterSpacing: 0.0,
                               ),
                         ),
-                        SizedBox(height:8),
+                        SizedBox(height: MediaQuery.of(context).size.width * 0.023),
                         Row(
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -639,18 +639,18 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   color: Color.fromARGB(255,33,33,33),
-                                  fontSize: 16,
+                                  fontSize: MediaQuery.of(context).size.width * 0.0448,
                                   letterSpacing: 0.0,
                                   fontWeight: FontWeight.w500,
                                 ),
                             ),
-                            SizedBox(width: 5),
+                            SizedBox(width: MediaQuery.of(context).size.width * 0.014),
                             Text(
                               '${widget.producto.precioMedida}€/kilo',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   color: Color.fromARGB(255,33,33,33),
-                                  fontSize: 10,
+                                  fontSize: MediaQuery.of(context).size.width * 0.028,
                                   letterSpacing: 0.0,
                                 ),
                             ),
@@ -663,8 +663,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 SizedBox(
                   child: _showButton
                     ? Container(
-                        height: MediaQuery.of(context).size.height * 0.045,
-                        width: MediaQuery.of(context).size.width * 0.17,
+                        height: MediaQuery.of(context).size.height * 0.047,
+                        width: MediaQuery.of(context).size.width * 0.18,
                         decoration: BoxDecoration(
                           color: Color.fromARGB(255, 149, 179, 252),
                           borderRadius: BorderRadius.circular(20)
@@ -693,8 +693,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                         )
                       )
                     : Container(
-                        height: MediaQuery.of(context).size.height * 0.045,
-                        width: MediaQuery.of(context).size.width * 0.17,
+                        height: MediaQuery.of(context).size.height * 0.047,
+                        width: MediaQuery.of(context).size.width * 0.18,
                         padding: EdgeInsets.zero,
                         decoration: BoxDecoration(
                           color: Color.fromARGB(255, 240, 240, 240),
@@ -705,9 +705,9 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             Positioned(
                               top: 0,
                               bottom: 0,
-                              right: 25,
+                              right: MediaQuery.of(context).size.width * 0.07,
                               child: IconButton(
-                                iconSize: 19,
+                                iconSize: MediaQuery.of(context).size.width * 0.053,
                                 padding: EdgeInsets.zero,
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,  
@@ -727,26 +727,26 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             ),
                             _counter < 10 
                             ? Positioned(
-                                left: 25,
-                                top: 4,
+                                left: MediaQuery.of(context).size.width * 0.074,
+                                top: MediaQuery.of(context).size.height * 0.0055,
                                 bottom: 0,
-                                child: Text('$_counter', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500)),
+                                child: Text('$_counter', style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.053, fontWeight: FontWeight.w500)),
                               )
                             : Positioned(
-                                left: 23,
-                                top: 6,
+                                left: MediaQuery.of(context).size.width * 0.063,
+                                top: MediaQuery.of(context).size.height * 0.008,
                                 bottom: 0,
-                                child: Text('$_counter', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                                child: Text('$_counter', style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0448, fontWeight: FontWeight.w500)),
                               ),
                             Positioned(
                               top: 0,
                               bottom: 0,
-                              left: 25,
+                              left: MediaQuery.of(context).size.width * 0.070,
                               child: IconButton(
                                 padding: EdgeInsets.zero,
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,  
-                                iconSize: 19,
+                                iconSize: MediaQuery.of(context).size.width * 0.053,
                                 icon: Icon(Icons.add),
                                 onPressed: () {
                                   if (_counter < 99) {
