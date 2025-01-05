@@ -150,66 +150,75 @@ class DetallesProducto extends StatelessWidget {
               const SizedBox(height: 16),
 
               // Nombre del producto
-              Text(
-                producto.nombre,
-                style: const TextStyle(fontFamily: 'Geist', fontSize: 26, fontWeight: FontWeight.bold),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  producto.nombre,
+                  style: const TextStyle(fontFamily: 'Geist', fontSize: 22, fontWeight: FontWeight.bold),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               const SizedBox(height: 6),
 
               // Marca
-              Text(
-                producto.marca,
-                style: const TextStyle(fontFamily: 'Geist', fontSize: 17, color: Colors.black),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  producto.marca,
+                  style: const TextStyle(fontFamily: 'Geist', fontSize: 17, color: Colors.black),
+                ),
               ),
               const SizedBox(height: 8),
 
               // Precio y botón de añadir al carrito
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${producto.precio.toStringAsFixed(2)}€',
-                        style: const TextStyle(fontFamily: 'Geist', fontSize: 32, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        precioMedida,
-                        style: const TextStyle(fontFamily: 'Geist', fontSize: 15, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  // Botón añadir al carrito
-                  GestureDetector(
-                    onTap: () async {
-                      try {
-                        listaCompraService.annadirProducto(listaCompra, producto);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('${producto.nombre} añadido a la lista de compra')),
-                        );
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Error al añadir a la lista de compra')),
-                        );
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF95B3FF),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const ImageIcon(
-                        AssetImage('assets/icons/cesta_icono.png'),
-                        size: 25,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${producto.precio.toStringAsFixed(2)}€',
+                          style: const TextStyle(fontFamily: 'Geist', fontSize: 32, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          precioMedida,
+                          style: const TextStyle(fontFamily: 'Geist', fontSize: 15, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    // Botón añadir al carrito
+                    GestureDetector(
+                      onTap: () async {
+                        try {
+                          listaCompraService.annadirProducto(listaCompra, producto);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('${producto.nombre} añadido a la lista de compra')),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Error al añadir a la lista de compra')),
+                          );
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF95B3FF),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const ImageIcon(
+                          AssetImage('assets/icons/cesta_icono.png'),
+                          size: 25,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: 50),
 
