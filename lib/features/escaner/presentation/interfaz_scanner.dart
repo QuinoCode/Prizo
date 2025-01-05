@@ -176,7 +176,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
             ),
           ),
           if(_isBlueFilterVisible)
-            Positioned.fill(child: Container(color: Colors.blue.withOpacity(0.5)))
+            Positioned.fill(child: Container(color: Color(0xFF95B3FF).withOpacity(0.7)))
           
         ],
       ),
@@ -233,6 +233,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
             turnFilterOff();
             await showDialog(
               context: context,
+              barrierColor: Colors.transparent,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: const Text("Error"),
@@ -244,7 +245,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
           else { 
            bool  every_product_is_null = products.every((product) => product == null);
            if (every_product_is_null){
-              await showDialog(context: context, builder: (context) => 
+              await showDialog(context: context,barrierColor: Colors.transparent, builder: (context) => 
                 AlertDialog(
                       title: const Text("No se encontró el producto"),
                       content: const Text(":(", textAlign: TextAlign.center,)
@@ -253,7 +254,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
               turnFilterOff();
            }
            else {
-             await showDialog(context: context, builder: (context) =>
+             await showDialog(context: context, barrierColor: Colors.transparent, builder: (context) =>
                 createAlertDialog(products!, context)
              ); 
               turnFilterOff();
@@ -327,32 +328,47 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
       )
       );
   }
+
   Widget _supermarketAddProductButton(BuildContext context, Producto producto){
-    return SizedBox(
-      width: MediaQuery.of(context).size.width*0.71,
-      height: MediaQuery.of(context).size.height*0.06,
-      child: GestureDetector(
-        onTap: (){
-          Navigator.of(context).pop();
-          //TODO: addItem to lista compra
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(color: Colors.blue),
-            borderRadius: BorderRadius.circular(30)
+    bool _isPressed = false;
+
+    return StatefulBuilder(
+      builder: (context, setState){
+         return SizedBox(
+          width: MediaQuery.of(context).size.width*0.71,
+          height: MediaQuery.of(context).size.height*0.06,
+          child: GestureDetector(
+            onPanStart: (_){
+              setState((){
+                _isPressed = true;
+              });
+            },
+            onPanEnd: (_){
+              Navigator.of(context).pop();
+              //TODO: addItem to lista compra
+              setState((){
+                _isPressed = false;
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: _isPressed ? Color(0xFF95B3FF) : Colors.transparent,
+                border: Border.all(color: Color(0xFF95B3FF)),
+                borderRadius: BorderRadius.circular(30)
+              ),
+              child: Row(
+              
+                children: [
+                  SizedBox(width: 15),
+                  Expanded(child: Text(producto.tienda.substring(0,1).toUpperCase() + producto.tienda.substring(1).toLowerCase(), style: TextStyle(color:Colors.black, fontSize: MediaQuery.of(context).size.shortestSide *0.045))),
+                  Text("${producto.precioOferta}€", style: TextStyle(color:Colors.black54, fontSize: MediaQuery.of(context).size.shortestSide *0.037)),
+                  SizedBox(width: 15)
+                ],
+              ),
+            ),
           ),
-          child: Row(
-          
-            children: [
-              SizedBox(width: 15),
-              Expanded(child: Text(producto.tienda.substring(0,1).toUpperCase() + producto.tienda.substring(1).toLowerCase(), style: TextStyle(color:Colors.black, fontSize: MediaQuery.of(context).size.shortestSide *0.045))),
-              Text("${producto.precioOferta}€", style: TextStyle(color:Colors.black54, fontSize: MediaQuery.of(context).size.shortestSide *0.037)),
-              SizedBox(width: 15)
-            ],
-          ),
-        ),
-      ),
+        );
+      }
     );
     
   }
