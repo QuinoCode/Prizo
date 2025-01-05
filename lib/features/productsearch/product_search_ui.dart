@@ -269,7 +269,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       _searchProducts();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04, vertical: MediaQuery.of(context).size.height * 0.012,),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.045, vertical: MediaQuery.of(context).size.height * 0.012,),
                       foregroundColor: Color.fromARGB(255, 80, 79, 79),
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -285,7 +285,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       _searchProducts();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04, vertical: MediaQuery.of(context).size.height * 0.012,),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.045, vertical: MediaQuery.of(context).size.height * 0.012,),
                       foregroundColor: Color.fromARGB(255, 80, 79, 79),
                       backgroundColor: Color.fromARGB(255, 149, 179, 252),
                       shape: RoundedRectangleBorder(
@@ -301,7 +301,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       _searchProducts();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04, vertical: MediaQuery.of(context).size.height * 0.012,),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.045, vertical: MediaQuery.of(context).size.height * 0.012,),
                       foregroundColor: Color.fromARGB(255, 80, 79, 79),
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -317,7 +317,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       _searchProducts();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04, vertical: MediaQuery.of(context).size.height * 0.012,),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.045, vertical: MediaQuery.of(context).size.height * 0.012,),
                       foregroundColor: Color.fromARGB(255, 80, 79, 79),
                       backgroundColor: Color.fromARGB(255, 149, 179, 252),
                       shape: RoundedRectangleBorder(
@@ -333,7 +333,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       _searchProducts();
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04, vertical: MediaQuery.of(context).size.height * 0.012,),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.045, vertical: MediaQuery.of(context).size.height * 0.012,),
                       foregroundColor: Color.fromARGB(255, 80, 79, 79),
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -442,7 +442,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,  
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

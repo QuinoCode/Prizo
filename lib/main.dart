@@ -1,14 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:prizo/features/productsearch/productsearch.ui.dart'; 
+import 'package:prizo/features/productsearch/product_search_ui.dart'; 
 import 'package:prizo/shared/database/database_operations.dart';
+import 'package:flutter/services.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseOperations.instance.openOrCreateDB();
   runApp(const Prizo());
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // Transparent status bar
+    statusBarIconBrightness: Brightness.dark, // Adjust icon color (optional)
+  ));
 }
 
 class Prizo extends StatelessWidget {
