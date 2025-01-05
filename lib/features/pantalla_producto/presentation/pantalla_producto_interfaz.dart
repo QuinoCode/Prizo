@@ -25,6 +25,10 @@ class DetallesProducto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Obtener tamaño de pantalla
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     final imageUrl = producto.foto;
     final precioMedida = producto.precioMedida > 0 ? '${producto.precioMedida.toStringAsFixed(2)}€/kg' : '';
 
@@ -39,11 +43,11 @@ class DetallesProducto extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: null, // Eliminar título del AppBar
+        title: null,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(screenWidth * 0.04),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -51,10 +55,10 @@ class DetallesProducto extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                    padding: EdgeInsets.only(left: screenWidth * 0.02),
                     child: SizedBox(
-                      width: 80.0,
-                      height: 80.0,
+                      width: screenWidth * 0.2,
+                      height: screenWidth * 0.2,
                       child: pantallaProductoService.obtenerLogoSupermercado(producto),
                     ),
                   ),
@@ -95,8 +99,8 @@ class DetallesProducto extends StatelessWidget {
                           }
                         },
                         child: Container(
-                          width: 40,
-                          height: 40,
+                          width: screenWidth * 0.1,
+                          height: screenWidth * 0.1,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Color(0xFF95B3FF),
@@ -118,8 +122,8 @@ class DetallesProducto extends StatelessWidget {
                           }
                         },
                         child: Container(
-                          width: 40,
-                          height: 40,
+                          width: screenWidth * 0.1,
+                          height: screenWidth * 0.1,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Color(0xFF95B3FF),
@@ -138,8 +142,8 @@ class DetallesProducto extends StatelessWidget {
                 child: imageUrl.isNotEmpty
                     ? Image.network(
                   imageUrl,
-                  width: 250,
-                  height: 250,
+                  width: screenWidth * 0.6,
+                  height: screenWidth * 0.6,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return const Icon(Icons.broken_image, size: 100);
@@ -151,7 +155,7 @@ class DetallesProducto extends StatelessWidget {
 
               // Nombre del producto
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                 child: Text(
                   producto.nombre,
                   style: const TextStyle(fontFamily: 'Geist', fontSize: 22, fontWeight: FontWeight.bold),
@@ -161,9 +165,8 @@ class DetallesProducto extends StatelessWidget {
               ),
               const SizedBox(height: 6),
 
-              // Marca
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                 child: Text(
                   producto.marca,
                   style: const TextStyle(fontFamily: 'Geist', fontSize: 17, color: Colors.black),
@@ -173,7 +176,7 @@ class DetallesProducto extends StatelessWidget {
 
               // Precio y botón de añadir al carrito
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -206,10 +209,13 @@ class DetallesProducto extends StatelessWidget {
                         }
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.07,
+                          vertical: screenHeight * 0.01,
+                        ),
                         decoration: BoxDecoration(
                           color: Color(0xFF95B3FF),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(60),
                         ),
                         child: const ImageIcon(
                           AssetImage('assets/icons/cesta_icono.png'),
@@ -236,6 +242,7 @@ class DetallesProducto extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
+              // FutureBuilder para mostrar productos relacionados
               FutureBuilder<List<Producto>>(
                 future: pantallaProductoService.obtenerProductosSimilares(
                     PantallaProductoService.limpiarNombreProducto(producto.nombre), producto),
@@ -249,7 +256,7 @@ class DetallesProducto extends StatelessWidget {
                   } else {
                     List<Producto> productosRelacionados = snapshot.data!;
                     return SizedBox(
-                      height: 200, // Altura ajustada para espacio adicional
+                      height: screenHeight * 0.25,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: productosRelacionados.length,
@@ -269,12 +276,12 @@ class DetallesProducto extends StatelessWidget {
                               );
                             },
                             child: Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
+                              padding: EdgeInsets.only(right: screenWidth * 0.04),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start, // Alinear a la izquierda
                                 children: [
                                   SizedBox(
-                                    width: 35,
+                                    width: screenWidth * 0.1,
                                     child: pantallaProductoService.obtenerLogoSupermercado(productoRelacionado),
                                   ),
                                   const SizedBox(height: 4),
@@ -282,8 +289,8 @@ class DetallesProducto extends StatelessWidget {
                                   // Imagen del producto
                                   Image.network(
                                     productoRelacionado.foto,
-                                    width: 60,
-                                    height: 60,
+                                    width: screenWidth * 0.2,
+                                    height: screenWidth * 0.2,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(Icons.broken_image, size: 60);
@@ -293,7 +300,7 @@ class DetallesProducto extends StatelessWidget {
 
                                   // Nombre del producto
                                   SizedBox(
-                                    width: 95,
+                                    width: screenWidth * 0.24,
                                     child: Text(
                                       productoRelacionado.nombre,
                                       style: const TextStyle(fontFamily: 'Geist', fontSize: 10),
