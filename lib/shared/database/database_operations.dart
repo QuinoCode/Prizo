@@ -180,7 +180,7 @@ class DatabaseOperations {
         // Insert into Lista_Compra_Producto table using parameterized query
         await db.rawInsert(
           'INSERT INTO Lista_Compra_Producto(lista_id, producto_id, cantidad) VALUES(?, ?, ?)', 
-          [listaId, producto.id, 1]  // Properly passing parameters
+          [listaId, producto.id, 0]  // Properly passing parameters
         );
       }
     } catch (e) {
@@ -191,7 +191,7 @@ class DatabaseOperations {
   Future<void> deleteFromListaCompraTable(Database db, Producto producto) async{
     try{
       //en caso de varias listas, indroducir un AND
-      var result = await db.rawDelete('DELETE FROM Lista_Compra WHERE id = "${producto.id}"');
+      var result = await db.rawDelete('DELETE FROM Lista_Compra_Producto WHERE producto_id = "${producto.id}"');
     } catch (e) {
       print(e);
     }
@@ -199,7 +199,7 @@ class DatabaseOperations {
 
   Future<int> fetchCantidadListaCompra(Database db, Producto producto) async {
     if (!await existsInListaCompraTable(db, producto)) {
-      registerIntoListaCompraTable(db, producto);
+      await registerIntoListaCompraTable(db, producto);
     }
     var result = await db.rawQuery(
       '''
