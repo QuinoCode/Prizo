@@ -170,12 +170,28 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                           width: 30, height: 30),
                     ),
                     child: ListTile(
-                      leading: producto.foto.isNotEmpty
-                          ? Image.network(
-                        imageUrl, width: 50, height: 50,
-                        errorBuilder: (context, error, stackTrace) { print('Error loading image: $error'); return Icon(Icons.broken_image); },
-                      )
-                          : Icon(Icons.image_not_supported),
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          producto.foto.isNotEmpty
+                              ? Image.network(
+                            imageUrl,
+                            width: 80,
+                            height: 80,
+                            errorBuilder:
+                                (context, error, stackTrace) {
+                              print('Error loading image: $error');
+                              return Icon(Icons.broken_image);
+                            },
+                          )
+                              : Icon(Icons.image_not_supported),
+                          VerticalDivider(
+                            width: 8,
+                            thickness: 2,
+                            color: Color(0xFF95B3FF),
+                          ),
+                        ],
+                      ),
                       title: Text(
                         listaFavoritosService.obtenerSubcadena(producto.nombre),
                         style: TextStyle(
