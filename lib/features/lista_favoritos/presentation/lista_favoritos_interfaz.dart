@@ -176,8 +176,6 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                         errorBuilder: (context, error, stackTrace) { print('Error loading image: $error'); return Icon(Icons.broken_image); },
                       )
                           : Icon(Icons.image_not_supported),
-                      //title: Text(listaFavoritosService.obtenerSubcadena(producto.nombre)),
-                      //subtitle: Text('${producto.tienda}-${productoService.getPrecio(producto).toStringAsFixed(2).replaceAll('.', ',')}€ (${producto.precioMedida.toStringAsFixed(2).replaceAll('.', ',')}€/kg)'),
                       title: Text(
                         listaFavoritosService.obtenerSubcadena(producto.nombre),
                         style: TextStyle(
@@ -186,6 +184,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                         ),
                       ),
                       subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             '${producto.tienda}',
@@ -194,20 +193,25 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                                 fontSize: 12.0
                             ),
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                '${productoService.getPrecio(producto).toStringAsFixed(2).replaceAll('.', ',')}€ ',
-                                style: TextStyle(fontSize: 16.0),
-                              ),
-                              Text(
-                                '${producto.precioMedida.toStringAsFixed(2).replaceAll('.', ',')}€/kg',
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 11.0
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: '${productoService.getPrecio(producto).toStringAsFixed(2).replaceAll('.', ',')}€ ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.black,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                TextSpan(
+                                  text: '${producto.precioMedida.toStringAsFixed(2).replaceAll('.', ',')}€/kg',
+                                  style: TextStyle(
+                                    fontSize: 11.0, // Ajustar al mismo tamaño para alineación
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
