@@ -231,7 +231,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
           products = await getProductFromScan(context, barcode.rawValue, eanFinder);
           if (products == null) {
             turnFilterOff();
-            showDialog(
+            await showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
@@ -244,7 +244,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
           else { 
            bool  every_product_is_null = products.every((product) => product == null);
            if (every_product_is_null){
-              showDialog(context: context, builder: (context) => 
+              await showDialog(context: context, builder: (context) => 
                 AlertDialog(
                       title: const Text("No se encontró el producto"),
                       content: const Text(":(", textAlign: TextAlign.center,)
@@ -253,9 +253,10 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
               turnFilterOff();
            }
            else {
-             showDialog(context: context, builder: (context) =>
+             await showDialog(context: context, builder: (context) =>
                 createAlertDialog(products!, context)
              ); 
+              turnFilterOff();
             };
           }
         }
@@ -334,10 +335,6 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
         onTap: (){
           Navigator.of(context).pop();
           //TODO: addItem to lista compra
-          setState(() {
-                  _isBlueFilterVisible = false;
-           }
-          );
         },
         child: Container(
           decoration: BoxDecoration(
