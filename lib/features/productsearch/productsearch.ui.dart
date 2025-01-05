@@ -263,6 +263,10 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         title: const Text('Busqueda producto'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: _navigateToPerfilInterfaz,
+          ),
+          IconButton(
             icon: const Icon(Icons.scanner),
             onPressed: _navigateToListaEscaner,
           ),
@@ -306,8 +310,8 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                     _searchProducts();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneDia ? Colors.lightBlueAccent : Colors.white,
-                    side: BorderSide(color: Colors.lightBlueAccent),
+                    backgroundColor: tieneDia ? Color(0xFF95B3FF) : Colors.white,
+                    side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text("Día"),
                 ),
@@ -317,8 +321,8 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                     _searchProducts();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneConsum ? Colors.lightBlueAccent : Colors.white,
-                    side: BorderSide(color: Colors.lightBlueAccent),
+                    backgroundColor: tieneConsum ? Color(0xFF95B3FF) : Colors.white,
+                    side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text("Consum"),
                 ),
@@ -328,8 +332,8 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
                     _searchProducts();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: tieneCarrefour ? Colors.lightBlueAccent : Colors.white,
-                    side: BorderSide(color: Colors.lightBlueAccent),
+                    backgroundColor: tieneCarrefour ? Color(0xFF95B3FF) : Colors.white,
+                    side: BorderSide(color: Color(0xFF95B3FF)),
                   ),
                   child: const Text("Carrefour"),
                 ),
