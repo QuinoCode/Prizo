@@ -3,6 +3,7 @@ import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/shared/application/producto_service.dart';
+import 'package:prizo/shared/database/database_operations.dart';
 
 class ListaCompraInterfaz extends StatefulWidget {
   final ListaCompra listaCompra;
@@ -14,13 +15,6 @@ class ListaCompraInterfaz extends StatefulWidget {
 }
 
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
-  final ListaCompraService listaCompraService = ListaCompraService();
-  final ProductoService productoService = new ProductoService();
-  bool _esImagenPulsada = false;
-  Producto? _productoSeleccionado;
-  Map<String, TextEditingController> _mapaControladorCantidad = {};
-  String? _mensajeAdvertencia;
-  GlobalKey<ScaffoldMessengerState> _scaffoldClave = GlobalKey<ScaffoldMessengerState>();
 
   Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
     return showDialog<void>(
@@ -97,178 +91,224 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    double precioTotal = listaCompraService.getPrecioTotal(widget.listaCompra);
-
-    return Scaffold(
-      key: _scaffoldClave,
-      appBar: AppBar(
-        title: const Text('Tu Lista de la Compra'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: widget.listaCompra.productos.isEmpty
-            ? Center(child: Text('Tu lista de la compra está vacía.'))
-            : Column(
-          children: [
-            /* Mostrar el mensaje de advertencia (si existe) */
-            if (_mensajeAdvertencia != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Text(
-                  _mensajeAdvertencia!,
-                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+  Widget _buildListViewTile(BuildContext context, Producto producto){
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => _navigateToProductInfo(widget.producto),
+                child: Image.network(
+                  widget.producto.foto,
+                  width: MediaQuery.of(context).size.width * 0.222,
+                  height: MediaQuery.of(context).size.width * 0.222,
                 ),
               ),
-            /* Lista de productos */
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.listaCompra.productos.length,
-                itemBuilder: (context, index) {
-                  final producto = widget.listaCompra.productos[index].$1;
-                  final cantidad = widget.listaCompra.productos[index].$2;
-                  final totalPriceForProduct = listaCompraService.getPrecio(widget.listaCompra, producto);
-
-                  return Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          /* Mostrar detalles del producto al hacer clic en la imagen */
-                          setState(() {
-                            _esImagenPulsada = !_esImagenPulsada;
-                            _productoSeleccionado = producto;
-                          });
-                        },
-                        child: ListTile(
-                          leading: producto.foto.isNotEmpty
-                              ? Image.network(
-                            producto.foto,
-                            width: 50,
-                            height: 50,
-                            errorBuilder: (context, error, stackTrace) {
-                              print('Error loading image: $error');
-                              return Icon(Icons.image_not_supported);
-                            },
-                          )
-                              : Icon(Icons.image_not_supported),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              /* Botón "-" para eliminar una instancia con confirmación */
-                              IconButton(
-                                icon: Icon(Icons.remove_circle_outline),
-                                onPressed: () {
-                                  if (cantidad > 1) {
-                                    /* Disminuir una instancia del producto */
-                                    setState(() {
-                                      /* Actualizamos la cantidad utilizando el método correspondiente */
-                                      listaCompraService.quitarInstancia(widget.listaCompra, producto);
-                                      /* Actualizamos el controlador para reflejar el cambio */
-                                      actualizarCantidadController(producto);
-                                    });
-                                  } else {
-                                    _ventanaConfirmacion(context, producto);
-                                  }
-                                },
-                              ),
-                              /* Campo de cantidad con un TextField para editar */
-                              Container(
-                                width: 50,
-                                child: TextField(
-                                  controller: _crearCantidadController(producto),
-                                  keyboardType: TextInputType.number,
-                                  onChanged: _manejadorTextField,
-                                  decoration: InputDecoration(
-                                    hintText: cantidad.toString(),
-                                    border: OutlineInputBorder(),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.028), 
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.119,
+                child: VerticalDivider(
+                  thickness: 1,
+                  color: Color.fromARGB(255,175,198,255),
+                ),
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.028), 
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    _navigateToProductInfo(widget.producto);
+                  },
+                  child:
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.3352,
+                          child:
+                            Text(
+                              widget.producto.nombre,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: Color.fromARGB(255,33,33,33),
+                                    fontSize: MediaQuery.of(context).size.width * 0.0419,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  textAlign: TextAlign.center,
-                                  onSubmitted: (value) {
-                                    /* Al hacer "Hecho" o "Enter", actualizar la cantidad */
-                                    int nuevaCantidad = int.tryParse(value) ?? cantidad;
-                                    if(nuevaCantidad > 0) {
-                                      setState(() {
-                                        /* Actualizar la cantidad usando el método de listaCompraService */
-                                        listaCompraService.setCantidadProducto(widget.listaCompra, producto, nuevaCantidad);
-                                        /* Actualizamos el TextField con la nueva cantidad */
-                                        actualizarCantidadController(producto);
-                                      });
-                                    } else {
-                                      _ventanaConfirmacion(context, producto);
-                                    }
-                                  },
-                                ),
+                            )
+                        ),
+                        SizedBox(height: MediaQuery.of(context).size.width * 0.0104),
+                        Text(
+                          widget.producto.tienda,
+                          style: TextStyle(
+                                fontFamily: 'Inter',
+                                color: Color.fromARGB(255,33,33,33),
+                                fontSize: MediaQuery.of(context).size.width * 0.0332,
+                                letterSpacing: 0.0,
                               ),
-                              /* Botón "+" para agregar una instancia */
-                              IconButton(
-                                icon: Icon(Icons.add_circle_outline),
+                        ),
+                        SizedBox(height: MediaQuery.of(context).size.width * 0.023),
+                        Text(
+                          '${widget.producto.precio}€',
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              color: Color.fromARGB(255,33,33,33),
+                              fontSize: MediaQuery.of(context).size.width * 0.0448,
+                              letterSpacing: 0.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                        ),
+                      ],
+                    ),
+                )
+              ),
+                SizedBox(
+                  child: Column (
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.047,
+                        width: MediaQuery.of(context).size.width * 0.18,
+                        padding: EdgeInsets.zero,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 240, 240, 240),
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 0,
+                              bottom: 0,
+                              right: MediaQuery.of(context).size.width * 0.07,
+                              child: IconButton(
+                                iconSize: MediaQuery.of(context).size.width * 0.053,
+                                padding: EdgeInsets.zero,
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,  
+                                icon: Icon(Icons.remove),
                                 onPressed: () {
                                   setState(() {
-                                    /* Actualizamos la cantidad utilizando el método correspondiente */
-                                    listaCompraService.annadirInstancia(widget.listaCompra, producto);
-                                    /* Actualizamos el controlador para reflejar el cambio */
-                                    actualizarCantidadController(producto);
+                                    if (_counter > 0) {
+                                      DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                      _counter--;
+                                    } else {
+                                      DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
+                                      _showButton = true;
+                                    }
                                   });
                                 },
                               ),
-                              /* Precio total del producto */
-                              Text(
-                                '${totalPriceForProduct.toStringAsFixed(2)} €',
-                                style: TextStyle(fontSize: 20),
+                            ),
+                            _counter < 10 
+                            ? Positioned(
+                                left: MediaQuery.of(context).size.width * 0.074,
+                                top: MediaQuery.of(context).size.height * 0.0055,
+                                bottom: 0,
+                                child: Text('$_counter', style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.053, fontWeight: FontWeight.w500)),
+                              )
+                            : Positioned(
+                                left: MediaQuery.of(context).size.width * 0.063,
+                                top: MediaQuery.of(context).size.height * 0.008,
+                                bottom: 0,
+                                child: Text('$_counter', style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0448, fontWeight: FontWeight.w500)),
                               ),
-                              /* Botón de papelera para eliminar el producto completo */
-                              IconButton(
-                                icon: Icon(Icons.delete),
+                            Positioned(
+                              top: 0,
+                              bottom: 0,
+                              left: MediaQuery.of(context).size.width * 0.070,
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,  
+                                iconSize: MediaQuery.of(context).size.width * 0.053,
+                                icon: Icon(Icons.add),
                                 onPressed: () {
-                                  _ventanaConfirmacion(context, producto);
+                                  if (_counter < 99) {
+                                    DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                    setState(() {
+                                      _counter++;
+                                    });
+                                  }
                                 },
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      /* Mostrar el nombre y el precio debajo de la imagen */
-                      if (_esImagenPulsada && _productoSeleccionado == producto)
-                        Column(
-                          children: [
-                            SizedBox(height: 8),
-                            Text(
-                              producto.nombre,
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              '${producto.tienda} - €${producto.precio.toStringAsFixed(2)}',
-                              style: TextStyle(fontSize: 14, color: Colors.grey),
                             ),
                           ],
                         ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            /* Muestra el precio total de todos los productos */
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    '${precioTotal.toStringAsFixed(2)} €',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
-                  ),
-                ],
-              ),
-            ),
-          ],
+                      ),
+                    ]
+                  )
+                )
+            ],
+          ),
         ),
-      ),
+      ]
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () => _toggleTienda("Dia"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: tiendasSeleccionadas.contains("Dia") ? Color(0xFF95B3FF) : Colors.white,
+                  side: BorderSide(color: Color(0xFF95B3FF)),
+                ),
+                child: const Text('Día'),
+              ),
+              ElevatedButton(
+                onPressed: () => _toggleTienda("Consum"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: tiendasSeleccionadas.contains("Consum") ? Color(0xFF95B3FF) : Colors.white,
+                  side: BorderSide(color: Color(0xFF95B3FF)),
+                ),
+                child: const Text('Consum'),
+              ),
+              ElevatedButton(
+                onPressed: () => _toggleTienda("Carrefour"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
+                  side: BorderSide(color: Color(0xFF95B3FF)),
+                ),
+                child: const Text('Carrefour'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Display the first list of products
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _productos.length,
+                    itemBuilder: (context, index) {
+                      final producto = _productos[index];
+                      return _buildListViewTile(context, producto);
+                    },
+                  ),
+                ]
+              )
+            )
+          )
+        ]
+      )
+      )
     );
   }
 }
