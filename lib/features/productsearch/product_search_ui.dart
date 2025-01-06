@@ -109,6 +109,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   List<Producto> _productos = [];
   List<Producto> _productosRestantes = [];
   List<String> tiendasSeleccionadas = [];
+  List<int> alergenosSeleccionados = [];
   bool _isLoading = false;
   bool _isSearching = false;
   var recentElementA, recentElementB, recentElementC, recentElementD, recentElementE;
@@ -167,20 +168,49 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     );
   }
 
-  //falta navegar a filtros
-  void _navigateToFilters() {
-    Navigator.push(
+  // Solo se aplica el filtrado por alergenos
+  void _navigateToFilters() async {
+    final updatedAlergenos = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            FiltroProductosInterfaz(
-              alergenos: [],
-            ),
+        builder: (context) => FiltroProductosInterfaz(alergenos: alergenosSeleccionados),
       ),
     );
+
+    if (updatedAlergenos != null) {
+      setState(() {
+        alergenosSeleccionados = updatedAlergenos;
+      });
+      _searchProducts();
+    }
   }
 
-  //Llamar a búsqueda 
+  List<List<Producto>> filtrar_alergeno(List<List<Producto>> productos) {
+    if (productos.isEmpty) { return productos; }
+    if (alergenosSeleccionados.isEmpty) { return productos; }
+    List<List<Producto>> productosFiltrados = [];
+    for (List<Producto> lista in productos) {
+      List<Producto> listaAuxiliar = [];
+      for (Producto producto in lista) {
+        if(!tieneAlergeno(producto)) {
+          listaAuxiliar.add(producto);
+        }
+      }
+      productosFiltrados.add(listaAuxiliar);
+    }
+    return productosFiltrados;
+  }
+
+  bool tieneAlergeno(Producto producto) {
+    for (int indice in alergenosSeleccionados) {
+      if (!(indice < 0 || indice >= producto.alergenos.length) && producto.alergenos[indice]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  //Llamar a búsqueda
   void _searchProducts() async {
     setState(() {
       _isLoading = true;
@@ -195,9 +225,10 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
 
     try {
       final productos = await searcher.searchProducts(_searchController.text, tiendasSeleccionadas);
+      List<List<Producto>> filtrado_por_alergeno = filtrar_alergeno(productos);
 
       // Por cada súper separa los productos en dos listas
-      List<(List<Producto>, List<Producto>)> listasSeparadas = productos.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
+      List<(List<Producto>, List<Producto>)> listasSeparadas = filtrado_por_alergeno.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
 
       // Combina las primeras listas de cada supermercado y las segundas de cada supermercado entre ellas
       final (List<Producto> listaCategoria, List<Producto> listaRestante) = combinaListasSupers(listasSeparadas);
@@ -205,7 +236,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
         _productos = listaCategoria;
         _productosRestantes = listaRestante;
       });
-      if (productos.isEmpty) {
+      if (filtrado_por_alergeno.isEmpty) {
         print("No se encontraron productos para la consulta: ${_searchController.text}");
       }
     } catch (e) {
