@@ -119,7 +119,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Geist',
-                  fontSize: MediaQuery.of(context).size.shortestSide * 0.037,
+                  fontSize: MediaQuery.of(context).size.shortestSide * 0.0364,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFF121212),
                 ),
