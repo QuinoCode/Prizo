@@ -16,6 +16,7 @@ import 'package:prizo/features/filtro_busqueda/filtro_busqueda.dart';
 import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 import 'package:prizo/features/lista/presentation/lista_interfaz.dart';
 import 'package:prizo/features/perfil/perfil.dart';
+import 'package:prizo/shared/application/icon_service.dart';
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query);
@@ -70,6 +71,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       id: '1', usuario: 'usuario_demo', productos: []);
   List<int> alergenosSeleccionados = [];
   List<String> tiendasSeleccionadas = [];
+  final IconService iconService = new IconService();
 
   List<List<Producto>> filtrar_tienda(List<List<Producto>> productos) {
     if (productos.isEmpty) { return productos; }
@@ -175,7 +177,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     }
   }
 
-  void _navigateToListaEscaner() {
+  void _navigateToEscaner() {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -184,6 +186,8 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       ),
     );
   }
+  void _navigateToBusqueda() {}
+  void _navigateToHome() {}
   void _navigateToPerfilInterfaz() {
     Navigator.push(
       context,
@@ -263,16 +267,8 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         title: const Text('Busqueda producto'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: _navigateToPerfilInterfaz,
-          ),
-          IconButton(
             icon: const Icon(Icons.scanner),
-            onPressed: _navigateToListaEscaner,
-          ),
-          IconButton(
-            icon: const Icon(Icons.list),
-            onPressed: _navigateToLista,
+            onPressed: _navigateToEscaner,
           ),
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -381,6 +377,43 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getCasa(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getLupaAzul(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getLista(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getPersona(), width: 30, height: 30,),
+            label: '',
+          ),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              _navigateToHome();
+              break;
+            case 1:
+              _navigateToBusqueda();
+              break;
+            case 2:
+              _navigateToLista();
+              break;
+            case 3:
+              _navigateToPerfilInterfaz();
+              break;
+          }
+        },
       ),
     );
   }

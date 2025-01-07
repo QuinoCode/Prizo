@@ -5,6 +5,8 @@ import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/shared/application/producto_service.dart';
+import 'package:prizo/features/perfil/perfil.dart';
+import 'package:prizo/shared/application/icon_service.dart';
 
 class ListaCompraInterfaz extends StatefulWidget {
   ListaCompra listaCompra;
@@ -25,6 +27,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
   String? _mensajeAdvertencia;
   GlobalKey<ScaffoldMessengerState> _scaffoldClave = GlobalKey<ScaffoldMessengerState>();
   List<String> tiendasSeleccionadas = [];
+  IconService iconService = new IconService();
 
   List<(Producto, int)> _filtrarProductos() {
     if (widget.original.productos.isEmpty) { return widget.original.productos; }
@@ -165,6 +168,19 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
       return input;
     }
   }
+
+  void _navigateToBusqueda() {}
+  void _navigateToHome() {}
+  void _navigateToPerfilInterfaz() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PerfilInterfaz(),
+      ),
+    );
+  }
+  void _navigateToLista() {}
+
   @override
   Widget build(BuildContext context) {
     double precioTotal = listaCompraService.getPrecioTotal(widget.listaCompra);
@@ -407,6 +423,43 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
               ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getCasa(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getLupa(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getListaAzul(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getPersona(), width: 30, height: 30,),
+            label: '',
+          ),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              _navigateToHome();
+              break;
+            case 1:
+              _navigateToBusqueda();
+              break;
+            case 2:
+              _navigateToLista();
+              break;
+            case 3:
+              _navigateToPerfilInterfaz();
+              break;
+          }
+        },
       ),
     );
   }

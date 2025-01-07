@@ -1,9 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:prizo/shared/application/icon_service.dart';
 
 class PerfilInterfaz extends StatelessWidget {
   final IconService iconService = new IconService();
+
+  void _navigateToBusqueda() {}
+  void _navigateToHome() {}
+  void _navigateToPerfilInterfaz() { }
+  void _navigateToLista() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +89,43 @@ class PerfilInterfaz extends StatelessWidget {
             )
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getCasa(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getLupa(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getLista(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getPersonaAzul(), width: 30, height: 30,),
+            label: '',
+          ),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              _navigateToHome();
+              break;
+            case 1:
+              _navigateToBusqueda();
+              break;
+            case 2:
+              _navigateToLista();
+              break;
+            case 3:
+              _navigateToPerfilInterfaz();
+              break;
+          }
+        },
       ),
     );
   }

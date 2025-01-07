@@ -5,6 +5,8 @@ import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/features/lista/application//lista_service.dart';
 import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
 import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+import 'package:prizo/features/perfil/perfil.dart';
+import 'package:prizo/shared/application/icon_service.dart';
 
 class ListaInterfaz extends StatefulWidget {
   final ListaCompra listaCompra;
@@ -22,6 +24,7 @@ class ListaInterfaz extends StatefulWidget {
 
 class _ListaState extends State<ListaInterfaz> {
   ListaService listaService = ListaService();
+  IconService iconService = new IconService();
 
   Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
     return showDialog<void>(
@@ -82,6 +85,43 @@ class _ListaState extends State<ListaInterfaz> {
             _buildFavoritosList(),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getCasa(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getLupa(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getListaAzul(), width: 30, height: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.memory(iconService.getPersona(), width: 30, height: 30,),
+            label: '',
+          ),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              _navigateToHome();
+              break;
+            case 1:
+              _navigateToBusqueda();
+              break;
+            case 2:
+              _navigateToLista();
+              break;
+            case 3:
+              _navigateToPerfilInterfaz();
+              break;
+          }
+        },
       ),
     );
   }
@@ -214,6 +254,17 @@ class _ListaState extends State<ListaInterfaz> {
       ),
     );
   }
+  void _navigateToBusqueda() {}
+  void _navigateToHome() {}
+  void _navigateToPerfilInterfaz() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PerfilInterfaz(),
+      ),
+    );
+  }
+  void _navigateToLista() {}
 
   void _navigateToListaFavoritos() {
     Navigator.push(
