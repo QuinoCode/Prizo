@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/features/productsearch/productsearch.ui.dart'; 
 import 'package:prizo/shared/database/database_operations.dart';
+import 'package:prizo/shared/application/barra_navegacion.dart';
 
 
 void main() async {
@@ -17,8 +18,10 @@ class Prizo extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => PrizoState(),
-      child: const MaterialApp(
-        home: ProductSearchScreen(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false, // Opcional, para quitar la etiqueta de debug
+        title: 'Prizo App',
+        home: BarraNavegacion(), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
       ),
     );
   }
