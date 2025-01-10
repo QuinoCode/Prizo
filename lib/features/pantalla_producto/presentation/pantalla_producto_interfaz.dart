@@ -183,10 +183,43 @@ class DetallesProducto extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${producto.precio.toStringAsFixed(2)}€',
-                          style: const TextStyle(fontFamily: 'Geist', fontSize: 32, fontWeight: FontWeight.bold),
-                        ),
+                        // Mostrar precio con descuento si está en oferta
+                        if (producto.oferta)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic, // Alineación precisa
+                            children: [
+                              Text(
+                                '${producto.precioOferta.toStringAsFixed(2)}€',
+                                style: const TextStyle(
+                                  fontFamily: 'Geist',
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              const SizedBox(width: 20), // Separación aumentada
+                              Text(
+                                '${producto.precio.toStringAsFixed(2)}€',
+                                style: const TextStyle(
+                                  fontFamily: 'Geist',
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                            ],
+                          )
+                        else
+                        // Mostrar precio normal si no está en oferta
+                          Text(
+                            '${producto.precio.toStringAsFixed(2)}€',
+                            style: const TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         const SizedBox(height: 4),
                         Text(
                           precioMedida,
