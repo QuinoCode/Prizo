@@ -34,7 +34,6 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
   Map<String, int> _productoCantidad = {};
   Map<String, bool> _mapaProductoConBotonCarrito = {};
   List<String> tiendasSeleccionadas = [];
-  final IconService iconService = new IconService();
 
   List<Producto> _filtrarProductos() {
     if (widget.original.productos.isEmpty) {
@@ -179,7 +178,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                       color: Color(0xFF95B3FF),
                       alignment: Alignment.centerLeft,
                       padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Image.memory(iconService.getPapelera(),
+                      child: Image.memory(icono_basura(),
                           width: 30, height: 30),
                     ),
                     child: ListTile(
@@ -272,7 +271,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                           ]
                               : [
                             IconButton(
-                              icon: Image.memory(iconService.getCesta(), width: 18, height: 18),
+                              icon: Image.memory(icono_cesta_plus(), width: 18, height: 18),
                               onPressed: () {
                                 setState(() {
                                   _mapaProductoConBotonCarrito[productoService.generarClave(producto)] = true;
@@ -289,43 +288,6 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getCasa(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getLupa(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getListaAzul(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getPersona(), width: 30, height: 30,),
-            label: '',
-          ),
-        ],
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              _navigateToHome();
-              break;
-            case 1:
-              _navigateToBusqueda();
-              break;
-            case 2:
-              _navigateToLista();
-              break;
-            case 3:
-              _navigateToPerfilInterfaz();
-              break;
-          }
-        },
       ),
     );
   }

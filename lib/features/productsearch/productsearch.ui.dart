@@ -71,7 +71,6 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       id: '1', usuario: 'usuario_demo', productos: []);
   List<int> alergenosSeleccionados = [];
   List<String> tiendasSeleccionadas = [];
-  final IconService iconService = new IconService();
 
   List<List<Producto>> filtrar_tienda(List<List<Producto>> productos) {
     if (productos.isEmpty) { return productos; }
@@ -377,43 +376,6 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getCasa(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getLupaAzul(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getLista(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getPersona(), width: 30, height: 30,),
-            label: '',
-          ),
-        ],
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              _navigateToHome();
-              break;
-            case 1:
-              _navigateToBusqueda();
-              break;
-            case 2:
-              _navigateToLista();
-              break;
-            case 3:
-              _navigateToPerfilInterfaz();
-              break;
-          }
-        },
       ),
     );
   }

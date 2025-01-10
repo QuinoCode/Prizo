@@ -24,7 +24,6 @@ class ListaInterfaz extends StatefulWidget {
 
 class _ListaState extends State<ListaInterfaz> {
   ListaService listaService = ListaService();
-  IconService iconService = new IconService();
 
   Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
     return showDialog<void>(
@@ -85,43 +84,6 @@ class _ListaState extends State<ListaInterfaz> {
             _buildFavoritosList(),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getCasa(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getLupa(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getListaAzul(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getPersona(), width: 30, height: 30,),
-            label: '',
-          ),
-        ],
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              _navigateToHome();
-              break;
-            case 1:
-              _navigateToBusqueda();
-              break;
-            case 2:
-              _navigateToLista();
-              break;
-            case 3:
-              _navigateToPerfilInterfaz();
-              break;
-          }
-        },
       ),
     );
   }

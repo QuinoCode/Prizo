@@ -13,7 +13,6 @@ class BarraNavegacion extends StatefulWidget {
 }
 
 class _BarraNavegacionState extends State<BarraNavegacion> {
-  final IconService iconService = new IconService();
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
@@ -61,19 +60,19 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
                   onTap: _onTabTapped,
                   items: [
                     BottomNavigationBarItem(
-                      icon: _buildIcon(iconService.figma_casa(), 0),
+                      icon: _buildIcon(icono_casa(), 0),
                       label: '',
                     ),
                     BottomNavigationBarItem(
-                      icon: _buildIcon(iconService.figma_lupa(), 1),
+                      icon: _buildIcon(icono_lupa(), 1),
                       label: '',
                     ),
                     BottomNavigationBarItem(
-                      icon: _buildIcon(iconService.figma_lista(), 2),
+                      icon: _buildIcon(icono_lista(), 2),
                       label: '',
                     ),
                     BottomNavigationBarItem(
-                      icon: _buildIcon(iconService.figma_persona(), 3),
+                      icon: _buildIcon(icono_persona(), 3),
                       label: '',
                     ),
                   ],

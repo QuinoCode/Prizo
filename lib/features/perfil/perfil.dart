@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:prizo/shared/application/icon_service.dart';
 
 class PerfilInterfaz extends StatelessWidget {
-  final IconService iconService = new IconService();
-
-  void _navigateToBusqueda() {}
-  void _navigateToHome() {}
-  void _navigateToPerfilInterfaz() { }
-  void _navigateToLista() {}
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +19,7 @@ class PerfilInterfaz extends StatelessWidget {
             SizedBox(height: 20),
             CircleAvatar(
               radius: 50,
-              backgroundImage: MemoryImage(iconService.getPerfil()),
+              backgroundImage: MemoryImage(icono_persona()),
             ),
             SizedBox(height: 20),
             Text(
@@ -45,7 +39,7 @@ class PerfilInterfaz extends StatelessWidget {
                   _buildSettingOption(
                     context,
                     icon: Image.memory(
-                      iconService.getNotificaciones(),
+                      icono_notificaciones(),
                       width: 30,
                       height: 30,
                     ),
@@ -60,7 +54,7 @@ class PerfilInterfaz extends StatelessWidget {
                   _buildSettingOption(
                     context,
                     icon: Image.memory(
-                      iconService.getSeguridad(),
+                      icono_seguridad(),
                       width: 30,
                       height: 30,
                     ),
@@ -69,7 +63,7 @@ class PerfilInterfaz extends StatelessWidget {
                   _buildSettingOption(
                     context,
                     icon: Image.memory(
-                      iconService.getAyuda(),
+                      icono_ayuda(),
                       width: 30,
                       height: 30,
                     ),
@@ -78,7 +72,7 @@ class PerfilInterfaz extends StatelessWidget {
                   _buildSettingOption(
                     context,
                     icon: Image.memory(
-                      iconService.getCerrarSesion(),
+                      icono_cerrar_sesion(),
                       width: 30,
                       height: 30,
                     ),
@@ -89,43 +83,6 @@ class PerfilInterfaz extends StatelessWidget {
             )
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getCasa(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getLupa(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getLista(), width: 30, height: 30,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.memory(iconService.getPersonaAzul(), width: 30, height: 30,),
-            label: '',
-          ),
-        ],
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              _navigateToHome();
-              break;
-            case 1:
-              _navigateToBusqueda();
-              break;
-            case 2:
-              _navigateToLista();
-              break;
-            case 3:
-              _navigateToPerfilInterfaz();
-              break;
-          }
-        },
       ),
     );
   }
