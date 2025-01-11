@@ -108,7 +108,7 @@ class DetallesProducto extends StatelessWidget {
                           child: Center(
                             child: const ImageIcon(
                               AssetImage('assets/icons/corazon_icono.png'),
-                              size: 24, // Ajusta el tamaño según lo necesites
+                              size: 24,
                             ),
                           ),
                         ),
