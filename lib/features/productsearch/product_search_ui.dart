@@ -105,18 +105,31 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   final DiaFinderService diaService = DiaFinderService();
   final CarrefourFinderService carrefourService = CarrefourFinderService();
   final TextEditingController _searchController = TextEditingController();
-  late TabController _tabController;
   List<Producto> _productos = [];
+  List<bool> _isPressed = [false,false,false,false,false];
   List<Producto> _productosRestantes = [];
   List<String> tiendasSeleccionadas = [];
   bool _isLoading = false;
   bool _isSearching = false;
-  var recentElementA, recentElementB, recentElementC, recentElementD, recentElementE;
+  final List<String> recentElements = [
+    '',
+    '',
+    '',
+    '',
+    ''
+  ];
+
+  final List<ValueNotifier<Color>> _colorNotifiers = List.generate(
+    5,  // Assuming you have 5 buttons
+    (_) => ValueNotifier(Colors.white),
+  );
 
   @override
   void dispose() {
-    _tabController.dispose();
     _searchController.dispose();
+    for (var notifier in _colorNotifiers) {
+      notifier.dispose();
+    }
     super.dispose();
   }
 
@@ -161,7 +174,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
       MaterialPageRoute(
         builder: (context) =>
             ListaCompraInterfaz(
-              listaCompra: listaCompra, original: listaCompra,
+              listaCompra: listaCompra,
             ),
       ),
     );
@@ -222,7 +235,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     }
   }
 
-  //Construye pantalla de recientes, faltan recientes 
   Widget _buildRecents() {
     return FutureBuilder<List<Map<String, Object?>>>(
       future: DatabaseOperations.instance.fetchItemsListaRecientes(db),
@@ -241,11 +253,11 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
           var result = snapshot.data!;
 
           // Ensure the list has 5 elements
-          String recentElementA = result.length > 0 ? result[0]['busqueda'].toString() : 'Queso';
-          String recentElementB = result.length > 1 ? result[1]['busqueda'].toString() : 'Tomate';
-          String recentElementC = result.length > 2 ? result[2]['busqueda'].toString() : 'Plátanos';
-          String recentElementD = result.length > 3 ? result[3]['busqueda'].toString() : 'Macarrones';
-          String recentElementE = result.length > 4 ? result[4]['busqueda'].toString() : 'Azúcar';
+          recentElements[0] = result.length > 0 ? result[0]['busqueda'].toString() : 'Queso';
+          recentElements[1] = result.length > 1 ? result[1]['busqueda'].toString() : 'Tomate';
+          recentElements[2] = result.length > 2 ? result[2]['busqueda'].toString() : 'Plátanos';
+          recentElements[3] = result.length > 3 ? result[3]['busqueda'].toString() : 'Macarrones';
+          recentElements[4] = result.length > 4 ? result[4]['busqueda'].toString() : 'Azúcar';
 
           // Build the UI with the fetched data
           return Column(
@@ -266,94 +278,42 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                 child: Wrap(
                   spacing: MediaQuery.of(context).size.width * 0.0333,
                   runSpacing: MediaQuery.of(context).size.height * 0.009,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        _searchController.text = recentElementA;
-                        _searchProducts();
+                  children: List.generate(recentElements.length, (index) {
+                    return GestureDetector(
+                      onPanStart: (_) {
+                        _colorNotifiers[index].value = Color.fromARGB(255, 149, 179, 252);  // Highlight color on pan start
                       },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.048, vertical: MediaQuery.of(context).size.height * 0.012,),
-                        shadowColor: Colors.transparent,
-                        foregroundColor: Color.fromARGB(255, 80, 79, 79),
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(23),
-                          side: BorderSide(color: Color.fromARGB(255,149,179,255)),
-                        ),
-                      ),
-                      child: Text(recentElementA),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _searchController.text = recentElementB;
-                        _searchProducts();
+                      onPanEnd: (_) {
+                        _colorNotifiers[index].value = Colors.white;  // Reset color on pan end
                       },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.048, vertical: MediaQuery.of(context).size.height * 0.012,),
-                        shadowColor: Colors.transparent,
-                        foregroundColor: Color.fromARGB(255, 80, 79, 79),
-                        backgroundColor: Color.fromARGB(255, 149, 179, 252),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(23),
-                          side: BorderSide(color: Color.fromARGB(255,149,179,255)),
-                        ),
+                      child: ValueListenableBuilder<Color>(
+                        valueListenable: _colorNotifiers[index],
+                        builder: (context, color, child) {
+                          return ElevatedButton(
+                            onPressed: () {
+                              _searchController.text = recentElements[index];
+                              _searchProducts();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: MediaQuery.of(context).size.width * 0.048,
+                                vertical: MediaQuery.of(context).size.height * 0.012,
+                              ),
+                              shadowColor: Colors.transparent,
+                              foregroundColor: Color.fromARGB(255, 80, 79, 79),
+                              backgroundColor: color, // Dynamically change the background color
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(23),
+                                side: BorderSide(color: Color.fromARGB(255, 149, 179, 255)),
+                              ),
+                            ),
+                            child: Text(recentElements[index]),
+                          );
+                        },
                       ),
-                      child: Text(recentElementB),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _searchController.text = recentElementC;
-                        _searchProducts();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.048, vertical: MediaQuery.of(context).size.height * 0.012,),
-                        shadowColor: Colors.transparent,
-                        foregroundColor: Color.fromARGB(255, 80, 79, 79),
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(23),
-                          side: BorderSide(color: Color.fromARGB(255,149,179,255)),
-                        ),
-                      ),
-                      child: Text(recentElementC),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _searchController.text = recentElementD;
-                        _searchProducts();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.048, vertical: MediaQuery.of(context).size.height * 0.012,),
-                        shadowColor: Colors.transparent,
-                        foregroundColor: Color.fromARGB(255, 80, 79, 79),
-                        backgroundColor: Color.fromARGB(255, 149, 179, 252),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(23),
-                          side: BorderSide(color: Color.fromARGB(255,149,179,255)),
-                        ),
-                      ),
-                      child: Text(recentElementD),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _searchController.text = recentElementE;
-                        _searchProducts();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.048, vertical: MediaQuery.of(context).size.height * 0.012,),
-                        shadowColor: Colors.transparent,
-                        foregroundColor: Color.fromARGB(255, 80, 79, 79),
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(23),
-                          side: BorderSide(color: Color.fromARGB(255,149,179,255)),
-                        ),
-                      ),
-                      child: Text(recentElementE),
-                    ),
-                  ],
-                ),
+                    );
+                  }),
+                )
               ),
             ],
           );
