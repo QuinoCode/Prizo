@@ -33,6 +33,7 @@ flutter:
     - assets/images/logo_carrefour.png
     - assets/fonts/
     - assets/icons/cesta_icono.png
+    - assets/icons/corazon_icono.png
 
   fonts:
     - family: Geist

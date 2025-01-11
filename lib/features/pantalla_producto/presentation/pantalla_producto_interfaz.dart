@@ -105,7 +105,12 @@ class DetallesProducto extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: Color(0xFF95B3FF),
                           ),
-                          child: const Icon(Icons.favorite_border, color: Colors.black),
+                          child: Center(
+                            child: const ImageIcon(
+                              AssetImage('assets/icons/corazon_icono.png'),
+                              size: 24, // Ajusta el tamaño según lo necesites
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 10),
