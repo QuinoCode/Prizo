@@ -400,7 +400,7 @@ class _BotonDistanciaState extends State<BotonDistancia> {
   // Cambiar color cuando el botón es presionado
   void _onTapDown(TapDownDetails details) {
     setState(() {
-      _color = Colors.blueAccent; // Cambia al color que quieras cuando se presiona
+      _color = Colors.grey; // Cambia al color que quieras cuando se presiona
     });
   }
 
