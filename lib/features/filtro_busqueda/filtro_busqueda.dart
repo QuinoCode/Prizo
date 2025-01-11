@@ -49,7 +49,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, widget.alergenos);
             },
           ),
         ],

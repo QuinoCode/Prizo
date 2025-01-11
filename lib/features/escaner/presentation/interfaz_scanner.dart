@@ -119,9 +119,9 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Geist',
-                  fontSize: MediaQuery.of(context).size.shortestSide * 0.037,
+                  fontSize: MediaQuery.of(context).size.shortestSide * 0.0364,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black,
+                  color: Color(0xFF121212),
                 ),
               ),
             ),
@@ -135,8 +135,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
             child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
-                border: Border(bottom: BorderSide(color: Color(0xFF95B3FF), width: 2.5), )
-                
+                border: Border(bottom: BorderSide(color: Color(0xFF95B3FF), width: 2.0))
               ),
               child:  Stack(
                 children: [
@@ -157,13 +156,13 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
                   Positioned(
                     child: Align(
                       alignment: const Alignment(0.8, 0.55),
-                      child: Container(
+                      child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.084,
                         height: MediaQuery.of(context).size.width * 0.084,
                         child: DiagonalCrossButton(
                           size: MediaQuery.of(context).size.width * 0.070,
                           strokeWidth: 2.5,
-                          color: Colors.black,
+                          color: Color(0xFF121212),
                           onPressed: (){
                             Navigator.pop(context);
                           },
@@ -212,7 +211,6 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
         if (lockOpen){
           lockOpen = false;
           await detected(capture, context, eanFinder);
-          print("------------Successfully scanned!--------------------");
           lockOpen = true;
         }
       }
@@ -236,15 +234,15 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
               barrierColor: Colors.transparent,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: const Text("Error"),
-                  content: const Text("No se encontró el artículo"),
+                  title: const Text("No se encontró el producto"),
+                  content: const Text(":(", textAlign: TextAlign.center,),
                 );
               },
             );
           }
           else { 
-           bool  every_product_is_null = products.every((product) => product == null);
-           if (every_product_is_null){
+           bool  everyProductIsNull = products.every((product) => product == null);
+           if (everyProductIsNull){
               await showDialog(context: context,barrierColor: Colors.transparent, builder: (context) => 
                 AlertDialog(
                       title: const Text("No se encontró el producto"),
@@ -275,10 +273,13 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
 
    createAlertDialog(List<Producto?> products, BuildContext context){
     return  Dialog(
+      backgroundColor: Colors.white,
         insetPadding: EdgeInsets.zero,
       child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.37,
+          height: MediaQuery.of(context).size.height * 0.12 + //Base height
+          products.where((product) => product !=null).length * MediaQuery.of(context).size.height * 0.072,
+          //height: MediaQuery.of(context).size.height * 0.37,
         child: Column(
             children: [
               SizedBox(
@@ -289,7 +290,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
                       alignment: Alignment(-0.9,0.53),
                       child: BackButton(
                         size: MediaQuery.of(context).size.width * 0.070,
-                        color: Colors.black,
+                        color: Color(0xFF121212),
                         strokeWidth: 2.6,
                         onPressed: (){
                           Navigator.pop(context);
@@ -301,7 +302,11 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
                       top: MediaQuery.of(context).size.height *0.025,
                       child: Text(
                         "Elegir supermercado",
-                        style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.065, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontFamily: 'Geist',
+                          fontSize: MediaQuery.of(context).size.shortestSide * 0.065,
+                          fontWeight: FontWeight.w500
+                        ),
                       ),
                     )
                   ],
@@ -322,7 +327,6 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
                    .toList(),
                  ),
               ),
-      
             ],
         ),
       )
@@ -330,40 +334,62 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
   }
 
   Widget _supermarketAddProductButton(BuildContext context, Producto producto){
-    bool _isPressed = false;
+    bool isPressed = false;
 
     return StatefulBuilder(
       builder: (context, setState){
          return SizedBox(
-          width: MediaQuery.of(context).size.width*0.71,
-          height: MediaQuery.of(context).size.height*0.06,
+          width: MediaQuery.of(context).size.width * 0.71,
+          height: MediaQuery.of(context).size.height * 0.06,
           child: GestureDetector(
             onPanStart: (_){
               setState((){
-                _isPressed = true;
+                isPressed = true;
+              });
+            },
+            onPanCancel: (){
+              setState((){
+                isPressed = false;
               });
             },
             onPanEnd: (_){
               Navigator.of(context).pop();
               //TODO: addItem to lista compra
               setState((){
-                _isPressed = false;
+                isPressed = false;
               });
             },
             child: Container(
               decoration: BoxDecoration(
-                color: _isPressed ? Color(0xFF95B3FF) : Colors.transparent,
+                color: isPressed ? Color(0xFF95B3FF) : Colors.white,
                 border: Border.all(color: Color(0xFF95B3FF)),
-                borderRadius: BorderRadius.circular(30)
+                borderRadius: BorderRadius.circular(40)
               ),
-              child: Row(
-              
-                children: [
-                  SizedBox(width: 15),
-                  Expanded(child: Text(producto.tienda.substring(0,1).toUpperCase() + producto.tienda.substring(1).toLowerCase(), style: TextStyle(color:Colors.black, fontSize: MediaQuery.of(context).size.shortestSide *0.045))),
-                  Text("${producto.precioOferta}€", style: TextStyle(color:Colors.black54, fontSize: MediaQuery.of(context).size.shortestSide *0.037)),
-                  SizedBox(width: 15)
-                ],
+              child: Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.035),
+                    Text(
+                      producto.tienda.substring(0,1).toUpperCase() + producto.tienda.substring(1).toLowerCase(),
+                      style: TextStyle(
+                        fontFamily: 'Geist',
+                        color: Color(0xFF121212),
+                        fontSize: MediaQuery.of(context).size.shortestSide * 0.045
+                      )
+                    ),
+                    Spacer(),
+                    Text("${producto.precioOferta}€",
+                      style: TextStyle(
+                        fontFamily: 'Geist',
+                        color:Color(0xFF504F4F),
+                        fontSize: MediaQuery.of(context).size.shortestSide * 0.03375
+                      )
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.035)
+                  ],
+                ),
               ),
             ),
           ),
