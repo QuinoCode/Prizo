@@ -65,58 +65,15 @@ class DetallesProducto extends StatelessWidget {
                   Row(
                     children: [
                       // Botón de favoritos
-                      GestureDetector(
-                        onTap: () async {
-                          try {
-                            if (listaFavoritosService.productoEnFavoritos(listaFavoritos, producto)) {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Producto ya en favoritos'),
-                                    content: Text('${producto.nombre} ya se encuentra en tu lista de favoritos.'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('Ok'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            } else {
-                              listaFavoritosService.annadirProducto(listaFavoritos, producto);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('${producto.nombre} añadido a favoritos')),
-                              );
-                            }
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Error al añadir a favoritos')),
-                            );
-                          }
-                        },
-                        child: Container(
-                          width: screenWidth * 0.1,
-                          height: screenWidth * 0.1,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xFF95B3FF),
-                          ),
-                          child: Center(
-                            child: const ImageIcon(
-                              AssetImage('assets/icons/corazon_icono.png'),
-                              size: 24,
-                            ),
-                          ),
-                        ),
+                      BotonFavoritos(
+                        producto: producto,
+                        listaFavoritos: listaFavoritos,
+                        listaFavoritosService: listaFavoritosService,
                       ),
                       const SizedBox(width: 10),
 
                       // Botón de distancia
-                      GestureDetector(
+                      BotonDistancia(
                         onTap: () async {
                           try {
                             shopDistance.launchMapQuery(producto.tienda);
@@ -126,15 +83,6 @@ class DetallesProducto extends StatelessWidget {
                             );
                           }
                         },
-                        child: Container(
-                          width: screenWidth * 0.1,
-                          height: screenWidth * 0.1,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xFF95B3FF),
-                          ),
-                          child: const Icon(Icons.map_outlined, color: Colors.black),
-                        ),
                       ),
                     ],
                   ),
@@ -371,3 +319,117 @@ class DetallesProducto extends StatelessWidget {
     );
   }
 }
+
+class BotonFavoritos extends StatefulWidget {
+  final Producto producto;
+  final ListaFavoritos listaFavoritos;
+  final ListaFavoritosService listaFavoritosService;
+
+  const BotonFavoritos({
+    Key? key,
+    required this.producto,
+    required this.listaFavoritos,
+    required this.listaFavoritosService,
+  }) : super(key: key);
+
+  @override
+  _BotonFavoritosState createState() => _BotonFavoritosState();
+}
+
+class _BotonFavoritosState extends State<BotonFavoritos> {
+  late bool _isFavorito;
+
+  @override
+  void initState() {
+    super.initState();
+    // Verificamos si el producto ya está en favoritos al iniciar
+    _isFavorito = widget.listaFavoritosService.productoEnFavoritos(widget.listaFavoritos, widget.producto);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        setState(() {
+          // Si el producto está en favoritos, lo eliminamos
+          if (_isFavorito) {
+            widget.listaFavoritosService.quitarProducto(widget.listaFavoritos, widget.producto);
+          } else {
+            // Si el producto no está en favoritos, lo añadimos
+            widget.listaFavoritosService.annadirProducto(widget.listaFavoritos, widget.producto);
+          }
+
+          // Cambiar el estado de favorito
+          _isFavorito = !_isFavorito;
+        });
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Color(0xFF95B3FF),
+        ),
+        child: Center(
+          child: ImageIcon(
+            AssetImage(
+              _isFavorito
+                  ? 'assets/icons/corazonnegro_icono.png'  // Ícono cuando está en favoritos
+                  : 'assets/icons/corazon_icono.png',  // Ícono cuando no está en favoritos
+            ),
+            size: 24,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class BotonDistancia extends StatefulWidget {
+  final Function onTap;
+
+  const BotonDistancia({Key? key, required this.onTap}) : super(key: key);
+
+  @override
+  _BotonDistanciaState createState() => _BotonDistanciaState();
+}
+
+class _BotonDistanciaState extends State<BotonDistancia> {
+  Color _color = Color(0xFF95B3FF); // Color original
+
+  // Cambiar color cuando el botón es presionado
+  void _onTapDown(TapDownDetails details) {
+    setState(() {
+      _color = Colors.blueAccent; // Cambia al color que quieras cuando se presiona
+    });
+  }
+
+  // Volver al color original cuando se suelta el botón
+  void _onTapUp(TapUpDetails details) {
+    setState(() {
+      _color = Color(0xFF95B3FF); // Color original al soltar
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: _onTapDown, // Detectar cuando se presiona
+      onTapUp: _onTapUp, // Detectar cuando se suelta
+      onTap: () {
+        widget.onTap();  // Llamar al onTap pasado desde el widget principal
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: _color,
+        ),
+        child: const Icon(Icons.map_outlined, color: Colors.black),
+      ),
+    );
+  }
+}
+
+
