@@ -29,6 +29,7 @@ flutter:
   uses-material-design: true
   assets: 
     - assets/gifs/dancing_rat.gif
+    - assets/gifs/splash_screen_animation.gif
     - assets/icons/filter.png
     - assets/icons/shopping_basket.png
     - assets/icons/scanner.png
