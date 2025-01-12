@@ -77,6 +77,15 @@ class MultiMarketProductSearcher implements ProductSearcher {
   }
 }
 
+
+String shortenText(String nombre, int limit, String replacement){
+  if(nombre.length > limit){
+    return nombre.substring(0,limit) +replacement;
+  } else {
+    return nombre;
+  }
+}
+
 class ProductSearchScreenU extends StatelessWidget {
   const ProductSearchScreenU ({super.key});
 
@@ -302,7 +311,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.017),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.025),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.113,
                 width: MediaQuery.of(context).size.width * 0.802,
@@ -330,6 +339,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                                 horizontal: MediaQuery.of(context).size.width * 0.048,
                                 vertical: MediaQuery.of(context).size.height * 0.012,
                               ),
+                              textStyle: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400, color: Color.fromARGB(255,18,18,18)),
                               shadowColor: Colors.transparent,
                               foregroundColor: Color.fromARGB(255, 80, 79, 79),
                               backgroundColor: color, // Dynamically change the background color
@@ -338,7 +348,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                                 side: BorderSide(color: Color.fromARGB(255, 149, 179, 255)),
                               ),
                             ),
-                            child: Text(recentElements[index]),
+                            child: Text(shortenText(recentElements[index],6,'..')),
                           );
                         },
                       ),
@@ -488,11 +498,11 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height * 0.0521,
                         child: TextField(
-                          textAlignVertical: TextAlignVertical(y: 1),
                           controller: _searchController,
                           style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.03846, fontWeight: FontWeight.w300),
                           decoration: InputDecoration(
                             hintText: ' ',
+                            contentPadding: EdgeInsets.symmetric(vertical: 0),
                             filled: true,
                             fillColor: const Color.fromARGB(255, 246, 246, 246), 
                             prefixIcon: IconButton(
@@ -505,7 +515,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                               iconSize: MediaQuery.of(context).size.width * 0.0615,
                               icon: ImageIcon(AssetImage('assets/icons/scanner.png'), ),
                               color: Color.fromARGB(255,18,18,18),
-                              onPressed: _navigateToScanner,
+                              onPressed: _navigateToListaCompra,
                             ),
                             border: OutlineInputBorder(
                               borderSide: BorderSide.none,
@@ -599,13 +609,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     _counter = 0;
   }
 
-  String shortenText(String nombre){
-    if(nombre.length >= 18){
-      return nombre.substring(0,18) +'...';
-    } else {
-      return nombre;
-    }
-  }
 
   void _navigateToProductInfo(Producto producto) {
     Navigator.push(
@@ -633,7 +636,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                   height: MediaQuery.of(context).size.height * 0.128,
                 ),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.0205), 
+              SizedBox(width: MediaQuery.of(context).size.width * 0.007), 
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.128,
                 child: VerticalDivider(
@@ -656,7 +659,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           width: MediaQuery.of(context).size.width * 0.283,
                           child:
                             Text(
-                              shortenText(widget.producto.nombre),
+                              shortenText(widget.producto.nombre, 18, '...'),
                               maxLines: 2,
                               style: TextStyle(
                                     height: 1.2,

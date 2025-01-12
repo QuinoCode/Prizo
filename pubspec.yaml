@@ -33,6 +33,8 @@ flutter:
     - assets/icons/shopping_basket.png
     - assets/icons/scanner.png
     - assets/icons/arrow.png
+    - assets/icons/empty_checkbox.png
+    - assets/icons/checked_checkbox.png
 
   fonts:
     - family: Kanit

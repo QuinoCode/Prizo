@@ -234,7 +234,6 @@ class _ListaState extends State<ListaInterfaz> {
       MaterialPageRoute(
         builder: (context) => ListaCompraInterfaz(
           listaCompra: widget.listaCompra,
-          original: widget.listaCompra,
         ),
       ),
     );
