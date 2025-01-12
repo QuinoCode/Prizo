@@ -8,6 +8,7 @@ import '../../shared/data_entities/models/lista_compra.dart';
 import '../../shared/data_entities/models/lista_favoritos.dart';
 import '../../shared/data_entities/models/producto.dart';
 import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
+import '../../features/lista_compra/presentation/lista_compra_interfaz_2.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
@@ -200,9 +201,8 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ListaInterfaz(
+            ListaCompraInterfaz2(
               listaCompra : listaCompra,
-              listaFavoritos : listaFavoritos,
             ),
       ),
     );
@@ -254,6 +254,18 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     );
   }
 
+  void _navigateToListaCompra() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ListaCompraInterfaz(
+          listaCompra: listaCompra,
+          original: listaCompra,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     bool tieneDia = tiendasSeleccionadas.contains("DIA");
@@ -272,6 +284,10 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
           IconButton(
             icon: const Icon(Icons.filter_list),
             onPressed: _navigateToFilterList,
+          ),
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: _navigateToListaCompra,
           ),
         ],
       ),
