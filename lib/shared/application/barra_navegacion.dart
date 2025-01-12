@@ -36,8 +36,6 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
           Positioned.fill(
             child: _screens[_currentIndex],
           ),
-
-
           Positioned(
             bottom: 16,
             left: 16,
@@ -46,7 +44,7 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
               height: 63,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(30), // Forma ovalada
+                borderRadius: BorderRadius.circular(50), // Forma ovalada
                 border: Border.all(
                   color: Color(0xFF95B3FF),
                   width: 2,
@@ -58,28 +56,40 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
                   type: BottomNavigationBarType.fixed,
                   currentIndex: _currentIndex,
                   onTap: _onTabTapped,
-                  items: [
+                  items: const [
                     BottomNavigationBarItem(
-                      icon: _buildIcon(icono_casa(), 0),
+                      icon: const ImageIcon(
+                        AssetImage('assets/icons/casa_icono.png'),
+                        size: 24,
+                      ),
+                      label: '', // Sin texto debajo del icono
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const ImageIcon(
+                        AssetImage('assets/icons/lupa_icono.png'),
+                        size: 20,
+                      ),
                       label: '',
                     ),
                     BottomNavigationBarItem(
-                      icon: _buildIcon(icono_lupa(), 1),
+                      icon: const ImageIcon(
+                        AssetImage('assets/icons/listas_icono.png'),
+                        size: 22,
+                      ),
                       label: '',
                     ),
                     BottomNavigationBarItem(
-                      icon: _buildIcon(icono_lista(), 2),
-                      label: '',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: _buildIcon(icono_persona(), 3),
+                      icon: const ImageIcon(
+                        AssetImage('assets/icons/usuario_icono.png'),
+                        size: 22,
+                      ),
                       label: '',
                     ),
                   ],
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   selectedItemColor: Color(0xFF95B3FF), // Color del ícono seleccionado
-                  unselectedItemColor: Colors.grey, // Color del ícono no seleccionado
+                  unselectedItemColor: Colors.black, // Color del ícono no seleccionado
                   elevation: 0, // Sin sombra
                   backgroundColor: Colors.transparent, // Fondo transparente
                 ),
