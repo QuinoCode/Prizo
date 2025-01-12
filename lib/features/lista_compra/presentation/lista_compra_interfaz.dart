@@ -58,32 +58,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
       });
     }
   }
-  
-  /*void _manejadorTextField(String input) {
-    /* Verificar que solo se introduzcan números */
-    if (input.isNotEmpty && RegExp(r'[^0-9]').hasMatch(input)) {
-      /* Si no es un número, mostrar un mensaje de advertencia*/
-      setState(() {
-        _mensajeAdvertencia = 'Solo números';
-      });
-      /* Evitar que se agregue el carácter no permitido */
-      /* Esta parte lo hace imposible */
-      _mapaControladorCantidad.forEach((key, controller) {
-        controller.text = controller.text.substring(0, controller.text.length - 1);
-      });
-      Future.delayed(Duration(seconds: 2), () {
-        /* Limpiar el mensaje de advertencia si han pasado 2 segundos */
-        setState(() {
-          _mensajeAdvertencia = null;
-        });
-      });
-    } else {
-      /* Limpiar el mensaje de advertencia si el input es válido */
-      setState(() {
-        _mensajeAdvertencia = null;
-      });
-    }
-  }*/
 
   void _toggleTienda(String tienda) {
     setState(() {
