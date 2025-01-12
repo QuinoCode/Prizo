@@ -64,14 +64,6 @@ class DetallesProducto extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      // Botón de favoritos
-                      BotonFavoritos(
-                        producto: producto,
-                        listaFavoritos: listaFavoritos,
-                        listaFavoritosService: listaFavoritosService,
-                      ),
-                      const SizedBox(width: 10),
-
                       // Botón de distancia
                       BotonDistancia(
                         onTap: () async {
@@ -83,6 +75,14 @@ class DetallesProducto extends StatelessWidget {
                             );
                           }
                         },
+                      ),
+                      const SizedBox(width: 10),
+
+                      // Botón de favoritos
+                      BotonFavoritos(
+                        producto: producto,
+                        listaFavoritos: listaFavoritos,
+                        listaFavoritosService: listaFavoritosService,
                       ),
                     ],
                   ),
@@ -431,5 +431,3 @@ class _BotonDistanciaState extends State<BotonDistancia> {
     );
   }
 }
-
-
