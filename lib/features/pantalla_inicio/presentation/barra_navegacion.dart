@@ -55,26 +55,38 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
                   onTap: _onTabTapped,
                   items: const [
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.home),
+                      icon: const ImageIcon(
+                        AssetImage('assets/icons/casa_icono.png'),
+                        size: 24,
+                      ),
                       label: '', // Sin texto debajo del icono
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.search),
+                      icon: const ImageIcon(
+                        AssetImage('assets/icons/lupa_icono.png'),
+                        size: 20,
+                      ),
                       label: '',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.favorite),
+                      icon: const ImageIcon(
+                        AssetImage('assets/icons/listas_icono.png'),
+                        size: 22,
+                      ),
                       label: '',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.person),
+                      icon: const ImageIcon(
+                        AssetImage('assets/icons/usuario_icono.png'),
+                        size: 22,
+                      ),
                       label: '',
                     ),
                   ],
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   selectedItemColor: Color(0xFF95B3FF), // Color del ícono seleccionado
-                  unselectedItemColor: Colors.grey, // Color del ícono no seleccionado
+                  unselectedItemColor: Colors.black, // Color del ícono no seleccionado
                   elevation: 0, // Sin sombra
                   backgroundColor: Colors.transparent, // Fondo transparente
                 ),
