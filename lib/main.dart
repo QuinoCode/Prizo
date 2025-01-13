@@ -51,9 +51,7 @@ class _SplashScreenState extends State<SplashScreen>{
   Widget build(BuildContext context){
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Image.asset('assets/gifs/dancing_rat.gif')
-      )
+      body: Image.asset('assets/gifs/splash_screen_animation.gif', alignment: Alignment(-1, 0),)
 
     );
   }
