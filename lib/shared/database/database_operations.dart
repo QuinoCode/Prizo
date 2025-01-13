@@ -360,4 +360,3 @@ class DatabaseOperations {
     return result;
   }
 }
-
