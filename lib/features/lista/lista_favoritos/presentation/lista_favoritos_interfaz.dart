@@ -3,8 +3,8 @@ import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/shared/application/producto_service.dart';
-import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
-import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/features/lista/lista_compra/application/lista_compra_service.dart';
+import 'package:prizo/features/lista/lista_favoritos/application/lista_favoritos_service.dart';
 
 class ListaFavoritosInterfaz extends StatefulWidget {
   ListaFavoritos listaFavoritos;
@@ -159,6 +159,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                     direction: DismissDirection.startToEnd,
                     onDismissed: (direction) {
                       listaFavoritosService.quitarProducto(widget.listaFavoritos, producto);
+                      listaFavoritosService.DB_quitarProducto(producto);
                     },
                     background: Container(
                       color: Colors.lightBlueAccent,
@@ -190,11 +191,13 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                               if (cantidad > 1) {
                                 setState(() {
                                   listaCompraService.quitarInstancia(widget.listaCompra, producto);
+                                  listaCompraService.DB_decreaseCantidad(producto);
                                   actualizarCantidadController(producto);
                                 });
                               } else {
                                 setState(() {
                                   listaCompraService.quitarProducto(widget.listaCompra, producto);
+                                  listaCompraService.DB_quitarProducto(producto);
                                   _mapaProductoConBotonCarrito[productoService.generarClave(producto)] = false;
                                 });
                               }
@@ -217,11 +220,13 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                                 if (newQuantity > 0) {
                                   setState(() {
                                     listaCompraService.setCantidadProducto(widget.listaCompra, producto, newQuantity);
+                                    listaCompraService.DB_setCantidad(producto, newQuantity);
                                     actualizarCantidadController(producto);
                                   });
                                 } else {
                                   setState(() {
                                     listaCompraService.quitarProducto(widget.listaCompra, producto);
+                                    listaCompraService.DB_quitarProducto(producto);
                                     _mapaProductoConBotonCarrito[productoService.generarClave(producto)] = false;
                                   });
                                 }
@@ -234,8 +239,10 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                               setState(() {
                                 if (_mapaControladorCantidad[productoService.generarClave(producto)]!.text == "0") {
                                   listaCompraService.annadirProducto(widget.listaCompra, producto);
+                                  listaCompraService.DB_annadirProducto(producto);
                                 } else {
                                   listaCompraService.annadirInstancia(widget.listaCompra, producto);
+                                  listaCompraService.DB_increaseCantidad(producto);
                                 }
                                 actualizarCantidadController(producto);
                               });

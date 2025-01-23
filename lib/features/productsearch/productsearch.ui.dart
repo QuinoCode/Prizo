@@ -7,11 +7,11 @@ import '../../features/comparacion_productos/application/comparacion_producto.da
 import '../../shared/data_entities/models/lista_compra.dart';
 import '../../shared/data_entities/models/lista_favoritos.dart';
 import '../../shared/data_entities/models/producto.dart';
-import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
-import '../../features/lista_compra/application/lista_compra_service.dart';
-import '../../features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+import '../lista/lista_compra/presentation/lista_compra_interfaz.dart';
+import '../lista/lista_compra/application/lista_compra_service.dart';
+import '../lista/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
-import '../lista_favoritos/application/lista_favoritos_service.dart';
+import '../lista/lista_favoritos/application/lista_favoritos_service.dart';
 import 'package:prizo/features/filtro_busqueda/filtro_busqueda.dart';
 import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 
@@ -68,6 +68,31 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
       id: '1', usuario: 'usuario_demo', productos: []);
   List<int> alergenosSeleccionados = [];
   List<String> tiendasSeleccionadas = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeListaFavoritos();
+    _initializeListaCompra();
+  }
+  void _initializeListaFavoritos() async {
+    // Llama a generar_ListaFavoritos y espera el resultado
+    ListaFavoritos fetchedListaFavoritos = await listaFavoritosService.generar_ListaFavoritos();
+
+    // Actualiza el estado con los datos obtenidos
+    setState(() {
+      listaFavoritos = fetchedListaFavoritos;
+    });
+  }
+  void _initializeListaCompra() async {
+    // Llama a generar_ListaCompra y espera el resultado
+    ListaCompra fetchedListaCompra = await listaCompraService.generar_ListaCompra();
+
+    // Actualiza el estado con los datos obtenidos
+    setState(() {
+      listaCompra = fetchedListaCompra;
+    });
+  }
 
   @override
   void dispose() {
@@ -189,24 +214,13 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
     );
   }
   void _navigateToListaCompra() {
-    List<(Producto, int)> productosFiltrados = [];
-    if (listaCompra.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
-      for (var producto in listaCompra.productos) {
-        if (tiendasSeleccionadas.contains(producto.$1.tienda)) {
-          productosFiltrados.add(producto);
-        }
-      }
-    } else {
-      productosFiltrados = listaCompra.productos;
-    }
-    ListaCompra comprasFiltradas = new ListaCompra(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltrados);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
             ListaCompraInterfaz(
-              listaCompra: comprasFiltradas,
-              tiendasSeleccionadas : tiendasSeleccionadas,
+              listaCompra: listaCompra,
+              tiendasSeleccionadas : [],
               original: listaCompra,
             ),
       ),
@@ -214,25 +228,14 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
   }
 
   void _navigateToListaFavoritos() {
-    List<Producto> productosFiltrados = [];
-    if (listaFavoritos.productos.isNotEmpty && tiendasSeleccionadas.isNotEmpty) {
-      for (var producto in listaFavoritos.productos) {
-        if(tiendasSeleccionadas.contains(producto.tienda)) {
-          productosFiltrados.add(producto);
-        }
-      }
-    } else {
-      productosFiltrados = listaFavoritos.productos;
-    }
-    ListaFavoritos favoritosFiltrados = new ListaFavoritos(id: listaFavoritos.id, usuario: listaFavoritos.usuario, productos: productosFiltrados);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
             ListaFavoritosInterfaz(
-                listaFavoritos: favoritosFiltrados,
+                listaFavoritos: listaFavoritos,
                 listaCompra: listaCompra,
-                tiendasSeleccionadas : tiendasSeleccionadas,
+                tiendasSeleccionadas : [],
                 original: listaFavoritos,
             ),
       ),
@@ -253,6 +256,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               onPressed: () {
                 setState(() {
                   listaCompraService.annadirProducto(listaCompra, producto);
+                  listaCompraService.DB_annadirProducto(producto);
                 });
                 Navigator.of(context).pop();
                 /*ScaffoldMessenger.of(context).showSnackBar(
@@ -265,6 +269,7 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
               onPressed: () {
                 setState(() {
                   listaFavoritosService.annadirProducto(listaFavoritos, producto);
+                  listaFavoritosService.DB_annadirProducto(producto);
                 });
                 Navigator.of(context).pop();
                 /*ScaffoldMessenger.of(context).showSnackBar(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
 import '/features/productsearch/productsearch.ui.dart';
 import '/features/perfil/perfil.dart';
+import '/features/lista/lista.dart';
 
 class BarraNavegacion extends StatefulWidget {
   @override
@@ -14,7 +15,7 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
   final List<Widget> _screens = [
     PantallaInicio(),
     ProductSearchScreen(),
-    PerfilInterfaz(),// Center(child: Text('Favoritos')),
+    ListaInterfaz(),
     PerfilInterfaz(),
   ];
 

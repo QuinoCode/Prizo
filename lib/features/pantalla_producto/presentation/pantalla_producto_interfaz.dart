@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../shared/data_entities/models/producto.dart';
-import '../../lista_compra/application/lista_compra_service.dart';
-import '../../lista_favoritos/application/lista_favoritos_service.dart';
+import '../../lista/lista_compra/application/lista_compra_service.dart';
+import '../../lista/lista_favoritos/application/lista_favoritos_service.dart';
 import '../../../shared/data_entities/models/lista_compra.dart';
 import '../../../shared/data_entities/models/lista_favoritos.dart';
 import '../../pantalla_producto/application/pantalla_producto_service.dart';
@@ -99,6 +99,7 @@ class DetallesProducto extends StatelessWidget {
                     try {
                       // Llamar al servicio para añadir a la lista de compra
                       listaCompraService.annadirProducto(listaCompra, producto);
+                      listaCompraService.DB_annadirProducto(producto);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('${producto.nombre} añadido a la lista de compra')),
                       );
@@ -147,6 +148,7 @@ class DetallesProducto extends StatelessWidget {
                       } else {
                         // Añadir a favoritos si no está ya en la lista
                         listaFavoritosService.annadirProducto(listaFavoritos, producto);
+                        listaFavoritosService.DB_annadirProducto(producto);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('${producto.nombre} añadido a favoritos')),
                         );

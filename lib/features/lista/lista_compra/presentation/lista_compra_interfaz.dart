@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/DAO/lista_compra_DAO.dart';
-import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
+import 'package:prizo/features/lista/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/shared/application/producto_service.dart';
 
 class ListaCompraInterfaz extends StatefulWidget {
@@ -108,6 +108,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                 /* Eliminar el producto completo de la lista */
                 setState(() {
                   listaCompraService.quitarProducto(widget.listaCompra, producto);
+                  listaCompraService.DB_quitarProducto(producto);
                 });
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
@@ -284,6 +285,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                     if (nuevaCantidad > 0) {
                                       setState(() {
                                         listaCompraService.setCantidadProducto(widget.listaCompra, producto, nuevaCantidad);
+                                        listaCompraService.DB_setCantidad(producto, nuevaCantidad);
                                         actualizarCantidadController(producto);
                                       });
                                     } else {
@@ -297,6 +299,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> {
                                 onPressed: () {
                                   setState(() {
                                     listaCompraService.annadirInstancia(widget.listaCompra, producto);
+                                    listaCompraService.DB_increaseCantidad(producto);
                                     actualizarCantidadController(producto);
                                   });
                                 },

@@ -6,6 +6,7 @@ import 'package:prizo/shared//database/database_operations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //await DatabaseOperations.instance.deleteDB();
   await DatabaseOperations.instance.openOrCreateDB();
   await initializeDateFormatting('es_ES', null);
   runApp(const Prizo());

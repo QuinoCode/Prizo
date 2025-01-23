@@ -5,49 +5,105 @@ import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ListaCompraService {
-  void DB_annadirProducto(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    DatabaseOperations.instance.existsInProductTable(db, product).then((exists) {
-      if (!exists) {
-        DatabaseOperations.instance.registerIntoProductTable(db, product).then((_) {});
-      }
-    });
-  }
-  void DB_annadirProducto_ListaCompra(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    DatabaseOperations.instance.existsInProductTable(db, product).then((exists) {
-      if (exists) {
-        DatabaseOperations.instance.existsInListaCompraTable(db, product).then((exists2) {
-          if (!exists2) {
-            DatabaseOperations.instance.registerIntoListaCompraTable(db, product).then((_) {});
-          }
-        });
+  void DB_annadirProducto(Producto producto) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    // Verifica si el producto ya existe en la tabla de productos
+    bool exists = await dbOps.existsInProductTable(db, producto);
+    if (exists) {
+      // Verifica si el producto ya está en la lista de compra
+      bool existsInListaCompra = await dbOps.existsInListaCompraTable(db, producto);
+      if (!existsInListaCompra) {
+        await dbOps.registerIntoListaCompraTable(db, producto);
       } else {
-        DatabaseOperations.instance.registerIntoProductTable(db, product).then((_) {
-          DatabaseOperations.instance.registerIntoListaCompraTable(db, product).then((_) {});
-        });
+        DB_increaseCantidad(producto);
+        print("hell yea");
       }
-    });
+    } else {
+      // Registra el producto en la tabla de productos y luego en la lista de compra
+      await dbOps.registerIntoProductTable(db, producto);
+      await dbOps.registerIntoListaCompraTable(db, producto);
+    }
   }
-  void DB_quitarProducto(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    DatabaseOperations.instance.deleteFromListaCompraTable(db, product);
+  void DB_quitarProducto(Producto producto) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    await dbOps.deleteFromListaCompraTable(db, producto);
   }
-  void DB_increaseCantidad(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    DatabaseOperations.instance.increaseCantidadListaCompra(db, product);
+  void DB_increaseCantidad(Producto producto) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    await dbOps.increaseCantidadListaCompra(db, producto);
   }
-  void DB_decreaseCantidad(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    DatabaseOperations.instance.decreaseCantidadListaCompra(db, product);
+  void DB_decreaseCantidad(Producto producto) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    await dbOps.decreaseCantidadListaCompra(db, producto);
   }
-  Future<int> DB_fetchCantidad(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    return DatabaseOperations.instance.fetchCantidadListaCompra(db, product);
+  Future<int> DB_fetchCantidad(Producto producto) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    return await dbOps.fetchCantidadListaCompra(db, producto);
   }
-  Future<List<Producto>> DB_fetchProducts() {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    return DatabaseOperations.instance.fetchProductsListaCompra(db);
+  void DB_setCantidad(Producto producto, int nuevaCantidad) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    await dbOps.setCantidadListaCompra(db, producto, nuevaCantidad);
+  }
+  Future<List<Producto>> DB_fetchProducts() async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    return await dbOps.fetchProductsListaCompra(db);
+  }
+  Future<ListaCompra> generar_ListaCompra() async {
+    // Llamar a DB_fetchProducts para obtener la lista de productos
+    List<Producto> BD_productos = await DB_fetchProducts();
+
+    // Generar tuplas de producto-cantidad
+    List<(Producto, int)> BD_tuplas = [];
+
+    for (Producto producto in BD_productos) {
+      // Llamar a DB_fetchCantidad para cada producto
+      int cantidad = await DB_fetchCantidad(producto);
+      BD_tuplas.add((producto, cantidad));
+    }
+
+    // Crear y devolver la lista de compra
+    ListaCompra listaCompra = ListaCompra(
+      id: '1',
+      usuario: 'usuario_demo',
+      productos: BD_tuplas,
+    );
+
+    return listaCompra;
   }
 
   final int LIMITE = 99;

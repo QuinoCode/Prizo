@@ -22,7 +22,13 @@ class DatabaseOperations {
 	Database? _prizoDatabase;
 
 	Database get prizoDatabase => _prizoDatabase!;
-  
+
+	Future<void> ensureDatabaseInitialized() async {
+		if (_prizoDatabase == null) {
+			await openOrCreateDB();
+		}
+	}
+
 	Future<void> openOrCreateDB() async {
 		 _prizoDatabase = await openDatabase(
 			join(await getDatabasesPath(), 'prizo_database.db'),
@@ -328,8 +334,8 @@ class DatabaseOperations {
 
 				// Insert into Lista_Favoritos_Producto table using parameterized query
 				await db.rawInsert(
-						'INSERT INTO Lista_Favoritos_Producto(lista_id, producto_id, cantidad) VALUES(?, ?, ?)',
-						[listaId, producto.id, 1]  // Properly passing parameters
+						'INSERT INTO Lista_Favoritos_Producto(lista_id, producto_id) VALUES(?, ?)',
+						[listaId, producto.id]  // Properly passing parameters
 				);
 			}
 		} catch (e) {
@@ -365,16 +371,22 @@ class DatabaseOperations {
 
 	Future<void> deleteFromListaCompraTable(Database db, Producto producto) async{
 		try{
-			//en caso de varias listas, indroducir un AND
-			await db.rawDelete('DELETE FROM Lista_Compra_Producto WHERE producto_id = ${producto.id}');
+			// Usar parámetros en lugar de concatenación directa
+			await db.rawDelete(
+				'DELETE FROM Lista_Compra_Producto WHERE producto_id = ?',
+				[producto.id], // Pasas el parámetro aquí como una lista
+			);
 		} catch (e) {
 			print(e);
 		}
 	}
 	Future<void> deleteFromListaFavoritosTable(Database db, Producto producto) async{
 		try{
-			//en caso de varias listas, indroducir un AND
-			await db.rawDelete('DELETE FROM Lista_Favoritos_Producto WHERE producto_id = ${producto.id}');
+			// Usar parámetros en lugar de concatenación directa
+			await db.rawDelete(
+				'DELETE FROM Lista_Favoritos_Producto WHERE producto_id = ?',
+				[producto.id], // Pasas el parámetro aquí como una lista
+			);
 		} catch (e) {
 			print(e);
 		}
@@ -440,6 +452,24 @@ class DatabaseOperations {
 			print('Error decreasing cantidad: $e');
 		}
 	}
-
+	Future<void> setCantidadListaCompra(Database db, Producto producto, int nuevaCantidad) async {
+		try {
+			if (nuevaCantidad > 0) {
+				// Si la cantidad es mayor a 0, actualiza la cantidad del producto
+				await db.rawUpdate(
+					'''
+        UPDATE Lista_Compra_Producto 
+        SET cantidad = ? 
+        WHERE producto_id = ?
+        ''',
+					[nuevaCantidad, producto.id],
+				);
+			} else {
+				// Si la cantidad es 0 o menos, elimina el producto de la lista de compra
+				await deleteFromListaCompraTable(db, producto);
+			}
+		} catch (e) {
+			print('Error al actualizar la cantidad: $e');
+		}
+	}
 }
-
