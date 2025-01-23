@@ -99,6 +99,7 @@ class DetallesProducto extends StatelessWidget {
                     try {
                       // Llamar al servicio para añadir a la lista de compra
                       listaCompraService.annadirProducto(listaCompra, producto);
+                      listaCompraService.DB_annadirProducto(producto);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('${producto.nombre} añadido a la lista de compra')),
                       );
@@ -147,6 +148,7 @@ class DetallesProducto extends StatelessWidget {
                       } else {
                         // Añadir a favoritos si no está ya en la lista
                         listaFavoritosService.annadirProducto(listaFavoritos, producto);
+                        listaFavoritosService.DB_annadirProducto(producto);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('${producto.nombre} añadido a favoritos')),
                         );

@@ -67,6 +67,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
       _productoCantidad[productoService.generarClave(producto)] =
           (_productoCantidad[productoService.generarClave(producto)] ?? 0) + 1;
       listaCompraService.annadirInstancia(widget.listaCompra, producto);
+      listaCompraService.DB_increaseCantidad(producto);
     });
   }
 
@@ -77,9 +78,11 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
       if (currentCantidad > 1) {
         _productoCantidad[productoService.generarClave(producto)] = currentCantidad - 1;
         listaCompraService.quitarInstancia(widget.listaCompra, producto);
+        listaCompraService.DB_decreaseCantidad(producto);
       } else {
         _productoCantidad.remove(productoService.generarClave(producto));
         listaCompraService.quitarProducto(widget.listaCompra, producto);
+        listaCompraService.DB_quitarProducto(producto);
         _mapaProductoConBotonCarrito[productoService.generarClave(producto)] = false;
       }
     });
@@ -157,6 +160,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                     onDismissed: (direction) {
                       listaFavoritosService.quitarProducto(
                           widget.listaFavoritos, producto);
+                      listaFavoritosService.DB_quitarProducto(producto);
                     },
                     background: Container(
                       color: Color(0xFF95B3FF),
