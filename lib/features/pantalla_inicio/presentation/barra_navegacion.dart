@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
 import '/features/productsearch/productsearch.ui.dart';
+import '/features/perfil/perfil.dart';
 
 class BarraNavegacion extends StatefulWidget {
   @override
@@ -13,8 +14,8 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
   final List<Widget> _screens = [
     PantallaInicio(),
     ProductSearchScreen(),
-    // Center(child: Text('Favoritos')),
-    // Center(child: Text('Perfil')),
+    PerfilInterfaz(),// Center(child: Text('Favoritos')),
+    PerfilInterfaz(),
   ];
 
   void _onTabTapped(int index) {
