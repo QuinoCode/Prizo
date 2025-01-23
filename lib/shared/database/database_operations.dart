@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../../../shared/data_entities/models/producto.dart';
-
 //In order to use the database first we have to initialize it
-// await DatabaseOperations.instance.openOrCreateDB(); 
+// await DatabaseOperations.instance.openOrCreateDB();
 //and then we can access it
-// Database db = DatabaseOperations.instance.prizoDatabase; 
+// Database db = DatabaseOperations.instance.prizoDatabase;
 
 class DatabaseOperations {
   //This is just a singleton pattern that just allows ONE single instance of database operations to exist, it has to be a static variable
@@ -33,20 +32,18 @@ class DatabaseOperations {
     );
     await _prizoDatabase!.execute('PRAGMA foreign_keys = ON;');
   }
+
   Future<void> deleteDB() async {
     try {
       // Get the database path
       String dbPath = join(await getDatabasesPath(), 'prizo_database.db');
-
       // Delete the database
       await deleteDatabase(dbPath);
-
       print("Database deleted successfully.");
     } catch (e) {
       print("Error deleting database: $e");
     }
   }
-
   //Builds the database creating the different tables
   Future<void> createTablesFromScratch(Database db) async {
     await createProductTable(db);
@@ -54,8 +51,8 @@ class DatabaseOperations {
     await createListaFavoritosTables(db);
     await createListaRecientesTables(db);
     await insertListaCompra(db);
-    await insertListaFavoritos(db);
   }
+
   Future<void> createFiltroTable(Database db) async {
     await db.execute(
         """
@@ -70,6 +67,7 @@ class DatabaseOperations {
       //Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
     );
   }
+
   Future<void> createProductTable(Database db) async {
     await db.execute(
         """
@@ -91,6 +89,25 @@ class DatabaseOperations {
       //Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
     );
   }
+
+  Future<bool> existsInProductTable(Database db, Producto producto) async{
+    // Perform the query to check if there are any rows in the table
+    var result = await db.rawQuery('SELECT * FROM Producto WHERE nombre = ?', [producto.nombre]);
+
+    if (result.isNotEmpty) {
+      return true;  // Item exists
+    }
+    return false;
+  }
+
+  Future<void> registerIntoProductTable(Database db, Producto producto) async{
+    try{
+      await db.insert("Producto", producto.toMap());
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> createListaCompraActual(Database db) async {
     await db.execute(
         """
@@ -102,6 +119,7 @@ class DatabaseOperations {
       //Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
     );
   }
+
   Future<void> createListaCompraTables(Database db) async {
     await db.execute(
         """
@@ -124,17 +142,153 @@ class DatabaseOperations {
 		"""
     );
   }
-  Future<void> createListaFavoritosActual(Database db) async {
-    await db.execute(
-        """
-			CREATE TABLE Lista_Favoritos_Actual(
-				id TEXT PRIMARY KEY
-			)
-			"""
-      //Sqlite no soporta booleanos así que oferta tiene que ser un integer con valor 0 o 1
-      //Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
-    );
+
+  Future<void> insertListaCompra(Database db,) async{
+    try{
+      await db.rawInsert('INSERT INTO Lista_compra(id, usuario) VALUES("lista1","Juan")');
+    } catch (e) {
+      print(e);
+    }
   }
+
+  Future<List<Producto>> fetchProductsListaCompra(Database db) async{
+    List<Producto> result = [];
+    var listaQuery = await db.rawQuery('SELECT id FROM Lista_Compra LIMIT 1');
+    if (listaQuery.isNotEmpty) {
+      var listaId = listaQuery.first['id'];
+      var listaProducts = await db.rawQuery('SELECT producto_id from Lista_Compra_Producto WHERE lista_id = ?',[listaId]);
+      for (int i = 0; i < listaProducts.length; i++){
+        var product = await db.rawQuery('SELECT * FROM Producto WHERE id = ?', [listaProducts[i]['producto_id']]);
+        var toAdd = product.first;
+        result.add(
+          new Producto(
+            id: toAdd['id'].toString(),
+            nombre: toAdd['nombre'] as String,
+            alergenos:(toAdd['alergenos'] != null)
+                ? (toAdd['alergenos'] as String)
+                .split(',')
+                .map((e) => e.toLowerCase() == 'true')
+                .toList()
+                : [],
+              categoria: toAdd['categoria'] as String,
+              marca: toAdd['marca'] as String,
+              oferta: (toAdd['oferta'] as int) == 1,
+              precio: toAdd['precio'] as double,
+              precioMedida: toAdd['precioMedida'] as double,
+              precioOferta: toAdd['precioOferta'] as double,
+              tienda: toAdd['tienda'] as String,
+              foto: toAdd['foto'] as String
+          )
+        );
+      }
+    }
+    return result;
+  }
+
+  Future<bool> existsInListaCompraTable(Database db, Producto producto) async{
+    try {
+      var result = await db.rawQuery('SELECT * FROM Lista_Compra_Producto WHERE producto_id = ?', [producto.id]);
+      if (result.isNotEmpty) {
+        return true;  // Item exists
+      }
+    } on Exception catch (e) {
+      print (e);
+      }
+    return false;
+  }
+  Future<void> registerIntoListaCompraTable(Database db, Producto producto) async {
+    try {
+      // Query to get the id from Lista_Compra
+      var result = await db.rawQuery(
+          'SELECT id FROM Lista_Compra LIMIT 1'); // Added LIMIT to fetch only one result
+
+      // Check if the result is not empty
+      if (result.isNotEmpty) {
+        // Extract the id value
+        var listaId = result.first['id']; // Get the 'id' from the first result
+
+        // Insert into Lista_Compra_Producto table using parameterized query
+        await db.rawInsert(
+            'INSERT INTO Lista_Compra_Producto(lista_id, producto_id, cantidad) VALUES(?, ?, ?)',
+            [listaId, producto.id, 1] // Properly passing parameters
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deleteFromListaCompraTable(Database db, Producto producto) async{
+    try{
+      //en caso de varias listas, indroducir un AND
+      await db.rawDelete('DELETE FROM Lista_Compra_Producto WHERE producto_id = ${producto.id}');
+    } catch (e) {
+      print(e);
+    }
+  }
+  Future<int> fetchCantidadListaCompra(Database db, Producto producto) async {
+    try {
+      var exists = await existsInListaCompraTable(db, producto);
+      if (!exists) {
+        await registerIntoListaCompraTable(db, producto);
+      } else {
+        var result = await db.rawQuery(
+            '''
+            SELECT cantidad
+            FROM Lista_Compra_Producto
+            WHERE producto_id = ?
+            ''',
+            [producto.id]
+        );
+        return result.first['cantidad'] as int;
+      }
+    } catch (e) {
+      print('Error increasing cantidad: $e');
+    }
+    return 0;
+  }
+
+  Future<void> increaseCantidadListaCompra(Database db, Producto producto) async {
+    try {
+      var exists = await existsInListaCompraTable(db, producto);
+      if (!exists) {
+        await registerIntoListaCompraTable(db, producto);
+      } else {
+        //si es necesario, añadir un AND con lista activa
+        await db.rawUpdate(
+            '''
+            UPDATE Lista_Compra_Producto
+            SET cantidad = cantidad + 1
+            WHERE producto_id = ?
+            ''',
+          [producto.id]
+        );
+      }
+    } catch (e) {
+      print('Error increasing cantidad: $e');
+    }
+  }
+
+  Future<void> decreaseCantidadListaCompra(Database db, Producto producto) async {
+    try {
+      int count = await fetchCantidadListaCompra(db, producto);
+      if (count > 0) {
+        await db.rawUpdate(
+            '''
+            UPDATE Lista_Compra_Producto
+        SET cantidad = cantidad - 1
+        WHERE producto_id = ?
+            ''',
+          [producto.id]
+        );
+      } else if (count == 0) {
+        deleteFromListaCompraTable(db, producto);
+      }
+    } catch (e) {
+      print('Error decreasing cantidad: $e');
+    }
+  }
+
   Future<void> createListaFavoritosTables(Database db) async {
     await db.execute(
         """
@@ -156,6 +310,7 @@ class DatabaseOperations {
 		"""
     );
   }
+
   Future<void> createListaRecientesTables(Database db) async {
     await db.execute(
         """
@@ -167,173 +322,6 @@ class DatabaseOperations {
     );
   }
 
-  Future<void> insertListaCompra(Database db,) async{
-    try{
-      await db.rawInsert('INSERT INTO Lista_compra(id, usuario) VALUES("lista1","Juan")');
-    } catch (e) {
-      print(e);
-    }
-  }
-  Future<void> insertListaFavoritos(Database db,) async{
-    try{
-      await db.rawInsert('INSERT INTO Lista_Favoritos(id, usuario) VALUES("lista2","Juan")');
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<List<Producto>> fetchProductsListaCompra(Database db) async{
-    List<Producto> result = [];
-    var listaQuery = await db.rawQuery('SELECT id FROM Lista_Compra LIMIT 1');
-    if (listaQuery.isNotEmpty) {
-      var listaId = listaQuery.first['id'];
-      var listaProducts = await db.rawQuery('SELECT producto_id from Lista_Compra_Producto WHERE lista_id = ?',[listaId]);
-      for (int i = 0; i < listaProducts.length; i++){
-        var product = await db.rawQuery('SELECT * FROM Producto WHERE id = ?', [listaProducts[i]['producto_id']]);
-        var toAdd = product.first;
-        result.add(
-            new Producto(
-                id: toAdd['id'].toString(),
-                nombre: toAdd['nombre'] as String,
-                alergenos:(toAdd['alergenos'] != null)
-                    ? (toAdd['alergenos'] as String)
-                    .split(',')
-                    .map((e) => e.toLowerCase() == 'true')
-                    .toList()
-                    : [],
-                categoria: toAdd['categoria'] as String,
-                marca: toAdd['marca'] as String,
-                oferta: (toAdd['oferta'] as int) == 1,
-                precio: toAdd['precio'] as double,
-                precioMedida: toAdd['precioMedida'] as double,
-                precioOferta: toAdd['precioOferta'] as double,
-                tienda: toAdd['tienda'] as String,
-                foto: toAdd['foto'] as String
-            )
-        );
-      }
-    }
-    return result;
-  }
-  Future<List<Producto>> fetchProductsListaFavoritos(Database db) async{
-    List<Producto> result = [];
-    var listaQuery = await db.rawQuery('SELECT id FROM Lista_Favoritos LIMIT 1');
-    if (listaQuery.isNotEmpty) {
-      var listaId = listaQuery.first['id'];
-      var listaProducts = await db.rawQuery('SELECT producto_id from Lista_Favoritos_Producto WHERE lista_id = ?',[listaId]);
-      for (int i = 0; i < listaProducts.length; i++){
-        var product = await db.rawQuery('SELECT * FROM Producto WHERE id = ?', [listaProducts[i]['producto_id']]);
-        var toAdd = product.first;
-        result.add(
-            new Producto(
-                id: toAdd['id'].toString(),
-                nombre: toAdd['nombre'] as String,
-                alergenos:(toAdd['alergenos'] != null)
-                    ? (toAdd['alergenos'] as String)
-                    .split(',')
-                    .map((e) => e.toLowerCase() == 'true')
-                    .toList()
-                    : [],
-                categoria: toAdd['categoria'] as String,
-                marca: toAdd['marca'] as String,
-                oferta: (toAdd['oferta'] as int) == 1,
-                precio: toAdd['precio'] as double,
-                precioMedida: toAdd['precioMedida'] as double,
-                precioOferta: toAdd['precioOferta'] as double,
-                tienda: toAdd['tienda'] as String,
-                foto: toAdd['foto'] as String
-            )
-        );
-      }
-    }
-    return result;
-  }
-  Future<List<Map<String, Object?>>> fetchItemsListaRecientes(Database db) async{
-    var result = await db.rawQuery('SELECT busqueda FROM Lista_Recientes');
-    return result;
-  }
-
-  Future<bool> existsInProductTable(Database db, Producto producto) async{
-    // Perform the query to check if there are any rows in the table
-    var result = await db.rawQuery('SELECT * FROM Producto WHERE nombre = ?', [producto.nombre]);
-
-    if (result.isNotEmpty) {
-      return true;  // Item exists
-    }
-    return false;
-  }
-  Future<bool> existsInListaCompraTable(Database db, Producto producto) async{
-    // Perform the query to check if there are any rows in the table
-    try {
-      var result = await db.rawQuery('SELECT * FROM Lista_Compra_Producto WHERE producto_id = ?', [producto.id]);
-      if (result.isNotEmpty) {
-        return true;  // Item exists
-      }
-    } on Exception catch (e) {
-      print (e);
-    }
-    return false;
-  }
-  Future<bool> existsInListaFavoritosTable(Database db, Producto producto) async{
-    // Perform the query to check if there are any rows in the table
-    try {
-      var result = await db.rawQuery('SELECT * FROM Lista_Favoritos_Producto WHERE producto_id = ?', [producto.id]);
-      if (result.isNotEmpty) {
-        return true;  // Item exists
-      }
-    } on Exception catch (e) {
-      print (e);
-    }
-    return false;
-  }
-
-  Future<void> registerIntoProductTable(Database db, Producto producto) async{
-    try{
-      await db.insert("Producto", producto.toMap());
-    } catch (e) {
-      print(e);
-    }
-  }
-  Future<void> registerIntoListaCompraTable(Database db, Producto producto) async{
-    try{
-      // Query to get the id from Lista_Compra
-      var result = await db.rawQuery('SELECT id FROM Lista_Compra LIMIT 1'); // Added LIMIT to fetch only one result
-
-      // Check if the result is not empty
-      if (result.isNotEmpty) {
-        // Extract the id value
-        var listaId = result.first['id']; // Get the 'id' from the first result
-
-        // Insert into Lista_Compra_Producto table using parameterized query
-        await db.rawInsert(
-            'INSERT INTO Lista_Compra_Producto(lista_id, producto_id, cantidad) VALUES(?, ?, ?)',
-            [listaId, producto.id, 1]  // Properly passing parameters
-        );
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-  Future<void> registerIntoListaFavoritosTable(Database db, Producto producto) async{
-    try{
-      // Query to get the id from Lista_Compra
-      var result = await db.rawQuery('SELECT id FROM Lista_Favoritos LIMIT 1'); // Added LIMIT to fetch only one result
-
-      // Check if the result is not empty
-      if (result.isNotEmpty) {
-        // Extract the id value
-        var listaId = result.first['id']; // Get the 'id' from the first result
-
-        // Insert into Lista_Favoritos_Producto table using parameterized query
-        await db.rawInsert(
-            'INSERT INTO Lista_Favoritos_Producto(lista_id, producto_id, cantidad) VALUES(?, ?, ?)',
-            [listaId, producto.id, 1]  // Properly passing parameters
-        );
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
   Future<void> registerReciente(Database db, String bus) async {
     try {
       // First, check how many items are in the table
@@ -361,81 +349,8 @@ class DatabaseOperations {
     }
   }
 
-  Future<void> deleteFromListaCompraTable(Database db, Producto producto) async{
-    try{
-      //en caso de varias listas, indroducir un AND
-      await db.rawDelete('DELETE FROM Lista_Compra_Producto WHERE producto_id = ${producto.id}');
-    } catch (e) {
-      print(e);
-    }
-  }
-  Future<void> deleteFromListaFavoritosTable(Database db, Producto producto) async{
-    try{
-      //en caso de varias listas, indroducir un AND
-      await db.rawDelete('DELETE FROM Lista_Favoritos_Producto WHERE producto_id = ${producto.id}');
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<int> fetchCantidadListaCompra(Database db, Producto producto) async {
-    try {
-      var exists = await existsInListaCompraTable(db, producto);
-      if (!exists) {
-        await registerIntoListaCompraTable(db, producto);
-      } else {
-        var result = await db.rawQuery(
-            '''
-          SELECT cantidad 
-          FROM Lista_Compra_Producto 
-          WHERE producto_id = ?
-          ''',
-            [producto.id]
-        );
-        return result.first['cantidad'] as int;
-      }
-    } catch (e) {
-      print('Error increasing cantidad: $e');
-    }
-    return 0;
-  }
-  Future<void> increaseCantidadListaCompra(Database db, Producto producto) async {
-    try {
-      var exists = await existsInListaCompraTable(db, producto);
-      if (!exists) {
-        await registerIntoListaCompraTable(db, producto);
-      } else {
-        //si es necesario, añadir un AND con lista activa
-        await db.rawUpdate(
-            '''
-          UPDATE Lista_Compra_Producto 
-          SET cantidad = cantidad + 1 
-          WHERE producto_id = ?
-          ''',
-            [producto.id]
-        );
-      }
-    } catch (e) {
-      print('Error increasing cantidad: $e');
-    }
-  }
-  Future<void> decreaseCantidadListaCompra(Database db, Producto producto) async {
-    try {
-      int count = await fetchCantidadListaCompra(db, producto);
-      if (count > 0) {
-        await db.rawUpdate(
-            '''
-          UPDATE Lista_Compra_Producto 
-          SET cantidad = cantidad - 1 
-          WHERE producto_id = ?
-          ''',
-            [producto.id]
-        );
-      } else if (count == 0) {
-        deleteFromListaCompraTable(db, producto);
-      }
-    } catch (e) {
-      print('Error decreasing cantidad: $e');
-    }
+  Future<List<Map<String, Object?>>> fetchItemsListaRecientes(Database db) async{
+    var result = await db.rawQuery('SELECT busqueda FROM Lista_Recientes');
+    return result;
   }
 }

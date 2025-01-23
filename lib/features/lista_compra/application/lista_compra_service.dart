@@ -1,55 +1,8 @@
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/application/producto_service.dart';
-import 'package:prizo/shared/database/database_operations.dart';
-import 'package:sqflite/sqflite.dart';
 
 class ListaCompraService {
-  void DB_annadirProducto(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    DatabaseOperations.instance.existsInProductTable(db, product).then((exists) {
-      if (!exists) {
-        DatabaseOperations.instance.registerIntoProductTable(db, product).then((_) {});
-      }
-    });
-  }
-  void DB_annadirProducto_ListaCompra(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    DatabaseOperations.instance.existsInProductTable(db, product).then((exists) {
-      if (exists) {
-        DatabaseOperations.instance.existsInListaCompraTable(db, product).then((exists2) {
-          if (!exists2) {
-            DatabaseOperations.instance.registerIntoListaCompraTable(db, product).then((_) {});
-          }
-        });
-      } else {
-        DatabaseOperations.instance.registerIntoProductTable(db, product).then((_) {
-          DatabaseOperations.instance.registerIntoListaCompraTable(db, product).then((_) {});
-        });
-      }
-    });
-  }
-  void DB_quitarProducto(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    DatabaseOperations.instance.deleteFromListaCompraTable(db, product);
-  }
-  void DB_increaseCantidad(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    DatabaseOperations.instance.increaseCantidadListaCompra(db, product);
-  }
-  void DB_decreaseCantidad(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    DatabaseOperations.instance.decreaseCantidadListaCompra(db, product);
-  }
-  Future<int> DB_fetchCantidad(Producto product) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    return DatabaseOperations.instance.fetchCantidadListaCompra(db, product);
-  }
-  Future<List<Producto>> DB_fetchProducts() {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    return DatabaseOperations.instance.fetchProductsListaCompra(db);
-  }
-
   final int LIMITE = 99;
   final ProductoService productoService = new ProductoService();
 
