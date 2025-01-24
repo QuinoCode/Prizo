@@ -184,10 +184,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ListaInterfaz(
-              listaCompra: listaCompra,
-              listaFavoritos: listaFavoritos,
-            ),
+            ListaInterfaz(),
       ),
     );
   }
