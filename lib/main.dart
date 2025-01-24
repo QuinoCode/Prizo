@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await DatabaseOperations.instance.deleteDB();
+  await DatabaseOperations.instance.deleteDB();
   await DatabaseOperations.instance.openOrCreateDB();
   runApp(const Prizo());
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

@@ -99,6 +99,7 @@ class DetallesProducto extends StatelessWidget {
                     try {
                       // Llamar al servicio para añadir a la lista de compra
                       listaCompraService.annadirProducto(listaCompra, producto);
+                      listaCompraService.DB_annadirProducto(producto);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('${producto.nombre} añadido a la lista de compra')),
                       );
@@ -124,6 +125,7 @@ class DetallesProducto extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     try {
+                      listaFavoritosService.DB_annadirProducto(producto);
                       // Verificar si el producto ya está en favoritos
                       if (listaFavoritosService.productoEnFavoritos(listaFavoritos, producto)) {
                         // Mostrar un diálogo si el producto ya está en favoritos

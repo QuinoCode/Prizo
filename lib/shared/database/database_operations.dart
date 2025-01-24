@@ -4,65 +4,67 @@ import 'package:path/path.dart';
 import '../../../shared/data_entities/models/producto.dart';
 
 //In order to use the database first we have to initialize it
-// await DatabaseOperations.instance.openOrCreateDB(); 
+// await DatabaseOperations.instance.openOrCreateDB();
 //and then we can access it
-// Database db = DatabaseOperations.instance.prizoDatabase; 
+// Database db = DatabaseOperations.instance.prizoDatabase;
 
 class DatabaseOperations {
- //This is just a singleton pattern that just allows ONE single instance of database operations to exist, it has to be a static variable
-	static DatabaseOperations? _databaseOperations;
+  //This is just a singleton pattern that just allows ONE single instance of database operations to exist, it has to be a static variable
+  static DatabaseOperations? _databaseOperations;
 
- //This is the constructor of the class, it is specified with an '_' to signify it is a private constructor that is only to be used internally within the class
-	DatabaseOperations._internal();
+  //This is the constructor of the class, it is specified with an '_' to signify it is a private constructor that is only to be used internally within the class
+  DatabaseOperations._internal();
 
- //This is a getter that checks whether the instance of _databaseOperations has been created and if its null (?? coalescence operator) it will assign (=) the value
- // that comes from using the constructor from within the class
-	static DatabaseOperations get instance => _databaseOperations ??= DatabaseOperations._internal();
+  //This is a getter that checks whether the instance of _databaseOperations has been created and if its null (?? coalescence operator) it will assign (=) the value
+  // that comes from using the constructor from within the class
+  static DatabaseOperations get instance => _databaseOperations ??= DatabaseOperations._internal();
 
-	Database? _prizoDatabase;
+  Database? _prizoDatabase;
 
-	Database get prizoDatabase => _prizoDatabase!;
+  Database get prizoDatabase => _prizoDatabase!;
 
   Future<void> ensureDatabaseInitialized() async {
     if (_prizoDatabase == null) {
       await openOrCreateDB();
     }
   }
-  
-	Future<void> openOrCreateDB() async {
-		 _prizoDatabase = await openDatabase(
-			join(await getDatabasesPath(), 'prizo_database.db'),
-			onCreate: (db, version) async {
-				await createTablesFromScratch(db);
-			},
-			version: 1
-		);
-	await _prizoDatabase!.execute('PRAGMA foreign_keys = ON;');
-	}
+
+  Future<void> openOrCreateDB() async {
+    _prizoDatabase = await openDatabase(
+        join(await getDatabasesPath(), 'prizo_database.db'),
+        onCreate: (db, version) async {
+          await createTablesFromScratch(db);
+        },
+        version: 1
+    );
+    await _prizoDatabase!.execute('PRAGMA foreign_keys = ON;');
+  }
+
   Future<void> deleteDB() async {
-		try {
+    try {
       // Get the database path
       String dbPath = join(await getDatabasesPath(), 'prizo_database.db');
-      
+
       // Delete the database
       await deleteDatabase(dbPath);
-      
+
       print("Database deleted successfully.");
     } catch (e) {
       print("Error deleting database: $e");
     }
-	}
+  }
 
-	//Builds the database creating the different tables
-	Future<void> createTablesFromScratch(Database db) async {
-		await createProductTable(db);
+  //Builds the database creating the different tables
+  Future<void> createTablesFromScratch(Database db) async {
+    await createProductTable(db);
     await createProductTickTable(db);
-		await createListaCompraTables(db);
-		await createListaFavoritosTables(db);
+    await createListaCompraTables(db);
+    await createListaFavoritosTables(db);
     await createListaRecientesTables(db);
     await insertListaCompra(db);
     await insertListaFavoritos(db);
-	}
+  }
+
   Future<void> createFiltroTable(Database db) async {
     await db.execute(
         """
@@ -130,17 +132,17 @@ class DatabaseOperations {
       //Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
     );
   }
-	Future<void> createListaCompraTables(Database db) async {
-		await db.execute(
-			"""
+  Future<void> createListaCompraTables(Database db) async {
+    await db.execute(
+        """
 			CREATE TABLE Lista_Compra(
 				id TEXT PRIMARY KEY, 
 				usuario TEXT
 			)
 			"""
-		);
-		await db.execute(
-		"""
+    );
+    await db.execute(
+        """
 		CREATE TABLE Lista_Compra_Producto (
 		    lista_id TEXT, 
 		    producto_id TEXT, 
@@ -150,8 +152,8 @@ class DatabaseOperations {
 		    FOREIGN KEY (producto_id) REFERENCES Producto(id) ON DELETE CASCADE
 		)
 		"""
-		);
-	}
+    );
+  }
   Future<void> createListaFavoritosActual(Database db) async {
     await db.execute(
         """
@@ -212,35 +214,35 @@ class DatabaseOperations {
 
   Future<List<Producto>> fetchProductsListaCompra(Database db) async{
     List<Producto> result = [];
-    var listaQuery = await db.rawQuery('SELECT id FROM Lista_Compra LIMIT 1'); 
-      if (listaQuery.isNotEmpty) {
-        var listaId = listaQuery.first['id'];
-        var listaProducts = await db.rawQuery('SELECT producto_id from Lista_Compra_Producto WHERE lista_id = ?',[listaId]);
-        for (int i = 0; i < listaProducts.length; i++){ 
-          var product = await db.rawQuery('SELECT * FROM Producto WHERE id = ?', [listaProducts[i]['producto_id']]);
-          var toAdd = product.first;
-          result.add(
+    var listaQuery = await db.rawQuery('SELECT id FROM Lista_Compra LIMIT 1');
+    if (listaQuery.isNotEmpty) {
+      var listaId = listaQuery.first['id'];
+      var listaProducts = await db.rawQuery('SELECT producto_id from Lista_Compra_Producto WHERE lista_id = ?',[listaId]);
+      for (int i = 0; i < listaProducts.length; i++){
+        var product = await db.rawQuery('SELECT * FROM Producto WHERE id = ?', [listaProducts[i]['producto_id']]);
+        var toAdd = product.first;
+        result.add(
             new Producto(
-              id: toAdd['id'].toString(),
-              nombre: toAdd['nombre'] as String,
-              alergenos:(toAdd['alergenos'] != null)
-                ? (toAdd['alergenos'] as String)
+                id: toAdd['id'].toString(),
+                nombre: toAdd['nombre'] as String,
+                alergenos:(toAdd['alergenos'] != null)
+                    ? (toAdd['alergenos'] as String)
                     .split(',')
                     .map((e) => e.toLowerCase() == 'true')
                     .toList()
-                : [],
-              categoria: toAdd['categoria'] as String, 
-              marca: toAdd['marca'] as String,
-              oferta: (toAdd['oferta'] as int) == 1,
-              precio: toAdd['precio'] as double,
-              precioMedida: toAdd['precioMedida'] as double,
-              precioOferta: toAdd['precioOferta'] as double,
-              tienda: toAdd['tienda'] as String,
-              foto: toAdd['foto'] as String
+                    : [],
+                categoria: toAdd['categoria'] as String,
+                marca: toAdd['marca'] as String,
+                oferta: (toAdd['oferta'] as int) == 1,
+                precio: toAdd['precio'] as double,
+                precioMedida: toAdd['precioMedida'] as double,
+                precioOferta: toAdd['precioOferta'] as double,
+                tienda: toAdd['tienda'] as String,
+                foto: toAdd['foto'] as String
             )
-          );
-        }
+        );
       }
+    }
     return result;
   }
   Future<List<Producto>> fetchProductsListaFavoritos(Database db) async{
@@ -308,7 +310,7 @@ class DatabaseOperations {
       }
     } on Exception catch (e) {
       print (e);
-    } 
+    }
     return false;
   }
   Future<bool> existsInListaFavoritosTable(Database db, Producto producto) async{
@@ -342,7 +344,7 @@ class DatabaseOperations {
     try{
       // Query to get the id from Lista_Compra
       var result = await db.rawQuery('SELECT id FROM Lista_Compra LIMIT 1'); // Added LIMIT to fetch only one result
-      
+
       // Check if the result is not empty
       if (result.isNotEmpty) {
         // Extract the id value
@@ -350,8 +352,8 @@ class DatabaseOperations {
 
         // Insert into Lista_Compra_Producto table using parameterized query
         await db.rawInsert(
-          'INSERT INTO Lista_Compra_Producto(lista_id, producto_id, cantidad) VALUES(?, ?, ?)', 
-          [listaId, producto.id, 1]  // Properly passing parameters
+            'INSERT INTO Lista_Compra_Producto(lista_id, producto_id, cantidad) VALUES(?, ?, ?)',
+            [listaId, producto.id, 1]  // Properly passing parameters
         );
       }
     } catch (e) {
@@ -370,8 +372,8 @@ class DatabaseOperations {
 
         // Insert into Lista_Favoritos_Producto table using parameterized query
         await db.rawInsert(
-            'INSERT INTO Lista_Favoritos_Producto(lista_id, producto_id, cantidad) VALUES(?, ?, ?)',
-            [listaId, producto.id, 1]  // Properly passing parameters
+            'INSERT INTO Lista_Favoritos_Producto(lista_id, producto_id) VALUES(?, ?)',
+            [listaId, producto.id]  // Properly passing parameters
         );
       }
     } catch (e) {
@@ -418,16 +420,22 @@ class DatabaseOperations {
   }
   Future<void> deleteFromListaCompraTable(Database db, Producto producto) async{
     try{
-      //en caso de varias listas, indroducir un AND
-      await db.rawDelete('DELETE FROM Lista_Compra_Producto WHERE producto_id = ${producto.id}');
+      // Usar parámetros en lugar de concatenación directa
+      await db.rawDelete(
+        'DELETE FROM Lista_Compra_Producto WHERE producto_id = ?',
+        [producto.id], // Pasas el parámetro aquí como una lista
+      );
     } catch (e) {
       print(e);
     }
   }
   Future<void> deleteFromListaFavoritosTable(Database db, Producto producto) async{
     try{
-      //en caso de varias listas, indroducir un AND
-      await db.rawDelete('DELETE FROM Lista_Favoritos_Producto WHERE producto_id = ${producto.id}');
+      // Usar parámetros en lugar de concatenación directa
+      await db.rawDelete(
+        'DELETE FROM Lista_Favoritos_Producto WHERE producto_id = ?',
+        [producto.id], // Pasas el parámetro aquí como una lista
+      );
     } catch (e) {
       print(e);
     }
@@ -440,12 +448,12 @@ class DatabaseOperations {
         await registerIntoListaCompraTable(db, producto);
       } else {
         var result = await db.rawQuery(
-          '''
+            '''
           SELECT cantidad 
           FROM Lista_Compra_Producto 
           WHERE producto_id = ?
-          ''', 
-          [producto.id]
+          ''',
+            [producto.id]
         );
         return result.first['cantidad'] as int;
       }
@@ -462,12 +470,12 @@ class DatabaseOperations {
       } else {
         //si es necesario, añadir un AND con lista activa
         await db.rawUpdate(
-          '''
+            '''
           UPDATE Lista_Compra_Producto 
           SET cantidad = cantidad + 1 
           WHERE producto_id = ?
-          ''', 
-          [producto.id]
+          ''',
+            [producto.id]
         );
       }
     } catch (e) {
@@ -479,12 +487,12 @@ class DatabaseOperations {
       int count = await fetchCantidadListaCompra(db, producto);
       if (count > 0) {
         await db.rawUpdate(
-          '''
+            '''
           UPDATE Lista_Compra_Producto 
           SET cantidad = cantidad - 1 
           WHERE producto_id = ?
-          ''', 
-          [producto.id]
+          ''',
+            [producto.id]
         );
       } else if (count == 0) {
         deleteFromListaCompraTable(db, producto);
