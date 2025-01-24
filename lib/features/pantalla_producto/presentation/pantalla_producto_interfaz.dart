@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../shared/data_entities/models/producto.dart';
-import '../../lista/lista_compra/application/lista_compra_service.dart';
-import '../../lista/lista_favoritos/application/lista_favoritos_service.dart';
+import '../../lista_compra/application/lista_compra_service.dart';
+import '../../lista_favoritos/application/lista_favoritos_service.dart';
 import '../../../shared/data_entities/models/lista_compra.dart';
 import '../../../shared/data_entities/models/lista_favoritos.dart';
 import '../../pantalla_producto/application/pantalla_producto_service.dart';

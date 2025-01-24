@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
-import 'package:prizo/features/lista/lista_compra/application/lista_compra_service.dart';
-import 'package:prizo/features/lista/lista_compra/presentation/lista_compra_interfaz.dart';
-import 'package:prizo/features/lista/lista_favoritos/application/lista_favoritos_service.dart';
-import 'package:prizo/features/lista/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
+import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
+import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 
 class ListaInterfaz extends StatefulWidget {
   ListaInterfaz({super.key});
@@ -54,8 +54,6 @@ class _ListaInterfazState extends State<ListaInterfaz> {
         builder: (context) =>
             ListaCompraInterfaz(
               listaCompra: listaCompra,
-              tiendasSeleccionadas : [],
-              original: listaCompra,
             ),
       ),
     );
@@ -69,7 +67,6 @@ class _ListaInterfazState extends State<ListaInterfaz> {
             ListaFavoritosInterfaz(
               listaFavoritos: listaFavoritos,
               listaCompra: listaCompra,
-              tiendasSeleccionadas : [],
               original: listaFavoritos,
             ),
       ),

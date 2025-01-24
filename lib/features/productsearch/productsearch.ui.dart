@@ -7,11 +7,11 @@ import '../../features/comparacion_productos/application/comparacion_producto.da
 import '../../shared/data_entities/models/lista_compra.dart';
 import '../../shared/data_entities/models/lista_favoritos.dart';
 import '../../shared/data_entities/models/producto.dart';
-import '../lista/lista_compra/presentation/lista_compra_interfaz.dart';
-import '../lista/lista_compra/application/lista_compra_service.dart';
-import '../lista/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+import '../lista_compra/presentation/lista_compra_interfaz.dart';
+import '../lista_compra/application/lista_compra_service.dart';
+import '../lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
-import '../lista/lista_favoritos/application/lista_favoritos_service.dart';
+import '../lista_favoritos/application/lista_favoritos_service.dart';
 import 'package:prizo/features/filtro_busqueda/filtro_busqueda.dart';
 import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 
@@ -220,8 +220,6 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
         builder: (context) =>
             ListaCompraInterfaz(
               listaCompra: listaCompra,
-              tiendasSeleccionadas : [],
-              original: listaCompra,
             ),
       ),
     );
@@ -235,7 +233,6 @@ class ProductSearchScreenState extends State<ProductSearchScreen> {
             ListaFavoritosInterfaz(
                 listaFavoritos: listaFavoritos,
                 listaCompra: listaCompra,
-                tiendasSeleccionadas : [],
                 original: listaFavoritos,
             ),
       ),
