@@ -83,17 +83,35 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
-                    Icon(Icons.search, color: Colors.grey),
+                    ImageIcon(
+                      AssetImage('assets/icons/lupa_icono.png'),
+                      size: 22,
+                    ),
                     Expanded(
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'Buscar productos...',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Geist',
+                            fontSize: 16,
+                          ),
                           border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(left: 14),
+                        ),
+                        style: TextStyle(
+                          fontFamily: 'Geist',
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
                         ),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.qr_code_scanner, color: Colors.grey),
+                      icon: ImageIcon(
+                        AssetImage('assets/icons/escaner_icono.png'),
+                        size: 22,
+                      ),
                       onPressed: () {},
                     ),
                   ],

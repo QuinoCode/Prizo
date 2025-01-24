@@ -41,6 +41,7 @@ flutter:
     - assets/icons/cesta_icono.png
     - assets/icons/corazon_icono.png
     - assets/icons/corazonnegro_icono.png
+    - assets/icons/escaner_icono.png
 
   fonts:
     - family: Geist
