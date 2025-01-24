@@ -69,7 +69,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     ),
                     Text(
                       '¿Qué quieres comprar hoy?',
-                      style: TextStyle(fontFamily: 'Geist', fontSize: 16, color: Color(0xFF504F4F)),
+                      style: TextStyle(fontFamily: 'Geist', fontSize: 18, color: Color(0xFF504F4F)),
                     ),
                   ],
                 ),
@@ -120,7 +120,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
               SizedBox(height: 20),
               Text(
                 'Ofertas de la semana',
-                style: TextStyle(fontFamily: 'Geist', fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontFamily: 'Geist', fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
               Column(
@@ -257,7 +257,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
               SizedBox(height: 40),
               Text(
                 'Tus supermercados cercanos',
-                style: TextStyle(fontFamily: 'Geist', fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontFamily: 'Geist', fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
               Container(
