@@ -58,6 +58,32 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
       });
     }
   }
+  
+  /*void _manejadorTextField(String input) {
+    /* Verificar que solo se introduzcan números */
+    if (input.isNotEmpty && RegExp(r'[^0-9]').hasMatch(input)) {
+      /* Si no es un número, mostrar un mensaje de advertencia*/
+      setState(() {
+        _mensajeAdvertencia = 'Solo números';
+      });
+      /* Evitar que se agregue el carácter no permitido */
+      /* Esta parte lo hace imposible */
+      _mapaControladorCantidad.forEach((key, controller) {
+        controller.text = controller.text.substring(0, controller.text.length - 1);
+      });
+      Future.delayed(Duration(seconds: 2), () {
+        /* Limpiar el mensaje de advertencia si han pasado 2 segundos */
+        setState(() {
+          _mensajeAdvertencia = null;
+        });
+      });
+    } else {
+      /* Limpiar el mensaje de advertencia si el input es válido */
+      setState(() {
+        _mensajeAdvertencia = null;
+      });
+    }
+  }*/
 
   void _toggleTienda(String tienda) {
     setState(() {
@@ -78,7 +104,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
       appBar: AppBar(
         leading: 
           IconButton(
-            padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.057,0,MediaQuery.of(context).size.width*0.0206,0),
+            padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.057,0,0,0),
             icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
             color: Color.fromARGB(255,18,18,18),
             onPressed: () {
@@ -93,69 +119,72 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(18,16,16,16),
+          padding: EdgeInsets.fromLTRB(18,16,15,16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.0379,
-                      width: MediaQuery.of(context).size.width * 0.169,
-                      child: ElevatedButton(
-                        onPressed: () => _toggleTienda("DIA"),
-                        style: ElevatedButton.styleFrom(
-                          shadowColor: Colors.transparent,
-                          padding: EdgeInsets.zero,
-                          backgroundColor: tiendasSeleccionadas.contains("DIA") ? Color(0xFF95B3FF) : Colors.white,
-                          foregroundColor: Color.fromARGB(255,80,79,79),
-                          side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
-                        ),
-                        child: Text(
-                          'Día', 
-                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.0379,
-                      width: MediaQuery.of(context).size.width * 0.274,
-                      child: ElevatedButton(
-                        onPressed: () => _toggleTienda("CONSUM"),
-                        style: ElevatedButton.styleFrom(
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0,0,7,0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.0379,
+                        width: MediaQuery.of(context).size.width * 0.169,
+                        child: ElevatedButton(
+                          onPressed: () => _toggleTienda("DIA"),
+                          style: ElevatedButton.styleFrom(
                             shadowColor: Colors.transparent,
                             padding: EdgeInsets.zero,
-                            backgroundColor: tiendasSeleccionadas.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
+                            backgroundColor: tiendasSeleccionadas.contains("DIA") ? Color(0xFF95B3FF) : Colors.white,
                             foregroundColor: Color.fromARGB(255,80,79,79),
-                            side: BorderSide(color: Color(0xFF95B3FF),width: 2),
+                            side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
                           ),
                           child: Text(
-                            'Consum', 
+                            'Día', 
                             style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
                           ),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.0379,
-                      width: MediaQuery.of(context).size.width * 0.305,
-                      child: ElevatedButton(
-                        onPressed: () => _toggleTienda("Carrefour"),
-                        style: ElevatedButton.styleFrom(
-                            shadowColor: Colors.transparent,
-                            padding: EdgeInsets.zero,
-                            backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
-                            foregroundColor: Color.fromARGB(255,80,79,79),
-                            side: BorderSide(color: Color(0xFF95B3FF),width: 2),
-                          ),
-                          child: Text(
-                            'Carrefour', 
-                            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
-                          ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.0379,
+                        width: MediaQuery.of(context).size.width * 0.274,
+                        child: ElevatedButton(
+                          onPressed: () => _toggleTienda("CONSUM"),
+                          style: ElevatedButton.styleFrom(
+                              shadowColor: Colors.transparent,
+                              padding: EdgeInsets.zero,
+                              backgroundColor: tiendasSeleccionadas.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
+                              foregroundColor: Color.fromARGB(255,80,79,79),
+                              side: BorderSide(color: Color(0xFF95B3FF),width: 2),
+                            ),
+                            child: Text(
+                              'Consum', 
+                              style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
+                            ),
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.0379,
+                        width: MediaQuery.of(context).size.width * 0.305,
+                        child: ElevatedButton(
+                          onPressed: () => _toggleTienda("Carrefour"),
+                          style: ElevatedButton.styleFrom(
+                              shadowColor: Colors.transparent,
+                              padding: EdgeInsets.zero,
+                              backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
+                              foregroundColor: Color.fromARGB(255,80,79,79),
+                              side: BorderSide(color: Color(0xFF95B3FF),width: 2),
+                            ),
+                            child: Text(
+                              'Carrefour', 
+                              style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
+                            ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.018),
                 // Scrollable list
@@ -172,7 +201,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                           itemBuilder: (context, index) {
                             final producto = _productos[index];
                             return StatefulStoreItem(producto: producto, onAction: () => fetchAndStoreProductos(db));
-;
                           },
                         ),
                       ]
@@ -259,17 +287,17 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+          padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
           child: Row(
             children: [
               Image.network(
                   widget.producto.foto,
-                  width: MediaQuery.of(context).size.width * 0.22,
-                  height: MediaQuery.of(context).size.height * 0.101,
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: MediaQuery.of(context).size.width * 0.2,
                 ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.0205), 
+              SizedBox(width: MediaQuery.of(context).size.width * 0.019), 
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.128,
+                height: MediaQuery.of(context).size.height * 0.12,
                 child: VerticalDivider(
                   thickness: 1,
                   color: Color.fromARGB(255,175,198,255),
@@ -302,6 +330,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           widget.producto.tienda,
                           style: TextStyle(
                                 fontFamily: 'Geist',
+                                fontWeight: FontWeight.w300,
                                 color: Color.fromARGB(255,33,33,33),
                                 fontSize: MediaQuery.of(context).size.width * 0.0332,
                               ),
@@ -316,99 +345,111 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               fontWeight: FontWeight.w500,
                             ),
                         ),
+                        SizedBox(height: MediaQuery.of(context).size.width * 0.023),
                       ],
                     ),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.051), 
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _showButton 
-                      ? IconButton(
-                          icon: Image.asset('assets/icons/empty_checkbox.png', width: MediaQuery.of(context).size.width * 0.102, height: MediaQuery.of(context).size.width * 0.102),
-                          onPressed: () {
-                            setState(() {
-                              _showButton = false;
-                            });
-                          }
-                        )
-                      : IconButton(
-                          icon: Image.asset('assets/icons/checked_checkbox.png', width: MediaQuery.of(context).size.width * 0.102, height: MediaQuery.of(context).size.width * 0.102),
-                          onPressed: () {
-                            setState(() {
-                              _showButton = true;
-                            });
-                          }
-                      ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.0473,
-                      width: MediaQuery.of(context).size.width * 0.21,
-                      padding: EdgeInsets.zero,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 0,
-                            bottom: 0,
-                            right: MediaQuery.of(context).size.width * 0.095,
-                            child: IconButton(
-                              iconSize: MediaQuery.of(context).size.width * 0.06,
-                              padding: EdgeInsets.zero,
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,  
-                              icon: Icon(Icons.remove),
-                              onPressed: () {
-                                setState(() {
-                                  if (_counter > 1) {
-                                    DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
-                                    _counter--;
-                                  } else {
-                                    _ventanaConfirmacion(context, widget.producto);
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                          _counter < 10 
-                          ? Positioned(
-                              left: MediaQuery.of(context).size.width * 0.089,
-                              top: MediaQuery.of(context).size.height * 0.004,
+              SizedBox(width: MediaQuery.of(context).size.width * 0.053), 
+              Padding(
+                padding: EdgeInsets.fromLTRB(10,0,0,16),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _showButton 
+                        ? IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Image.asset('assets/icons/empty_checkbox.png', width: MediaQuery.of(context).size.width * 0.099, height: MediaQuery.of(context).size.width * 0.102),
+                            onPressed: () {
+                              setState(() {
+                                _showButton = false;
+                              });
+                            }
+                          )
+                        : IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Image.asset('assets/icons/checked_checkbox.png', width: MediaQuery.of(context).size.width * 0.099, height: MediaQuery.of(context).size.width * 0.102),
+                            onPressed: () {
+                              setState(() {
+                                _showButton = true;
+                              });
+                            }
+                        ),
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.0473,
+                        width: MediaQuery.of(context).size.width * 0.21,
+                        padding: EdgeInsets.zero,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 0,
                               bottom: 0,
-                              child: Text('$_counter', style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0615, fontWeight: FontWeight.w400)),
-                            )
-                          : Positioned(
-                              left: MediaQuery.of(context).size.width * 0.074,
-                              top: MediaQuery.of(context).size.height * 0.006,
-                              bottom: 0,
-                              child: Text('$_counter', style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0538, fontWeight: FontWeight.w400)),
-                            ),
-                          Positioned(
-                            top: 0,
-                            bottom: MediaQuery.of(context).size.height * 0.001,
-                            left: MediaQuery.of(context).size.width * 0.093,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,  
-                              icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06),
-                              onPressed: () {
-                                if (_counter < 99) {
-                                  DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                              right: MediaQuery.of(context).size.width * 0.085,
+                              child: IconButton(
+                                iconSize: MediaQuery.of(context).size.width * 0.06,
+                                padding: EdgeInsets.zero,
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,  
+                                icon: Icon(Icons.remove),
+                                onPressed: () {
                                   setState(() {
-                                    _counter++;
+                                    if (_counter > 1) {
+                                      DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                      _counter--;
+                                    } else {
+                                      _ventanaConfirmacion(context, widget.producto);
+                                    }
                                   });
-                                }
-                              },
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              left: _counter > 10
+                                    ? _counter > 19
+                                      ? MediaQuery.of(context).size.width * 0.075
+                                      : MediaQuery.of(context).size.width * 0.082
+                                  : MediaQuery.of(context).size.width * (_counter == 1 ? 0.098 : 0.09),
+                              top: MediaQuery.of(context).size.height * (_counter < 10 ? 0.004 : 0.007),
+                              bottom: 0,
+                              child: Text(
+                                '$_counter',
+                                style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.width *
+                                      (_counter < 10 ? 0.06 : 0.053),
+                                  fontFamily: 'Geist',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 0,
+                              bottom: MediaQuery.of(context).size.height * 0.001,
+                              left: MediaQuery.of(context).size.width * 0.105,
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,  
+                                icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06),
+                                onPressed: () {
+                                  if (_counter < 99) {
+                                    DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                    setState(() {
+                                      _counter++;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+              ),
             ],
           ),
         ),

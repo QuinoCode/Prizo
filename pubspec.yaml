@@ -36,6 +36,7 @@ flutter:
     - assets/icons/arrow.png
     - assets/icons/empty_checkbox.png
     - assets/icons/checked_checkbox.png
+    - assets/icons/farrow.png
 
   fonts:
     - family: Kanit
@@ -56,4 +57,6 @@ flutter:
           weight: 500
         - asset: assets/fonts/Geist-Bold.ttf
           weight: 700
+        - asset: assets/fonts/Geist-Light.ttf
+          weight: 300
 

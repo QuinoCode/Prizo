@@ -5,6 +5,10 @@ import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/features/lista/application//lista_service.dart';
 import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
 import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+import 'package:prizo/shared/database/database_operations.dart';
+import 'package:sqflite/sqflite.dart';
+
+Database db = DatabaseOperations.instance.prizoDatabase;
 
 class ListaInterfaz extends StatefulWidget {
   final ListaCompra listaCompra;
@@ -97,7 +101,7 @@ class _ListaState extends State<ListaInterfaz> {
             style: const TextStyle(fontSize: 35),
           ),
           IconButton(
-            icon: const Icon(Icons.arrow_forward),
+            icon: ImageIcon(AssetImage('assets/icons/farrow.png')),
             iconSize: 36,
             onPressed: onTap,
           ),
@@ -107,17 +111,19 @@ class _ListaState extends State<ListaInterfaz> {
   }
 
   Widget _buildCompraList() {
-    final productosComprados = listaService.obtenerComprados(widget.listaCompra);
-    if (productosComprados.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Text(
-          'Tu lista de la compra está vacía.',
-          style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
-        ),
-      );
-    }
-    return _buildHorizontalList(productosComprados, isCompra: true);
+    DatabaseOperations.instance.fetchProductsListaCompra(db).then((productosComprados) {
+      if (productosComprados.isEmpty) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Text(
+            'Tu lista de la compra está vacía.',
+            style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+          ),
+        );
+      }
+      return _buildHorizontalList(productosComprados, isCompra: true);
+    });
+    return Text("Error de DB");
   }
 
   Widget _buildFavoritosList() {
@@ -220,8 +226,8 @@ class _ListaState extends State<ListaInterfaz> {
       context,
       MaterialPageRoute(
         builder: (context) => ListaFavoritosInterfaz(
-          listaFavoritos: widget.listaFavoritos,
           listaCompra: widget.listaCompra,
+          listaFavoritos: widget.listaFavoritos,
           original: widget.listaFavoritos,
         ),
       ),

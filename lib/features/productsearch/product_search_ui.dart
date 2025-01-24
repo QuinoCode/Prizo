@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:prizo/features/lista/presentation/lista_interfaz.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:prizo/shared/database/database_operations.dart';
@@ -183,8 +184,9 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ListaCompraInterfaz(
+            ListaInterfaz(
               listaCompra: listaCompra,
+              listaFavoritos: listaFavoritos,
             ),
       ),
     );
@@ -506,12 +508,13 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                             filled: true,
                             fillColor: const Color.fromARGB(255, 246, 246, 246), 
                             prefixIcon: IconButton(
-                              padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.057,0,MediaQuery.of(context).size.width*0.0206,0),
-                              icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
-                              color: Color.fromARGB(255,18,18,18),
+                              padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.048,0,MediaQuery.of(context).size.width*0.024,0),
+                              icon: ImageIcon(AssetImage('assets/icons/arrow.png'), size: MediaQuery.of(context).size.width*0.068 ),
+                              color: Color.fromARGB(255,33,33,33),
                               onPressed: () {},
                             ),
                             suffixIcon: IconButton(
+                              padding: EdgeInsets.fromLTRB(0, 0, MediaQuery.of(context).size.width * 0.02, 0),
                               iconSize: MediaQuery.of(context).size.width * 0.0615,
                               icon: ImageIcon(AssetImage('assets/icons/scanner.png'), ),
                               color: Color.fromARGB(255,18,18,18),
@@ -532,7 +535,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                         )
                       )
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.height * 0.017),
+                  SizedBox(width: MediaQuery.of(context).size.height * 0.011),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.1410,
                     height: MediaQuery.of(context).size.height * 0.0521,
@@ -675,6 +678,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           widget.producto.tienda,
                           style: TextStyle(
                                 fontFamily: 'Geist',
+                                fontWeight: FontWeight.w300,
                                 color: Color.fromARGB(255,33,33,33),
                                 fontSize: MediaQuery.of(context).size.width * 0.0332,
                               ),
@@ -697,7 +701,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               '${widget.producto.precioMedida}€/kg',
                               style: TextStyle(
                                   fontFamily: 'Geist',
-                                  color: Color.fromARGB(255,33,33,33),
+                                  color: Color.fromARGB(255,53,53,53),
                                   fontSize: MediaQuery.of(context).size.width * 0.028,
                                 ),
                             ),
@@ -753,7 +757,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           Positioned(
                             top: 0,
                             bottom: 0,
-                            right: MediaQuery.of(context).size.width * 0.095,
+                            right: MediaQuery.of(context).size.width * 0.097,
                             child: IconButton(
                               iconSize: MediaQuery.of(context).size.width * 0.06,
                               padding: EdgeInsets.zero,
@@ -773,23 +777,28 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               },
                             ),
                           ),
-                          _counter < 10 
-                          ? Positioned(
-                              left: MediaQuery.of(context).size.width * 0.089,
-                              top: MediaQuery.of(context).size.height * 0.004,
+                          Positioned(
+                              left: _counter > 10
+                                    ? _counter > 19
+                                      ? MediaQuery.of(context).size.width * 0.075
+                                      : MediaQuery.of(context).size.width * 0.082
+                                  : MediaQuery.of(context).size.width * (_counter == 1 ? 0.098 : 0.09),
+                              top: MediaQuery.of(context).size.height * (_counter < 10 ? 0.004 : 0.007),
                               bottom: 0,
-                              child: Text('$_counter', style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0615, fontWeight: FontWeight.w400)),
-                            )
-                          : Positioned(
-                              left: MediaQuery.of(context).size.width * 0.074,
-                              top: MediaQuery.of(context).size.height * 0.006,
-                              bottom: 0,
-                              child: Text('$_counter', style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0538, fontWeight: FontWeight.w400)),
+                              child: Text(
+                                '$_counter',
+                                style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.width *
+                                      (_counter < 10 ? 0.06 : 0.053),
+                                  fontFamily: 'Geist',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             ),
                           Positioned(
                             top: 0,
                             bottom: MediaQuery.of(context).size.height * 0.001,
-                            left: MediaQuery.of(context).size.width * 0.093,
+                            left: MediaQuery.of(context).size.width * 0.1,
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               splashColor: Colors.transparent,
@@ -812,6 +821,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
             ],
           ),
         ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.0098),
       ]
     );
   }
