@@ -178,12 +178,10 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                             widget.listaFavoritos, producto);
                       },
                       background: Container(
-                        color: Color(0xFF95B3FF),
                         alignment: Alignment.centerLeft,
                         padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Image.memory(getPapelera(),
-                            width: 30, height: 30),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(23)),
+                        child: Icon(Icons.delete),
+                        decoration: BoxDecoration(color: Color(0xFF95B3FF),borderRadius: BorderRadius.circular(16)),
                       ),
                       child: StatefulStoreItem(producto: producto,)
                   );
@@ -344,7 +342,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             });
                           },
                           color: Color.fromARGB(255, 80, 79, 79),
-                          icon: ImageIcon(AssetImage('assets/icons/shopping_basket.png'), size: MediaQuery.of(context).size.width * 0.0615, color: Color.fromARGB(255,18,18,18))
+                          icon: Icon(Icons.shopping_bag, size: MediaQuery.of(context).size.width * 0.0615, color: Color.fromARGB(255,18,18,18))
                       )
                   )
                       : Container(
