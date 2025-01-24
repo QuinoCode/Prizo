@@ -179,7 +179,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     );
   }
 
-  void _navigateToListaCompra() {
+  void _navigateToLista() {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -515,7 +515,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                               iconSize: MediaQuery.of(context).size.width * 0.0615,
                               icon: ImageIcon(AssetImage('assets/icons/scanner.png'), ),
                               color: Color.fromARGB(255,18,18,18),
-                              onPressed: _navigateToListaCompra,
+                              onPressed: _navigateToLista,
                             ),
                             border: OutlineInputBorder(
                               borderSide: BorderSide.none,
@@ -763,11 +763,13 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               icon: Icon(Icons.remove),
                               onPressed: () {
                                 setState(() {
-                                  if (_counter > 0) {
-                                    DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                  if (_counter > 1) {
+                                    //DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                    listaCompraService.DB_decreaseCantidad(widget.producto);
                                     _counter--;
                                   } else {
-                                    DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
+                                    //DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
+                                    listaCompraService.DB_quitarProducto(widget.producto);
                                     _showButton = true;
                                   }
                                 });
@@ -803,7 +805,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06),
                               onPressed: () {
                                 if (_counter < 99) {
-                                  DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                  //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                  listaCompraService.DB_annadirProducto(widget.producto);
                                   setState(() {
                                     _counter++;
                                   });
