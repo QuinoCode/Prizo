@@ -3,6 +3,8 @@ import '../../obtencion_producto/application/consum_finder_service.dart';
 import '../../obtencion_producto/application/dia_finder_service.dart';
 import '../../comparacion_productos/application/comparacion_producto.dart';
 import '../../obtencion_producto/application/carrefour_finder_service.dart';
+import 'package:flutter/material.dart';
+
 
 class PantallaProductoService {
   final ConsumFinderService consumService = ConsumFinderService();
@@ -28,7 +30,7 @@ class PantallaProductoService {
   static String limpiarNombreProducto(String nombre) {
     // Lista de palabras comunes a eliminar
     List<String> stopwords = [
-      "de", "con", "y", "en", "el", "la", "al", "los", "las", "ud", "g", "natural", "molino", "kg", "pack", "sabor", "paquete", "bolsa",
+      "de", "con", "y", "en", "el", "la", "al", "los", "las", "ud", "g", "molino", "kg", "pack", "sabor", "paquete", "bolsa",
       "carrefour", "dia", "consum", "caja", "lata", "botella", "envase", "frasco", "sobre"
     ];
 
@@ -51,4 +53,16 @@ class PantallaProductoService {
     return palabrasFiltradas.join(' ');
   }
 
+  Image obtenerLogoSupermercado(Producto producto) {
+    switch (producto.tienda.toLowerCase()) {
+      case 'dia':
+        return Image.asset('assets/images/logo_dia.png', width: 40, height: 40);
+      case 'consum':
+        return Image.asset('assets/images/logo_consum.png', width: 40, height: 40);
+      case 'carrefour':
+        return Image.asset('assets/images/logo_carrefour.png', width: 40, height: 40);
+      default:
+        return Image.asset('assets/images/default.png', width: 40, height: 40);
+    }
+  }
 }

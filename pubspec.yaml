@@ -34,3 +34,15 @@ flutter:
     - assets/icons/listas_icono.png
     - assets/icons/lupa_icono.png
     - assets/icons/usuario_icono.png
+    - assets/images/logo_dia.png
+    - assets/images/logo_consum.png
+    - assets/images/logo_carrefour.png
+    - assets/fonts/
+    - assets/icons/cesta_icono.png
+    - assets/icons/corazon_icono.png
+    - assets/icons/corazonnegro_icono.png
+
+  fonts:
+    - family: Geist
+      fonts:
+        - asset: assets/fonts/Geist-VariableFont_wght.ttf
