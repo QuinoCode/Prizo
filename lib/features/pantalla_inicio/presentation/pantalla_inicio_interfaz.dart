@@ -228,8 +228,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     day,
                     style: TextStyle(
                       color: day == currentDay[0].toUpperCase()
-                          ? Colors.white
+                          ? Colors.black
                           : Colors.black,
+                        fontFamily: 'Geist'
                     ),
                   ),
                 ))
