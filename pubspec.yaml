@@ -46,3 +46,8 @@ flutter:
     - family: Geist
       fonts:
         - asset: assets/fonts/Geist-VariableFont_wght.ttf
+
+    - family: Kanit
+      fonts:
+        - asset: assets/fonts/Kanit-Regular.ttf
+        - asset: assets/fonts/Kanit-Bold.ttf

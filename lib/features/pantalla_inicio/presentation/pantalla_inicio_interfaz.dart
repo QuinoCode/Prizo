@@ -65,11 +65,11 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   children: [
                     Text(
                       'PRIZO',
-                      style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontFamily: 'Kanit', fontSize: 36, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       '¿Qué quieres comprar hoy?',
-                      style: TextStyle(fontSize: 16, color: Color(0xFF504F4F)),
+                      style: TextStyle(fontFamily: 'Geist', fontSize: 16, color: Color(0xFF504F4F)),
                     ),
                   ],
                 ),
@@ -102,7 +102,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
               SizedBox(height: 20),
               Text(
                 'Ofertas de la semana',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontFamily: 'Geist', fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
               Column(
@@ -113,7 +113,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     Center(
                       child: Text(
                         'No hay productos en oferta en tu lista de favoritos.',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                        style: TextStyle(fontFamily: 'Geist', fontSize: 16, color: Colors.grey),
                       ),
                     )
                   else
@@ -157,11 +157,11 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                   SizedBox(height: 8),
                                   Text(
                                     producto.nombre,
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontFamily: 'Geist', fontSize: 16, fontWeight: FontWeight.bold),
                                   ),
                                   Text(
                                     '\$${producto.precioOferta.toStringAsFixed(2)}',
-                                    style: TextStyle(fontSize: 14, color: Colors.green),
+                                    style: TextStyle(fontFamily: 'Geist', fontSize: 14, color: Colors.green),
                                   ),
                                 ],
                               ),
@@ -195,7 +195,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
               Center(
                 child: Text(
                   '¡Hoy es $currentDay de compra!',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontFamily: 'Geist', fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(height: 20),
@@ -230,7 +230,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     Text(
                       '¡Recuerda llevarte tu bolsa\nde tela!',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18, color: Color(0xFF504F4F)),
+                      style: TextStyle(fontFamily: 'Geist', fontSize: 18, color: Color(0xFF504F4F)),
                     ),
                   ],
                 ),
@@ -238,7 +238,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
               SizedBox(height: 40),
               Text(
                 'Tus supermercados cercanos',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontFamily: 'Geist', fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
               Container(
