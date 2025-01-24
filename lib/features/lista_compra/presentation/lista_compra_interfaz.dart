@@ -3,6 +3,7 @@ import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 
 Database db = DatabaseOperations.instance.prizoDatabase;
 
@@ -225,15 +226,15 @@ class StatefulStoreItem extends StatefulWidget {
 }
 
 class _ProductTileItemState extends State<StatefulStoreItem> {
+  ListaCompraService listaCompraService = ListaCompraService();
   bool _showButton = true;
   int _counter = 0;
-
-  
 
   @override
   void initState() {
     super.initState();
     _cargarContador();
+    _cargarBoton();
   }
 
   String shortenText(String nombre){
@@ -248,6 +249,12 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     int count = await DatabaseOperations.instance.fetchCantidadListaCompra(db, widget.producto);
     setState(() {
       _counter = count;
+    });
+  }
+  Future<void> _cargarBoton () async {
+    bool boton = await listaCompraService.DB_Tick_tiene_tick(widget.producto);
+    setState(() {
+      _showButton = boton;
     });
   }
 
@@ -270,7 +277,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
             TextButton(
               onPressed: () {
                 /* Eliminar el producto completo de la lista */
-                DatabaseOperations.instance.deleteFromListaCompraTable(db, producto);
+                //DatabaseOperations.instance.deleteFromListaCompraTable(db, producto);
+                listaCompraService.DB_quitarProducto(producto);
                 widget.onAction();
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
@@ -398,7 +406,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                                 onPressed: () {
                                   setState(() {
                                     if (_counter > 1) {
-                                      DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                      //DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                      listaCompraService.DB_decreaseCantidad(widget.producto);
                                       _counter--;
                                     } else {
                                       _ventanaConfirmacion(context, widget.producto);
@@ -436,7 +445,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                                 icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06),
                                 onPressed: () {
                                   if (_counter < 99) {
-                                    DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                    //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                    listaCompraService.DB_increaseCantidad(widget.producto);
                                     setState(() {
                                       _counter++;
                                     });
