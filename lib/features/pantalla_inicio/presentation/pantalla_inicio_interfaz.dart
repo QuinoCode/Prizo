@@ -207,9 +207,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     ),
                 ],
               ),
-              SizedBox(height: 20),
-              Divider(color: Color(0xFF95B3FF)),
-              SizedBox(height: 20),
+              SizedBox(height: 22),
+              Divider(color: Color(0xFF95B3FF), thickness: 2,),
+              SizedBox(height: 22),
               Center(
                 child: Text(
                   '¡Hoy es $currentDay de compra!',
