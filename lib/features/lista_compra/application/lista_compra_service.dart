@@ -105,6 +105,37 @@ class ListaCompraService {
 
     return listaCompra;
   }
+  void DB_Tick_annadir(Producto producto) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    // Verifica si el producto ya existe en la tabla de productos tick
+    bool exists = await dbOps.existsInProductTickTable(db, producto);
+    if (!exists) {
+      // Registra el producto en la tabla de productos tick
+      await dbOps.registerIntoProductTickTable(db, producto);    }
+  }
+  void DB_Tick_quitar(Producto producto) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    await dbOps.deleteFromProductTickTable(db, producto);
+  }
+  Future<bool> DB_Tick_tiene_tick(Producto producto) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    return dbOps.existsInProductTickTable(db, producto);
+  }
 
   final int LIMITE = 99;
   final ProductoService productoService = new ProductoService();
