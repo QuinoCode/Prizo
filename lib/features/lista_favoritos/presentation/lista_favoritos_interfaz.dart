@@ -176,14 +176,15 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                     onDismissed: (direction) {
                       listaFavoritosService.quitarProducto(
                           widget.listaFavoritos, producto);
+                      listaFavoritosService.DB_quitarProducto(producto);
                     },
                     background: Container(
-                      color: Color(0xFF95B3FF),
+                      //color: Color(0xFF95B3FF),
                       alignment: Alignment.centerLeft,
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Image.memory(iconService.getPapelera(),
                           width: 30, height: 30),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(23)),
+                      decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
                     ),
                     child: StatefulStoreItem(producto: producto,)
                   );
