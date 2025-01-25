@@ -139,35 +139,47 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   itemBuilder: (context, index) {
                     final producto = productos[index];
                     final nombre = nombres[index];
-                    return Container(
-                      width: screenWidth * 0.4, // Ancho basado en el 40% del ancho de la pantalla
-                      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(screenWidth * 0.02), // Radio basado en el ancho
-                              child: Image.network(
-                                producto.foto,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(
-                                    Icons.image,
-                                    size: screenWidth * 0.1, // Tamaño del icono basado en el ancho
-                                    color: Colors.grey,
-                                  );
-                                },
+                    return Row(
+                      children: [
+                        // Producto
+                        Container(
+                          width: screenWidth * 0.4, // Ancho basado en el 40% del ancho de la pantalla
+                          margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(screenWidth * 0.02), // Radio basado en el ancho
+                                  child: Image.network(
+                                    producto.foto,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(
+                                        Icons.image,
+                                        size: screenWidth * 0.1, // Tamaño del icono basado en el ancho
+                                        color: Colors.grey,
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
-                            ),
+                              SizedBox(height: screenHeight * 0.01), // Espaciado basado en la altura
+                              Text(
+                                nombre,
+                                style: TextStyle(fontSize: screenWidth * 0.04), // Tamaño de texto basado en el ancho
+                              ),
+                            ],
                           ),
-                          SizedBox(height: screenHeight * 0.01), // Espaciado basado en la altura
-                          Text(
-                            nombre,
-                            style: TextStyle(fontSize: screenWidth * 0.04), // Tamaño de texto basado en el ancho
+                        ),
+                        // Separador vertical
+                        if (index != productos.length - 1) // Evitar barra al final
+                          Container(
+                            width: screenWidth * 0.0055, // Ancho en relación al ancho del contenedor
+                            height: screenHeight * 0.25, // Altura igual a la del contenedor
+                            color: Color(0xFF95B3FF), // Color de la barra
                           ),
-                        ],
-                      ),
+                      ],
                     );
                   },
                 ),
