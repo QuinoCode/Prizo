@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:prizo/shared/data_entities/DAO/lista_favoritos_DAO.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared//database/database_operations.dart';
-
+import '/features/distancia_tienda/shop_distance.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class PantallaInicio extends StatefulWidget {
   @override
@@ -17,10 +19,16 @@ class _PantallaInicioState extends State<PantallaInicio> {
   List<Producto> productosEnOferta = [];
   bool cargandoOfertas = true;
 
+  // Variables para  lógica supermercados cercanos
+  List<Map<String, dynamic>> supermercadosCercanos = [];
+  bool cargandoSupermercados = true;
+  final shopDistance = ShopDistance();
+
   @override
   void initState() {
     super.initState();
     cargarProductosEnOferta();
+    cargarSupermercadosCercanos();
   }
 
   Future<void> cargarProductosEnOferta() async {
@@ -44,6 +52,38 @@ class _PantallaInicioState extends State<PantallaInicio> {
       print("Error cargando productos en oferta: $e");
       setState(() {
         cargandoOfertas = false;
+      });
+    }
+  }
+
+  Future<void> cargarSupermercadosCercanos() async {
+    try {
+      setState(() {
+        cargandoSupermercados = true;
+      });
+
+      final coords = await shopDistance.location.getLocation(); // Obtener ubicación desde ShopDistance
+      final url = shopDistance.getFullUri(coords, "supermercado");
+      final response = await http.get(Uri.parse(url), headers: {"Accept": "application/json"});
+
+      if (response.statusCode == 200) {
+        final jsonMap = json.decode(response.body);
+        final List<dynamic> items = jsonMap["items"];
+        final List<Map<String, dynamic>> supermarkets = items.map((item) {
+          return Map<String, dynamic>.from(item);
+        }).toList();
+
+        setState(() {
+          supermercadosCercanos = supermarkets;
+          cargandoSupermercados = false;
+        });
+      } else {
+        throw Exception("Error en la API: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error cargando supermercados cercanos: $e");
+      setState(() {
+        cargandoSupermercados = false;
       });
     }
   }
@@ -260,12 +300,22 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 style: TextStyle(fontFamily: 'Geist', fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
-              Container(
+              cargandoSupermercados
+                  ? Center(child: CircularProgressIndicator())
+                  : supermercadosCercanos.isEmpty
+                  ? Center(
+                child: Text(
+                  'No se encontraron supermercados cercanos.',
+                  style: TextStyle(fontFamily: 'Geist', fontSize: 16, color: Colors.grey),
+                ),
+              )
+                  : Container(
                 height: 120, // Altura para lista horizontal
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5, // Número de supermercados
+                  itemCount: supermercadosCercanos.length,
                   itemBuilder: (context, index) {
+                    final supermercado = supermercadosCercanos[index];
                     return Container(
                       width: 200,
                       margin: EdgeInsets.symmetric(horizontal: 8),
@@ -274,8 +324,14 @@ class _PantallaInicioState extends State<PantallaInicio> {
                           backgroundColor: Colors.blue,
                           child: Icon(Icons.store, color: Colors.white),
                         ),
-                        title: Text('Supermercado ${index + 1}'),
-                        subtitle: Text('Distancia: ${index * 0.5 + 0.3} km\nDirección: Calle Falsa ${index + 123}'),
+                        title: Text(supermercado["title"] ?? "Supermercado"),
+                        subtitle: Text(
+                          "Distancia: ${(supermercado["distance"] / 1000).toStringAsFixed(2)} km",
+                        ),
+                        onTap: () {
+                          final shopDistance = ShopDistance();
+                          shopDistance.launchMapQuery(supermercado["title"]);
+                        },
                       ),
                     );
                   },
