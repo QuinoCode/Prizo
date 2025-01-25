@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '/features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
-import '/features/productsearch/productsearch.ui.dart';
+import '/features/productsearch/product_search_ui.dart';
 
 class BarraNavegacion extends StatefulWidget {
   @override

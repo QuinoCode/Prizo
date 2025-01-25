@@ -5,8 +5,6 @@ import 'package:provider/provider.dart';
 import 'features/pantalla_inicio/presentation/barra_navegacion.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:prizo/shared//database/database_operations.dart';
-import 'package:prizo/features/productsearch/product_search_ui.dart';
-import 'package:prizo/shared/database/database_operations.dart';
 import 'package:flutter/services.dart';
 
 
@@ -31,15 +29,13 @@ class Prizo extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false, // Opcional, para quitar la etiqueta de debug
         title: 'Prizo App',
-        home: BarraNavegacion(), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
+        initialRoute: '/',
+        routes: {
+          '/': (context) => SplashScreen(),
+          '/home': (context) => BarraNavegacion()
+        },
       ),
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-      '/': (context) => SplashScreen(),
-      '/home': (context) => ProductSearchScreen()
-    },
-      );
+    );
   }
 }
 
