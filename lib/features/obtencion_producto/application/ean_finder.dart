@@ -100,7 +100,7 @@ class EanFinder {
   Map<String, dynamic> convertItemToProductSearch(Map<String, dynamic> item){
     Map<String, dynamic> productSearch = {
     "ean": item["_id"],
-    "nombre":  item["product_name_es"],
+    "nombre":  item["product_name_es"]?? item["product_name"],
     "marca": item["brands"] ?? ""
     };
     return productSearch;

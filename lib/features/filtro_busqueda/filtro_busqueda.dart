@@ -5,11 +5,12 @@ class FiltroProductosInterfaz extends StatefulWidget {
   FiltroProductosInterfaz({super.key, required this.alergenos});
 
   @override
-  _FiltroProductosInterfazState createState() => _FiltroProductosInterfazState();
+  _FiltroProductosInterfazState createState() =>
+      _FiltroProductosInterfazState();
 }
 
 class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
-  int? selectedOrder;
+  List<int> selectedOrders = [];  // Usar una lista para permitir múltiples selecciones
 
   void _toggleAlergeno(int alergenosIndex) {
     setState(() {
@@ -21,9 +22,13 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
     });
   }
 
-  void _selectOrder(int orderIndex) {
+  void _toggleOrder(int orderIndex) {
     setState(() {
-      selectedOrder = orderIndex;
+      if (selectedOrders.contains(orderIndex)) {
+        selectedOrders.remove(orderIndex); // Desmarcar si ya está seleccionado
+      } else {
+        selectedOrders.add(orderIndex); // Agregar si no está seleccionado
+      }
     });
   }
 
@@ -36,6 +41,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         title: const Text('Filtrar'),
         centerTitle: true,
@@ -43,7 +49,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, widget.alergenos);
             },
           ),
         ],
@@ -93,11 +99,13 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
 
   Widget _buildOrderButton(String text, int index) {
     return ElevatedButton(
-      onPressed: () => _selectOrder(index),
+      onPressed: () => _toggleOrder(index),
       style: ElevatedButton.styleFrom(
-        backgroundColor: selectedOrder == index ? Colors.blue : Colors.white,
+        backgroundColor: selectedOrders.contains(index)
+            ? Color(0xFF95B3FF)
+            : Colors.white,
         foregroundColor: Colors.black,
-        side: const BorderSide(color: Colors.blue),
+        side: const BorderSide(color: Color(0xFF95B3FF)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
@@ -111,9 +119,9 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
     return ElevatedButton(
       onPressed: () => _toggleAlergeno(index),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? Colors.blue : Colors.white,
+        backgroundColor: isSelected ? Color(0xFF95B3FF) : Colors.white,
         foregroundColor: Colors.black,
-        side: const BorderSide(color: Colors.blue),
+        side: const BorderSide(color: Color(0xFF95B3FF)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),

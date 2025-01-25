@@ -1,14 +1,24 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'features/pantalla_inicio/presentation/barra_navegacion.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:prizo/shared//database/database_operations.dart';
+import 'package:prizo/features/productsearch/product_search_ui.dart';
+import 'package:prizo/shared/database/database_operations.dart';
+import 'package:flutter/services.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseOperations.instance.openOrCreateDB();
   await initializeDateFormatting('es_ES', null);
   runApp(const Prizo());
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // Transparent status bar
+    statusBarIconBrightness: Brightness.dark, // Adjust icon color (optional)
+  ));
 }
 
 class Prizo extends StatelessWidget {
@@ -23,6 +33,38 @@ class Prizo extends StatelessWidget {
         title: 'Prizo App',
         home: BarraNavegacion(), // Aquí se cambia ListaCompraInterfaz por ProductSearchScreen
       ),
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+      '/': (context) => SplashScreen(),
+      '/home': (context) => ProductSearchScreen()
+    },
+      );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>{
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacementNamed('/home');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Image.asset('assets/gifs/splash_screen_animation.gif', alignment: Alignment(-1, 0),)
+
     );
   }
 }
