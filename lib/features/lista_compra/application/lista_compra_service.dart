@@ -83,6 +83,35 @@ class ListaCompraService {
 
     return await dbOps.fetchProductsListaCompra(db);
   }
+  Future<List<String>> DB_generarNombres() async {
+    // Llamar a DB_fetchProducts para obtener la lista de productos
+    List<Producto> BD_productos = await DB_fetchProducts();
+
+    // Generar lista de nombres
+    List<String> BD_nombres = [];
+
+    for (Producto producto in BD_productos) {
+      if (producto.nombre.length >= 17 && producto.nombre[16] == ' ') {
+        String auxiliar = producto.nombre.substring(0, 16);
+        if (auxiliar.length < producto.nombre.length) {
+          auxiliar += "\n" + producto.nombre.substring(auxiliar.length, 17) + "...";
+          BD_nombres.add(auxiliar);
+        } else {
+          BD_nombres.add(auxiliar);
+        }
+      } else {
+        String auxiliar = producto.nombre.substring(0, 8);
+        if (auxiliar.length < producto.nombre.length) {
+          auxiliar += "\n" + producto.nombre.substring(auxiliar.length, 17) + "...";
+          BD_nombres.add(auxiliar);
+        } else {
+          BD_nombres.add(auxiliar);
+        }
+      }
+    }
+
+    return BD_nombres;
+  }
   Future<ListaCompra> generar_ListaCompra() async {
     // Llamar a DB_fetchProducts para obtener la lista de productos
     List<Producto> BD_productos = await DB_fetchProducts();
