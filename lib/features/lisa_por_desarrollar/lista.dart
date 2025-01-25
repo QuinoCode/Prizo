@@ -106,73 +106,83 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   }
 
   Widget _buildProductList(String title, List<Producto> productos, List<String> nombres, VoidCallback onNavigate) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-          title: Text(
-            title,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          trailing: Icon(Icons.arrow_forward),
-          onTap: onNavigate,
-        ),
-        if (productos.isEmpty || nombres.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Text(
-              "$title no tiene elementos",
-              style: TextStyle(
-                fontSize: 16,
-                fontStyle: FontStyle.italic,
-                color: Colors.grey,
+    return Builder(
+      builder: (context) {
+        final screenHeight = MediaQuery.of(context).size.height;
+        final screenWidth = MediaQuery.of(context).size.width;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              title: Text(
+                title,
+                style: TextStyle(
+                  fontSize: screenWidth * 0.05, // Tamaño de texto basado en el ancho de la pantalla
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              textAlign: TextAlign.center,
+              trailing: Icon(Icons.arrow_forward),
+              onTap: onNavigate,
             ),
-          )
-        else
-          SizedBox(
-            height: 200, // Altura fija para el contenedor horizontal
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: productos.length,
-              itemBuilder: (context, index) {
-                final producto = productos[index];
-                final nombre = nombres[index];
-                return Container(
-                  width: 150, // Ancho fijo para cada elemento
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            producto.foto,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(
-                                Icons.image,
-                                size: 50,
-                                color: Colors.grey,
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        nombre,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
+            if (productos.isEmpty || nombres.isEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
+                child: Text(
+                  "$title no tiene elementos",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.04, // Tamaño de texto basado en el ancho
+                    fontStyle: FontStyle.italic,
+                    color: Colors.grey,
                   ),
-                );
-              },
-            ),
-          ),
-      ],
+                  textAlign: TextAlign.center,
+                ),
+              )
+            else
+              SizedBox(
+                height: screenHeight * 0.25, // Altura basada en el 25% de la altura de la pantalla
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: productos.length,
+                  itemBuilder: (context, index) {
+                    final producto = productos[index];
+                    final nombre = nombres[index];
+                    return Container(
+                      width: screenWidth * 0.4, // Ancho basado en el 40% del ancho de la pantalla
+                      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(screenWidth * 0.02), // Radio basado en el ancho
+                              child: Image.network(
+                                producto.foto,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.image,
+                                    size: screenWidth * 0.1, // Tamaño del icono basado en el ancho
+                                    color: Colors.grey,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.01), // Espaciado basado en la altura
+                          Text(
+                            nombre,
+                            style: TextStyle(fontSize: screenWidth * 0.04), // Tamaño de texto basado en el ancho
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
