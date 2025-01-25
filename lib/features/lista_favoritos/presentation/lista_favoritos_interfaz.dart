@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import 'package:prizo/features/productsearch/product_search_ui.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
@@ -371,10 +372,12 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               onPressed: () {
                                 setState(() {
                                   if (_counter > 0) {
-                                    DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                    //DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                    listaCompraService.DB_decreaseCantidad(widget.producto);
                                     _counter--;
                                   } else {
-                                    DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
+                                    //DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
+                                    listaCompraService.DB_quitarProducto(widget.producto);
                                     _showButton = true;
                                   }
                                 });
@@ -410,7 +413,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06),
                               onPressed: () {
                                 if (_counter < 99) {
-                                  DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                  //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                  listaCompraService.DB_increaseCantidad(widget.producto);
                                   setState(() {
                                     _counter++;
                                   });

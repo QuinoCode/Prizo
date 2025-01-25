@@ -411,7 +411,7 @@ class DatabaseOperations {
     try{
       // Usar parámetros en lugar de concatenación directa
       await db.rawDelete(
-        'DELETE FROM ProductoTick WHERE producto_id = ?',
+        'DELETE FROM ProductoTick WHERE id = ?',
         [producto.id], // Pasas el parámetro aquí como una lista
       );
     } catch (e) {

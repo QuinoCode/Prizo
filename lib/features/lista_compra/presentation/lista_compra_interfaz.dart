@@ -254,7 +254,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
   Future<void> _cargarBoton () async {
     bool boton = await listaCompraService.DB_Tick_tiene_tick(widget.producto);
     setState(() {
-      _showButton = boton;
+      _showButton = !boton;
     });
   }
 
@@ -372,6 +372,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               setState(() {
                                 _showButton = false;
                               });
+                              listaCompraService.DB_Tick_annadir(widget.producto);
                             }
                           )
                         : IconButton(
@@ -381,6 +382,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               setState(() {
                                 _showButton = true;
                               });
+                              listaCompraService.DB_Tick_quitar(widget.producto);
                             }
                         ),
                       Container(

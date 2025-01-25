@@ -116,7 +116,9 @@ class ListaCompraService {
     bool exists = await dbOps.existsInProductTickTable(db, producto);
     if (!exists) {
       // Registra el producto en la tabla de productos tick
-      await dbOps.registerIntoProductTickTable(db, producto);    }
+      await dbOps.registerIntoProductTickTable(db, producto);
+      print("marcado");
+    }
   }
   void DB_Tick_quitar(Producto producto) async {
     DatabaseOperations dbOps = DatabaseOperations.instance;
@@ -125,7 +127,13 @@ class ListaCompraService {
 
     Database db = dbOps.prizoDatabase;
 
-    await dbOps.deleteFromProductTickTable(db, producto);
+    // Verifica si el producto ya existe en la tabla de productos tick
+    bool exists = await dbOps.existsInProductTickTable(db, producto);
+    if (exists) {
+      // Borra el producto en la tabla de productos tick
+      await dbOps.deleteFromProductTickTable(db, producto);
+      print("borrado");
+    }
   }
   Future<bool> DB_Tick_tiene_tick(Producto producto) async {
     DatabaseOperations dbOps = DatabaseOperations.instance;
