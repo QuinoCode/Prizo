@@ -19,7 +19,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
   List<Producto> productosEnOferta = [];
   bool cargandoOfertas = true;
 
-  // Variables para  lógica supermercados cercanos
+  // Variables para lógica supermercados cercanos
   List<Map<String, dynamic>> supermercadosCercanos = [];
   bool cargandoSupermercados = true;
   final shopDistance = ShopDistance();
@@ -33,19 +33,16 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
   Future<void> cargarProductosEnOferta() async {
     try {
-      // Obtén el ID de la lista de favoritos
       final String? idListaFavoritos = await listaFavoritosDAO.getIdListaFavoritosPorUsuario('usuario_actual');
       if (idListaFavoritos != null) {
-        // Obtén los productos en oferta de esa lista
         final productos = await listaFavoritosDAO.getProductosEnOfertaDeFavoritos(idListaFavoritos);
         setState(() {
           productosEnOferta = productos;
-          cargandoOfertas = false; // Datos cargados
+          cargandoOfertas = false;
         });
       } else {
-        // Si no hay lista de favoritos
         setState(() {
-          cargandoOfertas = false; // No hay nada que mostrar
+          cargandoOfertas = false;
         });
       }
     } catch (e) {
@@ -62,7 +59,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
         cargandoSupermercados = true;
       });
 
-      final coords = await shopDistance.location.getLocation(); // Obtener ubicación desde ShopDistance
+      final coords = await shopDistance.location.getLocation();
       final url = shopDistance.getFullUri(coords, "supermercado");
       final response = await http.get(Uri.parse(url), headers: {"Accept": "application/json"});
 
@@ -90,42 +87,54 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
+
     final String currentDay = DateFormat.EEEE('es_ES').format(DateTime.now());
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: width * 0.04),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
+              SizedBox(height: height * 0.05),
               Center(
                 child: Column(
                   children: [
                     Text(
                       'PRIZO',
-                      style: TextStyle(fontFamily: 'Kanit', fontSize: 36, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontFamily: 'Kanit',
+                        fontSize: width * 0.09,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       '¿Qué quieres comprar hoy?',
-                      style: TextStyle(fontFamily: 'Geist', fontSize: 18, color: Color(0xFF504F4F)),
+                      style: TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: width * 0.045,
+                        color: Color(0xFF504F4F),
+                      ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: height * 0.04),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(width * 0.06),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
                 child: Row(
                   children: [
                     ImageIcon(
                       AssetImage('assets/icons/lupa_icono.png'),
-                      size: 22,
+                      size: width * 0.06,
                     ),
                     Expanded(
                       child: TextField(
@@ -134,14 +143,14 @@ class _PantallaInicioState extends State<PantallaInicio> {
                           hintStyle: TextStyle(
                             color: Colors.grey,
                             fontFamily: 'Geist',
-                            fontSize: 16,
+                            fontSize: width * 0.04,
                           ),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 14),
+                          contentPadding: EdgeInsets.only(left: width * 0.03),
                         ),
                         style: TextStyle(
                           fontFamily: 'Geist',
-                          fontSize: 16,
+                          fontSize: width * 0.04,
                           fontWeight: FontWeight.normal,
                           color: Colors.black,
                         ),
@@ -150,33 +159,41 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     IconButton(
                       icon: ImageIcon(
                         AssetImage('assets/icons/escaner_icono.png'),
-                        size: 22,
+                        size: width * 0.06,
                       ),
                       onPressed: () {},
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: height * 0.04),
               Text(
                 'Ofertas de la semana',
-                style: TextStyle(fontFamily: 'Geist', fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: width * 0.056,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: height * 0.01),
               Column(
                 children: [
-                  if (cargandoOfertas) // Muestra un indicador de carga
+                  if (cargandoOfertas)
                     Center(child: CircularProgressIndicator())
-                  else if (productosEnOferta.isEmpty) // Si no hay productos en oferta
+                  else if (productosEnOferta.isEmpty)
                     Center(
                       child: Text(
                         'No hay productos en oferta en tu lista de favoritos.',
-                        style: TextStyle(fontFamily: 'Geist', fontSize: 16, color: Colors.grey),
+                        style: TextStyle(
+                          fontFamily: 'Geist',
+                          fontSize: width * 0.04,
+                          color: Colors.grey,
+                        ),
                       ),
                     )
                   else
                     Container(
-                      height: 200, // Altura para productos más grandes
+                      height: height * 0.25,
                       child: PageView.builder(
                         controller: _pageController,
                         itemCount: productosEnOferta.length,
@@ -188,16 +205,16 @@ class _PantallaInicioState extends State<PantallaInicio> {
                         itemBuilder: (context, index) {
                           final producto = productosEnOferta[index];
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(width * 0.03),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
+                                    blurRadius: width * 0.02,
+                                    offset: Offset(0, height * 0.005),
                                   ),
                                 ],
                               ),
@@ -212,14 +229,22 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                           Icon(Icons.image_not_supported),
                                     ),
                                   ),
-                                  SizedBox(height: 8),
+                                  SizedBox(height: height * 0.01),
                                   Text(
                                     producto.nombre,
-                                    style: TextStyle(fontFamily: 'Geist', fontSize: 16, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      fontFamily: 'Geist',
+                                      fontSize: width * 0.04,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   Text(
                                     '\$${producto.precioOferta.toStringAsFixed(2)}',
-                                    style: TextStyle(fontFamily: 'Geist', fontSize: 14, color: Colors.green),
+                                    style: TextStyle(
+                                      fontFamily: 'Geist',
+                                      fontSize: width * 0.04,
+                                      color: Colors.green,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -228,16 +253,16 @@ class _PantallaInicioState extends State<PantallaInicio> {
                         },
                       ),
                     ),
-                  SizedBox(height: 10),
+                  SizedBox(height: height * 0.02),
                   if (productosEnOferta.isNotEmpty)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
                         productosEnOferta.length,
                             (index) => Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          width: currentIndex == index ? 12 : 8,
-                          height: currentIndex == index ? 12 : 8,
+                          margin: EdgeInsets.symmetric(horizontal: width * 0.01),
+                          width: currentIndex == index ? width * 0.03 : width * 0.02,
+                          height: currentIndex == index ? width * 0.03 : width * 0.02,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: currentIndex == index ? Colors.blue : Colors.grey,
@@ -247,16 +272,20 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     ),
                 ],
               ),
-              SizedBox(height: 22),
-              Divider(color: Color(0xFF95B3FF), thickness: 2,),
-              SizedBox(height: 22),
+              SizedBox(height: height * 0.03),
+              Divider(color: Color(0xFF95B3FF), thickness: height * 0.002),
+              SizedBox(height: height * 0.03),
               Center(
                 child: Text(
                   '¡Hoy es $currentDay de compra!',
-                  style: TextStyle(fontFamily: 'Geist', fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: width * 0.045,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: height * 0.02),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: ['L', 'M', 'X', 'J', 'V', 'S', 'D']
@@ -270,55 +299,67 @@ class _PantallaInicioState extends State<PantallaInicio> {
                       color: day == currentDay[0].toUpperCase()
                           ? Colors.black
                           : Colors.black,
-                        fontFamily: 'Geist'
+                      fontFamily: 'Geist',
                     ),
                   ),
                 ))
                     .toList(),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: height * 0.04),
               Center(
                 child: Column(
                   children: [
                     Image.asset(
                       'assets/images/Bolsa_de_tela.png',
-                      width: 200,
-                      height: 200,
+                      width: width * 0.5,
+                      height: height * 0.25,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: height * 0.01),
                     Text(
                       '¡Recuerda llevarte tu bolsa\nde tela!',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontFamily: 'Geist', fontSize: 18, color: Color(0xFF504F4F)),
+                      style: TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: width * 0.046,
+                        color: Color(0xFF504F4F),
+                      ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: height * 0.05),
               Text(
                 'Tus supermercados cercanos',
-                style: TextStyle(fontFamily: 'Geist', fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: width * 0.055,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: height * 0.02),
               cargandoSupermercados
                   ? Center(child: CircularProgressIndicator())
                   : supermercadosCercanos.isEmpty
                   ? Center(
                 child: Text(
                   'No se encontraron supermercados cercanos.',
-                  style: TextStyle(fontFamily: 'Geist', fontSize: 16, color: Colors.grey),
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: width * 0.04,
+                    color: Colors.grey,
+                  ),
                 ),
               )
                   : Container(
-                height: 120, // Altura para lista horizontal
+                height: height * 0.15,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: supermercadosCercanos.length,
                   itemBuilder: (context, index) {
                     final supermercado = supermercadosCercanos[index];
                     return Container(
-                      width: 200,
-                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      width: width * 0.5,
+                      margin: EdgeInsets.symmetric(horizontal: width * 0.02),
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: Colors.blue,
@@ -329,7 +370,6 @@ class _PantallaInicioState extends State<PantallaInicio> {
                           "Distancia: ${(supermercado["distance"] / 1000).toStringAsFixed(2)} km",
                         ),
                         onTap: () {
-                          final shopDistance = ShopDistance();
                           shopDistance.launchMapQuery(supermercado["title"]);
                         },
                       ),
@@ -338,7 +378,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 ),
               ),
               SizedBox(
-                height: 80, // Espacio para la barra de navegación flotante
+                height: height * 0.1,
               ),
             ],
           ),
