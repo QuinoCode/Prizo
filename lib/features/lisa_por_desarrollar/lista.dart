@@ -115,14 +115,19 @@ class _ListaInterfazState extends State<ListaInterfaz> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              title: Text(
-                title,
-                style: TextStyle(
-                  fontSize: screenWidth * 0.05, // Tamaño de texto basado en el ancho de la pantalla
-                  fontWeight: FontWeight.bold,
-                ),
+              title: Row(
+                mainAxisSize: MainAxisSize.min, // Ajustar el ancho al contenido
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.085, // Tamaño de texto basado en el ancho de la pantalla
+                    ),
+                  ),
+                  SizedBox(width: screenWidth * 0.01), // Espaciado entre el texto y el ícono
+                  Icon(Icons.arrow_forward, size: screenWidth * 0.05), // Tamaño del ícono ajustado
+                ],
               ),
-              trailing: Icon(Icons.arrow_forward),
               onTap: onNavigate,
             ),
             if (productos.isEmpty || nombres.isEmpty)
