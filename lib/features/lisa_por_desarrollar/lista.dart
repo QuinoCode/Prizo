@@ -20,6 +20,10 @@ class ListaInterfaz extends StatefulWidget {
 class _ListaInterfazState extends State<ListaInterfaz> {
   final ListaCompraService listaCompraService = ListaCompraService();
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
+  List<Producto> productosCompra = [];
+  List<String> productosCompraNombre = [];
+  List<Producto> productosFavoritos = [];
+  List<String> productosFavoritosNombre = [];
   ListaCompra listaCompra = ListaCompra(
       id: '1', usuario: 'usuario_demo', productos: []);
   ListaFavoritos listaFavoritos = ListaFavoritos(
@@ -28,6 +32,10 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   @override
   void initState() {
     super.initState();
+    _initializeProductosFavoritos();
+    _initializeNombresFavoritos();
+    _initializeProductosCompra();
+    _initializeNombresCompra();
     _initializeListaFavoritos();
     _initializeListaCompra();
   }
@@ -47,6 +55,30 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     // Actualiza el estado con los datos obtenidos
     setState(() {
       listaCompra = fetchedListaCompra;
+    });
+  }
+  void _initializeProductosFavoritos() async {
+    List<Producto> productos = await listaFavoritosService.DB_fetchProducts();
+    setState(() {
+      productosFavoritos = productos;
+    });
+  }
+  void _initializeNombresFavoritos() async {
+    List<String> nombres = await listaFavoritosService.DB_generarNombres();
+    setState(() {
+      productosFavoritosNombre = nombres;
+    });
+  }
+  void _initializeProductosCompra() async {
+    List<Producto> productos = await listaCompraService.DB_fetchProducts();
+    setState(() {
+      productosCompra = productos;
+    });
+  }
+  void _initializeNombresCompra() async {
+    List<String> nombres = await listaCompraService.DB_generarNombres();
+    setState(() {
+      productosCompraNombre = nombres;
     });
   }
 
