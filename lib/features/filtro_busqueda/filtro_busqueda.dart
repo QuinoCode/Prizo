@@ -40,56 +40,82 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        title: const Text('Filtrar'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              Navigator.pop(context, widget.alergenos);
-            },
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(64),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          title: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+            child: Text('Filtrar', style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.0615, fontWeight: FontWeight.w500)),
           ),
-        ],
+          centerTitle: true,
+          actions: [
+            IconButton(
+              padding: EdgeInsets.fromLTRB(0, 20, 13, 0),
+              color: Color.fromARGB(255,18,18,18),
+              icon: ImageIcon(AssetImage('assets/icons/x.png'),size: MediaQuery.of(context).size.width * 0.07,),
+              onPressed: () {
+                Navigator.pop(context, widget.alergenos);
+              },
+            ),
+          ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(4.0),
+            child: Container(
+                color: Color(0xFF95B3FF),
+                height: 2.0,
+            )
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
+            SizedBox(height:30),
+            Text(
               'Ordenar por:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0923, fontFamily: 'Geist', fontWeight: FontWeight.w500),
             ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildOrderButton('Precio', 0),
-                _buildOrderButton('Novedades', 1),
-                _buildOrderButton('Más comprados', 2),
-              ],
+            const SizedBox(height: 14),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Spaces between items
+                children: [
+                  _buildOrderButton('Precio', 0),
+                  SizedBox(width: 12),
+                  _buildOrderButton('Novedades', 1),
+                  SizedBox(width: 12),
+                  _buildOrderButton('Más comprados', 2),
+                ],
+              ),
             ),
-            const SizedBox(height: 24),
-            const Text(
+            const SizedBox(height: 54),
+            Text(
               'Filtrar por:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0923, fontFamily: 'Geist', fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
             const Text(
               'Alérgenos',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 22, fontFamily: 'Geist', fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildFilterButton('Sin Lactosa', 1, hasLactose),
-                _buildFilterButton('Sin gluten', 0, hasGluten),
-                _buildFilterButton('Sin frutos secos', 2, hasNuts),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Spaces between items
+                children: [
+                  _buildFilterButton('Sin Lactosa', 1, hasLactose),
+                  SizedBox(width: 12),
+                  _buildFilterButton('Sin gluten', 0, hasGluten),
+                  SizedBox(width: 12),
+                  _buildFilterButton('Sin frutos secos', 2, hasNuts),
+                ],
+              ),
             ),
           ],
         ),
@@ -105,13 +131,14 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
             ? Color(0xFF95B3FF)
             : Colors.white,
         foregroundColor: Colors.black,
-        side: const BorderSide(color: Color(0xFF95B3FF)),
+        shadowColor: Colors.transparent,
+        side: BorderSide(width: 2, color: Color(0xFF95B3FF)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
-      child: Text(text, style: const TextStyle(fontSize: 14)),
+      child: Text(text, style: TextStyle(fontSize: 14, fontFamily: 'Geist', fontWeight: FontWeight.w400)),
     );
   }
 
@@ -121,13 +148,14 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected ? Color(0xFF95B3FF) : Colors.white,
         foregroundColor: Colors.black,
-        side: const BorderSide(color: Color(0xFF95B3FF)),
+        shadowColor: Colors.transparent,
+        side: BorderSide(width: 2, color: Color(0xFF95B3FF)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
-      child: Text(text, style: const TextStyle(fontSize: 14)),
+      child: Text(text, style: TextStyle(fontSize: 14, fontFamily: 'Geist', fontWeight: FontWeight.w400)),
     );
   }
 }
