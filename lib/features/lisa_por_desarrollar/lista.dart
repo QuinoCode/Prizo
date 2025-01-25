@@ -108,13 +108,10 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mis Listas"),
-      ),
       body: ListView(
         children: [
           ListTile(
-            title: const Text("Lista de la compra"),
+            title: const Text("Lista de compra"),
             trailing: const Icon(Icons.arrow_forward),
             onTap: _navigateToListaCompra,
           ),
