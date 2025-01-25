@@ -83,10 +83,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            ListaCompraInterfaz(
-              listaCompra: listaCompra,
-            ),
+        builder: (context) => ListaCompraInterfaz(listaCompra: listaCompra),
       ),
     );
   }
@@ -95,12 +92,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            ListaFavoritosInterfaz(
-              listaFavoritos: listaFavoritos,
-              listaCompra: listaCompra,
-              original: listaFavoritos,
-            ),
+        builder: (context) => ListaFavoritosInterfaz(listaFavoritos: listaFavoritos, listaCompra: listaCompra, original: listaFavoritos),
       ),
     );
   }
@@ -178,6 +170,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     );
   }
 }
+
 
 void main() {
   runApp(MaterialApp(
