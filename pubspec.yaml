@@ -36,6 +36,7 @@ flutter:
     - assets/icons/arrow.png
     - assets/icons/empty_checkbox.png
     - assets/icons/checked_checkbox.png
+    - assets/icons/x.png
 
   fonts:
     - family: Kanit
