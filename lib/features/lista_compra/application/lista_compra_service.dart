@@ -94,7 +94,7 @@ class ListaCompraService {
       if (producto.nombre.length >= 17 && producto.nombre[16] == ' ') {
         String auxiliar = producto.nombre.substring(0, 16);
         if (auxiliar.length < producto.nombre.length) {
-          auxiliar += "\n" + producto.nombre.substring(auxiliar.length, 17) + "...";
+          auxiliar += producto.nombre.substring(auxiliar.length, 17) + "...";
           BD_nombres.add(auxiliar);
         } else {
           BD_nombres.add(auxiliar);
@@ -102,7 +102,7 @@ class ListaCompraService {
       } else {
         String auxiliar = producto.nombre.substring(0, 8);
         if (auxiliar.length < producto.nombre.length) {
-          auxiliar += "\n" + producto.nombre.substring(auxiliar.length, 17) + "...";
+          auxiliar += producto.nombre.substring(auxiliar.length, 17) + "...";
           BD_nombres.add(auxiliar);
         } else {
           BD_nombres.add(auxiliar);

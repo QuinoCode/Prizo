@@ -113,45 +113,56 @@ class _ListaInterfazState extends State<ListaInterfaz> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: Text(
-              title + " no tiene elementos",
-              style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Colors.grey),
+              "$title no tiene elementos",
+              style: TextStyle(
+                fontSize: 16,
+                fontStyle: FontStyle.italic,
+                color: Colors.grey,
+              ),
               textAlign: TextAlign.center,
             ),
           )
         else
-          GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.75,
+          SizedBox(
+            height: 200, // Altura fija para el contenedor horizontal
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: productos.length,
+              itemBuilder: (context, index) {
+                final producto = productos[index];
+                final nombre = nombres[index];
+                return Container(
+                  width: 150, // Ancho fijo para cada elemento
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            producto.foto,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(
+                                Icons.image,
+                                size: 50,
+                                color: Colors.grey,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        nombre,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
-            itemCount: productos.length,
-            itemBuilder: (context, index) {
-              final producto = productos[index];
-              final nombre = nombres[index];
-              return Column(
-                children: [
-                  Expanded(
-                    child: Image.network(
-                      producto.foto,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Icon(Icons.image, size: 50, color: Colors.grey);
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    nombre,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              );
-            },
           ),
       ],
     );
