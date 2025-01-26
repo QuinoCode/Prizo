@@ -132,43 +132,61 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    _toggleTienda("DIA");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: tiendasSeleccionadas.contains("DIA")
-                        ? Color(0xFF95B3FF)
-                        : Colors.white,
-                    side: BorderSide(color: Color(0xFF95B3FF)),
+                SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.0379,
+                    width: MediaQuery.of(context).size.width * 0.169,
+                    child: ElevatedButton(
+                      onPressed: () => _toggleTienda("DIA"),
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Colors.transparent,
+                        padding: EdgeInsets.zero,
+                        backgroundColor: tiendasSeleccionadas.contains("DIA") ? Color(0xFF95B3FF) : Colors.white,
+                        foregroundColor: Color.fromARGB(255,80,79,79),
+                        side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
+                      ),
+                      child: Text(
+                          'Día',
+                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
+                      ),
+                    ),
                   ),
-                  child: const Text('Día'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _toggleTienda("CONSUM");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: tiendasSeleccionadas.contains("CONSUM")
-                        ? Color(0xFF95B3FF)
-                        : Colors.white,
-                    side: BorderSide(color: Color(0xFF95B3FF)),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.0379,
+                    width: MediaQuery.of(context).size.width * 0.274,
+                    child: ElevatedButton(
+                      onPressed: () => _toggleTienda("CONSUM"),
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Colors.transparent,
+                        padding: EdgeInsets.zero,
+                        backgroundColor: tiendasSeleccionadas.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
+                        foregroundColor: Color.fromARGB(255,80,79,79),
+                        side: BorderSide(color: Color(0xFF95B3FF),width: 2),
+                      ),
+                      child: Text(
+                          'Consum',
+                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
+                      ),
+                    ),
                   ),
-                  child: const Text('Consum'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _toggleTienda("Carrefour");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: tiendasSeleccionadas.contains("Carrefour")
-                        ? Color(0xFF95B3FF)
-                        : Colors.white,
-                    side: BorderSide(color: Color(0xFF95B3FF)),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.0379,
+                    width: MediaQuery.of(context).size.width * 0.305,
+                    child: ElevatedButton(
+                      onPressed: () => _toggleTienda("Carrefour"),
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Colors.transparent,
+                        padding: EdgeInsets.zero,
+                        backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
+                        foregroundColor: Color.fromARGB(255,80,79,79),
+                        side: BorderSide(color: Color(0xFF95B3FF),width: 2),
+                      ),
+                      child: Text(
+                          'Carrefour',
+                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
+                      ),
+                    ),
                   ),
-                  child: const Text('Carrefour'),
-                ),
-              ],
+              ]
             ),
             Expanded(
               child: widget.listaFavoritos.productos.isEmpty
@@ -178,11 +196,6 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                 itemBuilder: (context, index) {
                   final producto =
                   widget.listaFavoritos.productos[index];
-                  final imageUrl = producto.foto;
-                  final cantidad = _productoCantidad[
-                  productoService.generarClave(producto)] ??
-                      listaCompraService.getCantidadProducto(
-                          widget.listaCompra, producto);
                   return Dismissible(
                       key: Key(productoService.generarClave(producto)),
                       direction: DismissDirection.startToEnd,
@@ -195,16 +208,15 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                         //color: Color(0xFF95B3FF),
                         alignment: Alignment.centerLeft,
                         padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Image.memory(iconService.getPapelera(),
-                            width: 30, height: 30),
                         decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
+                        child: Image.memory(iconService.getPapelera(), width: 30, height: 30),
                       ),
                       child: StatefulStoreItem(producto: producto,)
                   );
                 },
               ),
             ),
-          ],
+          ]
         ),
       ),
     );
@@ -246,199 +258,205 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () => _navigateToProductInfo(widget.producto),
-                  child: Image.network(
-                    widget.producto.foto,
-                    width: MediaQuery.of(context).size.width * 0.279,
+            child: Container(
+              decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(23), // Rounded corners
+            ),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => _navigateToProductInfo(widget.producto),
+                    child: Image.network(
+                      widget.producto.foto,
+                      width: MediaQuery.of(context).size.width * 0.279,
+                      height: MediaQuery.of(context).size.height * 0.128,
+                    ),
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.007),
+                  SizedBox(
                     height: MediaQuery.of(context).size.height * 0.128,
+                    child: VerticalDivider(
+                      thickness: 1,
+                      color: Color.fromARGB(255,175,198,255),
+                    ),
                   ),
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.007),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.128,
-                  child: VerticalDivider(
-                    thickness: 1,
-                    color: Color.fromARGB(255,175,198,255),
-                  ),
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        _navigateToProductInfo(widget.producto);
-                      },
-                      child:
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.283,
-                              child:
-                              Text(
-                                shortenText(widget.producto.nombre, 18, '...'),
-                                maxLines: 2,
-                                style: TextStyle(
-                                  height: 1.2,
-                                  fontFamily: 'Geist',
-                                  color: Color.fromARGB(255,18,18,18),
-                                  fontSize: MediaQuery.of(context).size.width * 0.04,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                          ),
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.005),
-                          Text(
-                            widget.producto.tienda,
-                            style: TextStyle(
-                              fontFamily: 'Geist',
-                              fontWeight: FontWeight.w300,
-                              color: Color.fromARGB(255,33,33,33),
-                              fontSize: MediaQuery.of(context).size.width * 0.0332,
-                            ),
-                          ),
-                          SizedBox(height: MediaQuery.of(context).size.width * 0.023),
-                          Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+                  Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          _navigateToProductInfo(widget.producto);
+                        },
+                        child:
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.283,
+                                child:
                                 Text(
-                                  '${widget.producto.precio}€',
+                                  shortenText(widget.producto.nombre, 18, '...'),
+                                  maxLines: 2,
                                   style: TextStyle(
+                                    height: 1.2,
                                     fontFamily: 'Geist',
-                                    color: Color.fromARGB(255,33,33,33),
+                                    color: Color.fromARGB(255,18,18,18),
                                     fontSize: MediaQuery.of(context).size.width * 0.04,
                                     fontWeight: FontWeight.w500,
                                   ),
-                                ),
-                                SizedBox(width: MediaQuery.of(context).size.width * 0.014),
-                                Text(
-                                  '${widget.producto.precioMedida}€/kg',
-                                  style: TextStyle(
-                                    fontFamily: 'Geist',
-                                    color: Color.fromARGB(255,53,53,53),
-                                    fontSize: MediaQuery.of(context).size.width * 0.028,
+                                )
+                            ),
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.005),
+                            Text(
+                              widget.producto.tienda,
+                              style: TextStyle(
+                                fontFamily: 'Geist',
+                                fontWeight: FontWeight.w300,
+                                color: Color.fromARGB(255,33,33,33),
+                                fontSize: MediaQuery.of(context).size.width * 0.0332,
+                              ),
+                            ),
+                            SizedBox(height: MediaQuery.of(context).size.width * 0.023),
+                            Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Text(
+                                    '${widget.producto.precio}€',
+                                    style: TextStyle(
+                                      fontFamily: 'Geist',
+                                      color: Color.fromARGB(255,33,33,33),
+                                      fontSize: MediaQuery.of(context).size.width * 0.04,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                              ]
-                          ),
-                        ],
-                      ),
-                    )
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.051),
-                SizedBox(
-                  child: _showButton
-                      ? Container(
-                      height: MediaQuery.of(context).size.height * 0.0473,
-                      width: MediaQuery.of(context).size.width * 0.21,
-                      decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 149, 179, 252),
-                          borderRadius: BorderRadius.circular(20)
-                      ),
-                      child:
-                      IconButton(
-                          onPressed: () {
-                            DatabaseOperations.instance.existsInProductTable(db, widget.producto).then((exists) {
-                              if (exists) {
-                                DatabaseOperations.instance.fetchCantidadListaCompra(db, widget.producto).then((cantidad) {
-                                  setState(() {
-                                    _counter = cantidad;  // Set _counter to the fetched cantidad
-                                    _showButton = false; // Update _showButton only if the product exists in the table
-                                  });
-                                });
-                              } else {
-                                DatabaseOperations.instance.registerIntoProductTable(db, widget.producto).then((_) {});
-                                setState(() {
-                                  _showButton = false; // Update _showButton after inserting the product
-                                });
-                              }
-                            });
-                          },
-                          color: Color.fromARGB(255, 80, 79, 79),
-                          icon: ImageIcon(AssetImage('assets/icons/shopping_basket.png'), size: MediaQuery.of(context).size.width * 0.0615, color: Color.fromARGB(255,18,18,18))
+                                  SizedBox(width: MediaQuery.of(context).size.width * 0.014),
+                                  Text(
+                                    '${widget.producto.precioMedida}€/kg',
+                                    style: TextStyle(
+                                      fontFamily: 'Geist',
+                                      color: Color.fromARGB(255,53,53,53),
+                                      fontSize: MediaQuery.of(context).size.width * 0.028,
+                                    ),
+                                  ),
+                                ]
+                            ),
+                          ],
+                        ),
                       )
-                  )
-                      : Container(
-                    height: MediaQuery.of(context).size.height * 0.0473,
-                    width: MediaQuery.of(context).size.width * 0.21,
-                    padding: EdgeInsets.zero,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 246, 246, 246),
-                        borderRadius: BorderRadius.circular(20)
-                    ),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: 0,
-                          bottom: 0,
-                          right: MediaQuery.of(context).size.width * 0.097,
-                          child: IconButton(
-                            iconSize: MediaQuery.of(context).size.width * 0.06,
-                            padding: EdgeInsets.zero,
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            icon: Icon(Icons.remove),
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.051),
+                  SizedBox(
+                    child: _showButton
+                        ? Container(
+                        height: MediaQuery.of(context).size.height * 0.0473,
+                        width: MediaQuery.of(context).size.width * 0.21,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 149, 179, 252),
+                            borderRadius: BorderRadius.circular(20)
+                        ),
+                        child:
+                        IconButton(
                             onPressed: () {
-                              setState(() {
-                                if (_counter > 0) {
-                                  //DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
-                                  listaCompraService.DB_decreaseCantidad(widget.producto);
-                                  _counter--;
+                              DatabaseOperations.instance.existsInProductTable(db, widget.producto).then((exists) {
+                                if (exists) {
+                                  DatabaseOperations.instance.fetchCantidadListaCompra(db, widget.producto).then((cantidad) {
+                                    setState(() {
+                                      _counter = cantidad;  // Set _counter to the fetched cantidad
+                                      _showButton = false; // Update _showButton only if the product exists in the table
+                                    });
+                                  });
                                 } else {
-                                  //DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
-                                  listaCompraService.DB_quitarProducto(widget.producto);
-                                  _showButton = true;
+                                  DatabaseOperations.instance.registerIntoProductTable(db, widget.producto).then((_) {});
+                                  setState(() {
+                                    _showButton = false; // Update _showButton after inserting the product
+                                  });
                                 }
                               });
                             },
-                          ),
-                        ),
-                        Positioned(
-                          left: _counter > 10
-                              ? _counter > 19
-                              ? MediaQuery.of(context).size.width * 0.075
-                              : MediaQuery.of(context).size.width * 0.082
-                              : MediaQuery.of(context).size.width * (_counter == 1 ? 0.098 : 0.09),
-                          top: MediaQuery.of(context).size.height * (_counter < 10 ? 0.004 : 0.007),
-                          bottom: 0,
-                          child: Text(
-                            '$_counter',
-                            style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.width *
-                                  (_counter < 10 ? 0.06 : 0.053),
-                              fontFamily: 'Geist',
-                              fontWeight: FontWeight.w400,
+                            color: Color.fromARGB(255, 80, 79, 79),
+                            icon: ImageIcon(AssetImage('assets/icons/shopping_basket.png'), size: MediaQuery.of(context).size.width * 0.0615, color: Color.fromARGB(255,18,18,18))
+                        )
+                    )
+                        : Container(
+                      height: MediaQuery.of(context).size.height * 0.0473,
+                      width: MediaQuery.of(context).size.width * 0.21,
+                      padding: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 246, 246, 246),
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 0,
+                            bottom: 0,
+                            right: MediaQuery.of(context).size.width * 0.097,
+                            child: IconButton(
+                              iconSize: MediaQuery.of(context).size.width * 0.06,
+                              padding: EdgeInsets.zero,
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              icon: Icon(Icons.remove),
+                              onPressed: () {
+                                setState(() {
+                                  if (_counter > 0) {
+                                    //DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                    listaCompraService.DB_decreaseCantidad(widget.producto);
+                                    _counter--;
+                                  } else {
+                                    //DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
+                                    listaCompraService.DB_quitarProducto(widget.producto);
+                                    _showButton = true;
+                                  }
+                                });
+                              },
                             ),
                           ),
-                        ),
-                        Positioned(
-                          top: 0,
-                          bottom: MediaQuery.of(context).size.height * 0.001,
-                          left: MediaQuery.of(context).size.width * 0.1,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06),
-                            onPressed: () {
-                              if (_counter < 99) {
-                                //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
-                                listaCompraService.DB_increaseCantidad(widget.producto);
-                                setState(() {
-                                  _counter++;
-                                });
-                              }
-                            },
+                          Positioned(
+                            left: _counter > 10
+                                ? _counter > 19
+                                ? MediaQuery.of(context).size.width * 0.075
+                                : MediaQuery.of(context).size.width * 0.082
+                                : MediaQuery.of(context).size.width * (_counter == 1 ? 0.098 : 0.09),
+                            top: MediaQuery.of(context).size.height * (_counter < 10 ? 0.004 : 0.007),
+                            bottom: 0,
+                            child: Text(
+                              '$_counter',
+                              style: TextStyle(
+                                fontSize: MediaQuery.of(context).size.width *
+                                    (_counter < 10 ? 0.06 : 0.053),
+                                fontFamily: 'Geist',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            top: 0,
+                            bottom: MediaQuery.of(context).size.height * 0.001,
+                            left: MediaQuery.of(context).size.width * 0.1,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06),
+                              onPressed: () {
+                                if (_counter < 99) {
+                                  //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                  listaCompraService.DB_increaseCantidad(widget.producto);
+                                  setState(() {
+                                    _counter++;
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.0098),
