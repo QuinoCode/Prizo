@@ -424,28 +424,30 @@ class BotonCarrito extends StatefulWidget {
 
 class _BotonCarritoState extends State<BotonCarrito> {
   int _counter = 0;
-  bool _showButton = true;
+  bool _showButton = true; // Siempre empezamos con el botón visible
 
   @override
   void initState() {
     super.initState();
-    _initializeState();
+    _initializeState(); // Inicializamos el estado, pero no mostramos el contador aún
   }
 
+  // Este método inicializa el estado, pero el contador solo aparecerá cuando se haga clic en el botón
   Future<void> _initializeState() async {
     final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
     setState(() {
+      // No cambiamos _showButton aquí, lo dejamos en true para que siempre empiece con el botón
       _counter = cantidad;
-      _showButton = cantidad == 0;
     });
   }
 
   void _addToCart() async {
+    // Añadimos el producto al carrito
     widget.listaCompraService.DB_annadirProducto(widget.producto);
     final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
     setState(() {
       _counter = cantidad;
-      _showButton = false;
+      _showButton = false; // El botón cambia para mostrar el contador
     });
   }
 
@@ -470,7 +472,7 @@ class _BotonCarritoState extends State<BotonCarrito> {
       widget.listaCompraService.DB_quitarProducto(widget.producto);
       setState(() {
         _counter = 0;
-        _showButton = true;
+        _showButton = true; // El botón vuelve a aparecer y el contador se reinicia
       });
     }
   }
@@ -520,8 +522,7 @@ class _BotonCarritoState extends State<BotonCarrito> {
             ),
           ),
           // Contador centrado
-          _counter < 10
-              ? Positioned(
+          Positioned(
             left: MediaQuery.of(context).size.width * 0.089,
             top: MediaQuery.of(context).size.height * 0.004,
             bottom: 0,
@@ -529,18 +530,6 @@ class _BotonCarritoState extends State<BotonCarrito> {
               '$_counter',
               style: TextStyle(
                 fontSize: MediaQuery.of(context).size.width * 0.0615,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          )
-              : Positioned(
-            left: MediaQuery.of(context).size.width * 0.074,
-            top: MediaQuery.of(context).size.height * 0.006,
-            bottom: 0,
-            child: Text(
-              '$_counter',
-              style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width * 0.0538,
                 fontWeight: FontWeight.w400,
               ),
             ),
