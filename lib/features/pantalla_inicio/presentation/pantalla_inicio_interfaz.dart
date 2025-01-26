@@ -203,7 +203,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => ScannerInterface()), // Reemplaza con tu pantalla
+                          MaterialPageRoute(builder: (context) => ScannerInterface()),
                         );
                       },
                     ),
@@ -395,7 +395,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 ),
               )
                   : Container(
-                height: height * 0.24, // Altura de los items, ajusta como desees
+                height: height * 0.24,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: supermercadosCercanos.length,
@@ -426,24 +426,22 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     return Padding(
                       padding: EdgeInsets.only(right: width * 0.03),  // Separación horizontal entre los items
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,  // Centra los elementos en el eje vertical de la fila
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          // Contenedor para el logo y el texto
                           Container(
-                            width: width * 0.6,  // Ancho fijo para cada item
+                            width: width * 0.6,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,  // Centra los elementos verticalmente dentro del contenedor
-                              crossAxisAlignment: CrossAxisAlignment.center,  // Asegura que los elementos estén alineados al centro horizontalmente
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 // Logo con tamaño fijo
                                 Image.asset(
                                   logo,
-                                  width: width * 0.3,  // Tamaño fijo para todos los logos
-                                  height: width * 0.3,  // Asegura que todos los logos tengan la misma altura
+                                  width: width * 0.3,
+                                  height: width * 0.3,
                                   fit: BoxFit.contain,
                                 ),
                                 SizedBox(height: height * 0.01),  // Espacio entre el logo y el texto
-                                // Row para alinear la distancia y dirección a la izquierda
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,  // Alinea los textos a la izquierda
                                   children: [
@@ -466,9 +464,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                         fontSize: width * 0.035,
                                         color: Colors.black,
                                       ),
-                                      overflow: TextOverflow.ellipsis,  // Agrega "..." si el texto es muy largo
-                                      maxLines: 2,  // Limita el número de líneas
-                                      textAlign: TextAlign.left,  // Alinea la dirección a la izquierda
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      textAlign: TextAlign.left,
                                     ),
                                   ],
                                 ),
@@ -477,9 +475,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
                           ),
                           // Barra azul vertical
                           Container(
-                            width: 2.0,  // Ancho de la barra azul
-                            height: height * 0.12,  // Ajusta la altura de la barra
-                            color: Color(0xFF95B3FF),  // Color azul
+                            width: 2.0,
+                            height: height * 0.12,
+                            color: Color(0xFF95B3FF),
                           ),
                         ],
                       ),
