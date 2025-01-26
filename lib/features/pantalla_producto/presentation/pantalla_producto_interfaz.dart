@@ -317,7 +317,7 @@ class BotonFavoritos extends StatefulWidget {
 }
 
 class _BotonFavoritosState extends State<BotonFavoritos> {
-  late bool _isFavorito;
+  late bool _isFavorito = false;
 
   @override
   void initState() {
