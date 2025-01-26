@@ -277,7 +277,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                         borderRadius: BorderRadius.circular(width * 0.03),
                                         child: Image.network(
                                           producto.foto,
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.fill,
                                           errorBuilder: (context, error, stackTrace) =>
                                               Icon(Icons.image_not_supported),
                                         ),
