@@ -181,33 +181,9 @@ class DetallesProducto extends StatelessWidget {
                       ],
                     ),
                     // Botón añadir al carrito
-                    GestureDetector(
-                      onTap: () async {
-                        try {
-                          listaCompraService.annadirProducto(listaCompra, producto);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('${producto.nombre} añadido a la lista de compra')),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Error al añadir a la lista de compra')),
-                          );
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.07,
-                          vertical: screenHeight * 0.01,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF95B3FF),
-                          borderRadius: BorderRadius.circular(60),
-                        ),
-                        child: const ImageIcon(
-                          AssetImage('assets/icons/cesta_icono.png'),
-                          size: 25,
-                        ),
-                      ),
+                    BotonCarrito(
+                      producto: producto,
+                      listaCompraService: listaCompraService,
                     ),
                   ],
                 ),
@@ -427,6 +403,165 @@ class _BotonDistanciaState extends State<BotonDistancia> {
           color: _color,
         ),
         child: const Icon(Icons.map_outlined, color: Colors.black),
+      ),
+    );
+  }
+}
+
+class BotonCarrito extends StatefulWidget {
+  final Producto producto;
+  final ListaCompraService listaCompraService;
+
+  const BotonCarrito({
+    Key? key,
+    required this.producto,
+    required this.listaCompraService,
+  }) : super(key: key);
+
+  @override
+  _BotonCarritoState createState() => _BotonCarritoState();
+}
+
+class _BotonCarritoState extends State<BotonCarrito> {
+  int _counter = 0;
+  bool _showButton = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeState();
+  }
+
+  Future<void> _initializeState() async {
+    final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
+    setState(() {
+      _counter = cantidad;
+      _showButton = cantidad == 0;
+    });
+  }
+
+  void _addToCart() async {
+    widget.listaCompraService.DB_annadirProducto(widget.producto);
+    final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
+    setState(() {
+      _counter = cantidad;
+      _showButton = false;
+    });
+  }
+
+  void _incrementCounter() async {
+    if (_counter < widget.listaCompraService.LIMITE) {
+      widget.listaCompraService.DB_increaseCantidad(widget.producto);
+      final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
+      setState(() {
+        _counter = cantidad;
+      });
+    }
+  }
+
+  void _decrementCounter() async {
+    if (_counter > 1) {
+      widget.listaCompraService.DB_decreaseCantidad(widget.producto);
+      final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
+      setState(() {
+        _counter = cantidad;
+      });
+    } else {
+      widget.listaCompraService.DB_quitarProducto(widget.producto);
+      setState(() {
+        _counter = 0;
+        _showButton = true;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _showButton
+        ? Container(
+      height: MediaQuery.of(context).size.height * 0.0473,
+      width: MediaQuery.of(context).size.width * 0.21,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 149, 179, 252),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: IconButton(
+        onPressed: _addToCart,
+        color: const Color.fromARGB(255, 80, 79, 79),
+        icon: ImageIcon(
+          const AssetImage('assets/icons/shopping_basket.png'),
+          size: MediaQuery.of(context).size.width * 0.0615,
+          color: const Color.fromARGB(255, 18, 18, 18),
+        ),
+      ),
+    )
+        : Container(
+      height: MediaQuery.of(context).size.height * 0.0473,
+      width: MediaQuery.of(context).size.width * 0.21,
+      padding: EdgeInsets.zero,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 246, 246, 246),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Stack(
+        children: [
+          // Botón para decrementar
+          Positioned(
+            top: 0,
+            bottom: 0,
+            right: MediaQuery.of(context).size.width * 0.095,
+            child: IconButton(
+              iconSize: MediaQuery.of(context).size.width * 0.06,
+              padding: EdgeInsets.zero,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              icon: const Icon(Icons.remove),
+              onPressed: _decrementCounter,
+            ),
+          ),
+          // Contador centrado
+          _counter < 10
+              ? Positioned(
+            left: MediaQuery.of(context).size.width * 0.089,
+            top: MediaQuery.of(context).size.height * 0.004,
+            bottom: 0,
+            child: Text(
+              '$_counter',
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.0615,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          )
+              : Positioned(
+            left: MediaQuery.of(context).size.width * 0.074,
+            top: MediaQuery.of(context).size.height * 0.006,
+            bottom: 0,
+            child: Text(
+              '$_counter',
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.0538,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          // Botón para incrementar
+          Positioned(
+            top: 0,
+            bottom: MediaQuery.of(context).size.height * 0.001,
+            left: MediaQuery.of(context).size.width * 0.093,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              icon: Icon(
+                Icons.add,
+                size: MediaQuery.of(context).size.width * 0.06,
+              ),
+              onPressed: _incrementCounter,
+            ),
+          ),
+        ],
       ),
     );
   }
