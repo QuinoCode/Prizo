@@ -1,6 +1,7 @@
 import 'package:prizo/shared/data_entities/models/producto.dart';
 
 class ProductoService {
+
   double getPrecio(Producto product) {
     if(product.oferta) {
       return product.precioOferta;

@@ -35,8 +35,34 @@ flutter:
     - assets/icons/cesta_icono.png
     - assets/icons/corazon_icono.png
     - assets/icons/corazonnegro_icono.png
+    - assets/gifs/dancing_rat.gif
+    - assets/gifs/splash_screen_animation.gif
+    - assets/icons/filter.png
+    - assets/icons/shopping_basket.png
+    - assets/icons/scanner.png
+    - assets/icons/arrow.png
+    - assets/icons/empty_checkbox.png
+    - assets/icons/checked_checkbox.png
+    - assets/icons/x.png
 
   fonts:
+    - family: Kanit
+      fonts:
+        - asset: assets/fonts/Kanit-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Kanit-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Kanit-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Kanit-SemiBold.ttf
+          weight: 600
     - family: Geist
       fonts:
+        - asset: assets/fonts/Geist-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Geist-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Geist-Bold.ttf
+          weight: 700
         - asset: assets/fonts/Geist-VariableFont_wght.ttf
+
