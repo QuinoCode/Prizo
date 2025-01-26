@@ -105,7 +105,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     );
   }
 
-  Widget _buildProductList(String title, List<Producto> productos, List<String> nombres, VoidCallback onNavigate) {
+  Widget _buildProductList(String title, List<Producto> productos, List<String> nombres, VoidCallback onNavigate, bool esCompra) {
     return Builder(
       builder: (context) {
         final screenHeight = MediaQuery.of(context).size.height;
@@ -178,7 +178,28 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                 ),
                               ),
                               SizedBox(height: screenHeight * 0.01), // Espaciado basado en la altura
-                              Text(
+                              esCompra
+                                  ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start, // Alinea el texto al inicio (izquierda)
+                                children: [
+                                  Text(
+                                    nombre,
+                                    style: TextStyle(fontSize: screenWidth * 0.04), // Tamaño del texto
+                                  ),
+                                  SizedBox(height: screenHeight * 0.005), // Espaciado entre el texto y el ícono
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end, // Alinea el ícono a la derecha
+                                    children: [
+                                      Icon(
+                                        Icons.favorite,
+                                        size: screenWidth * 0.05, // Tamaño ajustado al ancho
+                                        color: Colors.red, // Cambia el color si lo necesitas
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                                  : Text(
                                 nombre,
                                 style: TextStyle(fontSize: screenWidth * 0.04), // Tamaño de texto basado en el ancho
                               ),
@@ -208,9 +229,9 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     return Scaffold(
       body: ListView(
         children: [
-          _buildProductList("Lista de compra", productosCompra, productosCompraNombre, _navigateToListaCompra),
+          _buildProductList("Lista de compra", productosCompra, productosCompraNombre, _navigateToListaCompra, true),
           Divider(),
-          _buildProductList("Lista de favoritos", productosFavoritos, productosFavoritosNombre, _navigateToListaFavoritos),
+          _buildProductList("Lista de favoritos", productosFavoritos, productosFavoritosNombre, _navigateToListaFavoritos, false),
         ],
       ),
     );
