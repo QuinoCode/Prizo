@@ -12,6 +12,7 @@ import 'package:prizo/features/lista_favoritos/application/lista_favoritos_servi
 import 'package:prizo/shared/application/icon_service.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:prizo/features/lista/lista.dart';
 
 Database db = DatabaseOperations.instance.prizoDatabase;
 ListaCompra listaCompra = ListaCompra(

@@ -4,6 +4,7 @@ import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
+import 'package:prizo/features/lista/lista.dart';
 
 Database db = DatabaseOperations.instance.prizoDatabase;
 
