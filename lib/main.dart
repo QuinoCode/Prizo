@@ -1,15 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:prizo/features/productsearch/product_search_ui.dart'; 
-import 'package:prizo/shared/database/database_operations.dart';
+import 'package:provider/provider.dart';
+import 'features/pantalla_inicio/presentation/barra_navegacion.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:prizo/shared//database/database_operations.dart';
 import 'package:flutter/services.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await DatabaseOperations.instance.deleteDB();
   await DatabaseOperations.instance.openOrCreateDB();
+  await initializeDateFormatting('es_ES', null);
   runApp(const Prizo());
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // Transparent status bar
@@ -22,13 +24,18 @@ class Prizo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-      '/': (context) => SplashScreen(),
-      '/home': (context) => ProductSearchScreen()
-    },
-      );
+    return ChangeNotifierProvider(
+      create: (context) => PrizoState(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false, // Opcional, para quitar la etiqueta de debug
+        title: 'Prizo App',
+        initialRoute: '/',
+        routes: {
+          '/': (context) => SplashScreen(),
+          '/home': (context) => BarraNavegacion()
+        },
+      ),
+    );
   }
 }
 
@@ -57,7 +64,6 @@ class _SplashScreenState extends State<SplashScreen>{
     );
   }
 }
-
 
 class PrizoState extends ChangeNotifier {
   var displayTest = 'Hello World';

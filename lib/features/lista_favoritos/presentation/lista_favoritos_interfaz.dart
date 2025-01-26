@@ -116,12 +116,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back), // Ícono de la flecha
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ListaInterfaz(), // Redirige a lista.dart
-              ),
-            );
+            Navigator.pop(context);
           },
         ),
       ),

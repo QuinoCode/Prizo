@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.0
+  intl: ^0.18.0
   http: ^1.2.2
   html: ^0.15.0
   json_annotation: ^4.7.0
@@ -28,6 +29,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/images/Bolsa_de_tela.png
+    - assets/icons/casa_icono.png
+    - assets/icons/listas_icono.png
+    - assets/icons/lupa_icono.png
+    - assets/icons/usuario_icono.png
     - assets/images/logo_dia.png
     - assets/images/logo_consum.png
     - assets/images/logo_carrefour.png
@@ -35,6 +41,7 @@ flutter:
     - assets/icons/cesta_icono.png
     - assets/icons/corazon_icono.png
     - assets/icons/corazonnegro_icono.png
+    - assets/icons/escaner_icono.png
     - assets/gifs/dancing_rat.gif
     - assets/gifs/splash_screen_animation.gif
     - assets/icons/filter.png

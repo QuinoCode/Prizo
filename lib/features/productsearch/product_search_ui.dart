@@ -13,7 +13,6 @@ import '../../features/obtencion_producto/application/dia_finder_service.dart';
 
 import '../../features/comparacion_productos/application/comparacion_producto.dart';
 
-import '../../features/lista_compra/presentation/lista_compra_interfaz.dart';
 import '../../features/lista_compra/application/lista_compra_service.dart';
 import '../../features/filtro_busqueda/filtro_busqueda.dart';
 
@@ -552,7 +551,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
         ),
       ),
       //navigator unused at the moment
-      bottomNavigationBar: NavigationBar(
+      /*bottomNavigationBar: NavigationBar(
         selectedIndex: 1,
         destinations: const [
           NavigationDestination(
@@ -576,7 +575,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
             label: 'Profile',
           ),
         ],
-      ),
+      ),*/
     );
   }
 }
