@@ -685,7 +685,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                       child:
                       IconButton(
                         onPressed: () {
-                          DatabaseOperations.instance.existsInProductTable(widget.database, widget.producto).then((exists) {
+                          DatabaseOperations.instance.existsInListaCompraTable(widget.database, widget.producto).then((exists) {
                             if (exists) {
                               DatabaseOperations.instance.fetchCantidadListaCompra(widget.database, widget.producto).then((cantidad) {
                                 setState(() {
@@ -694,7 +694,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                                 });
                               });
                             } else {
-                              DatabaseOperations.instance.registerIntoProductTable(widget.database, widget.producto).then((_) {});
+                              //DatabaseOperations.instance.registerIntoProductTable(widget.database, widget.producto).then((_) {});
                               setState(() {
                                 _showButton = false; // Update _showButton after inserting the product
                               });
@@ -728,10 +728,17 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               onPressed: () {
                                 setState(() {
                                   if (_counter > 0) {
-                                    DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
+                                    if(_counter == 1) {
+                                      listaCompraService.DB_quitarProducto(widget.producto);
+                                    } else {
+                                      listaCompraService.DB_decreaseCantidad(widget.producto);
+                                    }
+                                    //listaCompraService.DB_decreaseCantidad(widget.producto);
+                                    //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
                                     _counter--;
                                   } else {
-                                    DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
+                                    listaCompraService.DB_quitarProducto(widget.producto);
+                                    //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
                                     _showButton = true;
                                   }
                                 });
@@ -762,7 +769,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06),
                               onPressed: () {
                                 if (_counter < 99) {
-                                  DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
+                                  listaCompraService.DB_annadirProducto(widget.producto);
+                                  //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
                                   setState(() {
                                     _counter++;
                                   });
