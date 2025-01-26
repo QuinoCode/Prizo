@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:prizo/features/obtencion_producto/application/ean_finder.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
+import 'package:prizo/shared/database/database_operations.dart';
+import 'package:sqflite/sqflite.dart';
 
 
 
@@ -354,7 +356,8 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
             },
             onPanEnd: (_){
               Navigator.of(context).pop();
-              //TODO: addItem to lista compra
+              Database db = DatabaseOperations.instance.prizoDatabase;
+              DatabaseOperations.instance.registerIntoListaCompraTable(db, producto);
               setState((){
                 isPressed = false;
               });

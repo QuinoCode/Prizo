@@ -26,7 +26,7 @@ ListaCompra listaCompra = ListaCompra(
     id: '1', usuario: 'usuario_demo', productos: []);
 ListaFavoritos listaFavoritos = ListaFavoritos(
     id: '1', usuario: 'usuario_demo', productos: []);
-Database db = DatabaseOperations.instance.prizoDatabase;
+
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query, List<String> stores);
@@ -178,18 +178,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     );
   }
 
-  void _navigateToListaCompra() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            ListaCompraInterfaz(
-              listaCompra: listaCompra,
-            ),
-      ),
-    );
-  }
-
   // Solo se aplica el filtrado por alergenos
   void _navigateToFilters() async {
     final updatedAlergenos = await Navigator.push(
@@ -276,6 +264,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   }
 
   Widget _buildRecents() {
+    Database db = DatabaseOperations.instance.prizoDatabase;
     return FutureBuilder<List<Map<String, Object?>>>(
       future: DatabaseOperations.instance.fetchItemsListaRecientes(db),
       builder: (context, snapshot) {
@@ -477,11 +466,13 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   }
 
   Widget _buildProductTile(BuildContext context, Producto producto) {
-    return StatefulStoreItem(producto: producto);
+    Database db = DatabaseOperations.instance.prizoDatabase;
+    return StatefulStoreItem(producto: producto, database: db);
   }
 
   @override
   Widget build(BuildContext context) {
+    Database db = DatabaseOperations.instance.prizoDatabase;
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,  
@@ -515,7 +506,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                               iconSize: MediaQuery.of(context).size.width * 0.0615,
                               icon: ImageIcon(AssetImage('assets/icons/scanner.png'), ),
                               color: Color.fromARGB(255,18,18,18),
-                              onPressed: _navigateToListaCompra,
+                              onPressed: _navigateToScanner,
                             ),
                             border: OutlineInputBorder(
                               borderSide: BorderSide.none,
@@ -593,7 +584,8 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
 //Declaración de un nuevo statefulWidget para instanciar los elementos de producto, falta que el contador tome de la lista de compra
 class StatefulStoreItem extends StatefulWidget {
   final Producto producto;
-  const StatefulStoreItem({required this.producto});
+  final Database database;
+  const StatefulStoreItem({required this.producto, required this.database});
 
   @override
   _ProductTileItemState createState() => _ProductTileItemState();
@@ -720,16 +712,16 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                       child:
                       IconButton(
                         onPressed: () {
-                          DatabaseOperations.instance.existsInProductTable(db, widget.producto).then((exists) {
+                          DatabaseOperations.instance.existsInProductTable(widget.database, widget.producto).then((exists) {
                             if (exists) {
-                              DatabaseOperations.instance.fetchCantidadListaCompra(db, widget.producto).then((cantidad) {
+                              DatabaseOperations.instance.fetchCantidadListaCompra(widget.database, widget.producto).then((cantidad) {
                                 setState(() {
                                   _counter = cantidad;  // Set _counter to the fetched cantidad
                                   _showButton = false; // Update _showButton only if the product exists in the table
                                 });
                               });
                             } else {
-                              DatabaseOperations.instance.registerIntoProductTable(db, widget.producto).then((_) {});
+                              DatabaseOperations.instance.registerIntoProductTable(widget.database, widget.producto).then((_) {});
                               setState(() {
                                 _showButton = false; // Update _showButton after inserting the product
                               });
@@ -763,10 +755,10 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               onPressed: () {
                                 setState(() {
                                   if (_counter > 0) {
-                                    DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                    DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
                                     _counter--;
                                   } else {
-                                    DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
+                                    DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
                                     _showButton = true;
                                   }
                                 });
@@ -797,7 +789,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06),
                               onPressed: () {
                                 if (_counter < 99) {
-                                  DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                                  DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
                                   setState(() {
                                     _counter++;
                                   });

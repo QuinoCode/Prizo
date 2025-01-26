@@ -4,6 +4,7 @@ import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
+import 'package:prizo/features/lista/lista.dart';
 
 Database db = DatabaseOperations.instance.prizoDatabase;
 
@@ -109,7 +110,12 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
           icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
           color: Color.fromARGB(255,18,18,18),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ListaInterfaz(), // Redirige a lista.dart
+              ),
+            );
           },
         ),
         title: Text('Lista de compra'),

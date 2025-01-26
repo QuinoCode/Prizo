@@ -12,6 +12,7 @@ import 'package:prizo/features/lista_favoritos/application/lista_favoritos_servi
 import 'package:prizo/shared/application/icon_service.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:prizo/features/lista/lista.dart';
 
 Database db = DatabaseOperations.instance.prizoDatabase;
 ListaCompra listaCompra = ListaCompra(
@@ -111,7 +112,18 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Tu Lista de Favoritos'),
+        title: const Text('Lista de Favoritos'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Ícono de la flecha
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ListaInterfaz(), // Redirige a lista.dart
+              ),
+            );
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

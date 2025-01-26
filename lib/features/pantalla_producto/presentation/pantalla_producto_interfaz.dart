@@ -38,7 +38,11 @@ class DetallesProducto extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Image.asset(
+            'assets/icons/arrow.png',
+            width: 24,
+            height: 24,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -76,7 +80,7 @@ class DetallesProducto extends StatelessWidget {
                           }
                         },
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: screenWidth * 0.03),
 
                       // Botón de favoritos
                       BotonFavoritos(
@@ -88,7 +92,7 @@ class DetallesProducto extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.02),
 
               // Imagen del producto
               Center(
@@ -104,32 +108,32 @@ class DetallesProducto extends StatelessWidget {
                 )
                     : const Icon(Icons.image_not_supported, size: 100),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.01),
 
               // Nombre del producto
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                 child: Text(
                   producto.nombre,
-                  style: const TextStyle(fontFamily: 'Geist', fontSize: 22, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontFamily: 'Geist', fontSize: 24, fontWeight: FontWeight.bold),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: screenHeight * 0.01),
 
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                 child: Text(
                   producto.marca,
                   style: const TextStyle(fontFamily: 'Geist', fontSize: 17, color: Colors.black),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: screenHeight * 0.02),
 
               // Precio y botón de añadir al carrito
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -146,12 +150,12 @@ class DetallesProducto extends StatelessWidget {
                                 '${producto.precioOferta.toStringAsFixed(2)}€',
                                 style: const TextStyle(
                                   fontFamily: 'Geist',
-                                  fontSize: 32,
+                                  fontSize: 34,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red,
                                 ),
                               ),
-                              const SizedBox(width: 20), // Separación aumentada
+                              SizedBox(width: screenWidth * 0.05), // Separación aumentada
                               Text(
                                 '${producto.precio.toStringAsFixed(2)}€',
                                 style: const TextStyle(
@@ -169,11 +173,11 @@ class DetallesProducto extends StatelessWidget {
                             '${producto.precio.toStringAsFixed(2)}€',
                             style: const TextStyle(
                               fontFamily: 'Geist',
-                              fontSize: 32,
+                              fontSize: 34,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: screenHeight * 0.005),
                         Text(
                           precioMedida,
                           style: const TextStyle(fontFamily: 'Geist', fontSize: 15, color: Colors.grey),
@@ -181,52 +185,28 @@ class DetallesProducto extends StatelessWidget {
                       ],
                     ),
                     // Botón añadir al carrito
-                    GestureDetector(
-                      onTap: () async {
-                        try {
-                          listaCompraService.annadirProducto(listaCompra, producto);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('${producto.nombre} añadido a la lista de compra')),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Error al añadir a la lista de compra')),
-                          );
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.07,
-                          vertical: screenHeight * 0.01,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF95B3FF),
-                          borderRadius: BorderRadius.circular(60),
-                        ),
-                        child: const ImageIcon(
-                          AssetImage('assets/icons/cesta_icono.png'),
-                          size: 25,
-                        ),
-                      ),
+                    BotonCarrito(
+                      producto: producto,
+                      listaCompraService: listaCompraService,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 50),
+              SizedBox(height: screenHeight * 0.04),
 
               // Barra azul de separación
               Container(
                 height: 2,
-                color: Color(0xFF95B3FF),
+                color: const Color(0xFF95B3FF),
               ),
-              const SizedBox(height: 50),
+              SizedBox(height: screenHeight * 0.05),
 
               // Productos relacionados
               Text(
                 'Productos relacionados',
                 style: const TextStyle(fontFamily: 'Geist', fontSize: 20),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.02),
 
               // FutureBuilder para mostrar productos relacionados
               FutureBuilder<List<Producto>>(
@@ -270,7 +250,7 @@ class DetallesProducto extends StatelessWidget {
                                     width: screenWidth * 0.1,
                                     child: pantallaProductoService.obtenerLogoSupermercado(productoRelacionado),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: screenHeight * 0.01),
 
                                   // Imagen del producto
                                   Image.network(
@@ -282,7 +262,7 @@ class DetallesProducto extends StatelessWidget {
                                       return const Icon(Icons.broken_image, size: 60);
                                     },
                                   ),
-                                  const SizedBox(height: 8),
+                                  SizedBox(height: screenHeight * 0.01),
 
                                   // Nombre del producto
                                   SizedBox(
@@ -295,7 +275,7 @@ class DetallesProducto extends StatelessWidget {
                                       maxLines: 2,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: screenHeight * 0.01),
 
                                   // Precio del producto
                                   Text(
@@ -342,8 +322,18 @@ class _BotonFavoritosState extends State<BotonFavoritos> {
   @override
   void initState() {
     super.initState();
-    // Verificamos si el producto ya está en favoritos al iniciar
-    _isFavorito = widget.listaFavoritosService.productoEnFavoritos(widget.listaFavoritos, widget.producto);
+    // Usamos addPostFrameCallback para esperar al siguiente ciclo de renderizado
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _verificarFavorito();
+    });
+  }
+
+  // Función asincrónica para verificar si el producto está en favoritos
+  Future<void> _verificarFavorito() async {
+    bool isFavorito = await widget.listaFavoritosService.isProductoEnFavoritos(widget.producto);
+    setState(() {
+      _isFavorito = isFavorito;
+    });
   }
 
   @override
@@ -353,10 +343,10 @@ class _BotonFavoritosState extends State<BotonFavoritos> {
         setState(() {
           // Si el producto está en favoritos, lo eliminamos
           if (_isFavorito) {
-            widget.listaFavoritosService.quitarProducto(widget.listaFavoritos, widget.producto);
+            widget.listaFavoritosService.DB_quitarProducto(widget.producto);
           } else {
             // Si el producto no está en favoritos, lo añadimos
-            widget.listaFavoritosService.annadirProducto(widget.listaFavoritos, widget.producto);
+            widget.listaFavoritosService.DB_annadirProducto(widget.producto);
           }
 
           // Cambiar el estado de favorito
@@ -427,6 +417,154 @@ class _BotonDistanciaState extends State<BotonDistancia> {
           color: _color,
         ),
         child: const Icon(Icons.map_outlined, color: Colors.black),
+      ),
+    );
+  }
+}
+
+class BotonCarrito extends StatefulWidget {
+  final Producto producto;
+  final ListaCompraService listaCompraService;
+
+  const BotonCarrito({
+    Key? key,
+    required this.producto,
+    required this.listaCompraService,
+  }) : super(key: key);
+
+  @override
+  _BotonCarritoState createState() => _BotonCarritoState();
+}
+
+class _BotonCarritoState extends State<BotonCarrito> {
+  int _counter = 0;
+  bool _showButton = true; // Siempre empezamos con el botón visible
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeState(); // Inicializamos el estado, pero no mostramos el contador aún
+  }
+
+  // Este método inicializa el estado, pero el contador solo aparecerá cuando se haga clic en el botón
+  Future<void> _initializeState() async {
+    final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
+    setState(() {
+      // No cambiamos _showButton aquí, lo dejamos en true para que siempre empiece con el botón
+      _counter = cantidad;
+    });
+  }
+
+  void _addToCart() async {
+    // Añadimos el producto al carrito
+    widget.listaCompraService.DB_annadirProducto(widget.producto);
+    final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
+    setState(() {
+      _counter = cantidad;
+      _showButton = false; // El botón cambia para mostrar el contador
+    });
+  }
+
+  void _incrementCounter() async {
+    if (_counter < widget.listaCompraService.LIMITE) {
+      widget.listaCompraService.DB_increaseCantidad(widget.producto);
+      final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
+      setState(() {
+        _counter = cantidad;
+      });
+    }
+  }
+
+  void _decrementCounter() async {
+    if (_counter > 1) {
+      widget.listaCompraService.DB_decreaseCantidad(widget.producto);
+      final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
+      setState(() {
+        _counter = cantidad;
+      });
+    } else {
+      widget.listaCompraService.DB_quitarProducto(widget.producto);
+      setState(() {
+        _counter = 0;
+        _showButton = true; // El botón vuelve a aparecer y el contador se reinicia
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _showButton
+        ? Container(
+      height: MediaQuery.of(context).size.height * 0.0473,
+      width: MediaQuery.of(context).size.width * 0.21,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 149, 179, 252),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: IconButton(
+        onPressed: _addToCart,
+        color: const Color.fromARGB(255, 80, 79, 79),
+        icon: ImageIcon(
+          const AssetImage('assets/icons/shopping_basket.png'),
+          size: MediaQuery.of(context).size.width * 0.0615,
+          color: const Color.fromARGB(255, 18, 18, 18),
+        ),
+      ),
+    )
+        : Container(
+      height: MediaQuery.of(context).size.height * 0.0473,
+      width: MediaQuery.of(context).size.width * 0.21,
+      padding: EdgeInsets.zero,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 246, 246, 246),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Stack(
+        children: [
+          // Botón para decrementar
+          Positioned(
+            top: 0,
+            bottom: 0,
+            right: MediaQuery.of(context).size.width * 0.095,
+            child: IconButton(
+              iconSize: MediaQuery.of(context).size.width * 0.06,
+              padding: EdgeInsets.zero,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              icon: const Icon(Icons.remove),
+              onPressed: _decrementCounter,
+            ),
+          ),
+          // Contador centrado
+          Positioned(
+            left: MediaQuery.of(context).size.width * 0.089,
+            top: MediaQuery.of(context).size.height * 0.004,
+            bottom: 0,
+            child: Text(
+              '$_counter',
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.0615,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          // Botón para incrementar
+          Positioned(
+            top: 0,
+            bottom: MediaQuery.of(context).size.height * 0.001,
+            left: MediaQuery.of(context).size.width * 0.093,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              icon: Icon(
+                Icons.add,
+                size: MediaQuery.of(context).size.width * 0.06,
+              ),
+              onPressed: _incrementCounter,
+            ),
+          ),
+        ],
       ),
     );
   }
