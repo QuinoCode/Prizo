@@ -125,7 +125,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                     ),
                   ),
                   SizedBox(width: screenWidth * 0.01),
-                  Icon(Icons.arrow_forward, size: screenWidth * 0.05),
+                  Icon(Icons.arrow_forward, size: screenWidth * 0.085),
                 ],
               ),
               onTap: onNavigate,
