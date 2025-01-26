@@ -515,7 +515,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                               iconSize: MediaQuery.of(context).size.width * 0.0615,
                               icon: ImageIcon(AssetImage('assets/icons/scanner.png'), ),
                               color: Color.fromARGB(255,18,18,18),
-                              onPressed: _navigateToListaCompra,
+                              onPressed: _navigateToScanner,
                             ),
                             border: OutlineInputBorder(
                               borderSide: BorderSide.none,
