@@ -116,16 +116,16 @@ class _ListaInterfazState extends State<ListaInterfaz> {
           children: [
             ListTile(
               title: Row(
-                mainAxisSize: MainAxisSize.min, // Ajustar el ancho al contenido
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: screenWidth * 0.085, // Tamaño de texto basado en el ancho de la pantalla
+                      fontSize: screenWidth * 0.085,
                     ),
                   ),
-                  SizedBox(width: screenWidth * 0.01), // Espaciado entre el texto y el ícono
-                  Icon(Icons.arrow_forward, size: screenWidth * 0.05), // Tamaño del ícono ajustado
+                  SizedBox(width: screenWidth * 0.01),
+                  Icon(Icons.arrow_forward, size: screenWidth * 0.05),
                 ],
               ),
               onTap: onNavigate,
@@ -136,7 +136,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                 child: Text(
                   "$title no tiene elementos",
                   style: TextStyle(
-                    fontSize: screenWidth * 0.04, // Tamaño de texto basado en el ancho
+                    fontSize: screenWidth * 0.04,
                     fontStyle: FontStyle.italic,
                     color: Colors.grey,
                   ),
@@ -145,75 +145,90 @@ class _ListaInterfazState extends State<ListaInterfaz> {
               )
             else
               SizedBox(
-                height: screenHeight * 0.25, // Altura basada en el 25% de la altura de la pantalla
+                height: screenHeight * 0.25,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: productos.length,
                   itemBuilder: (context, index) {
                     final producto = productos[index];
                     final nombre = nombres[index];
-                    return Row(
-                      children: [
-                        // Producto
-                        Container(
-                          width: screenWidth * 0.4, // Ancho basado en el 40% del ancho de la pantalla
-                          margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(screenWidth * 0.02), // Radio basado en el ancho
-                                  child: Image.network(
-                                    producto.foto,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Icon(
-                                        Icons.image,
-                                        size: screenWidth * 0.1, // Tamaño del icono basado en el ancho
-                                        color: Colors.grey,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: screenHeight * 0.01), // Espaciado basado en la altura
-                              esCompra
-                                  ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start, // Alinea el texto al inicio (izquierda)
+
+                    return FutureBuilder<bool>(
+                      future: listaCompraService.DB_Tick_tiene_tick(producto),
+                      builder: (context, snapshot) {
+                        final tieneTick = snapshot.data ?? false;
+                        final iconPath = tieneTick
+                            ? 'assets/icons/checked_checkbox.png'
+                            : 'assets/icons/empty_checkbox.png';
+
+                        return Row(
+                          children: [
+                            Container(
+                              width: screenWidth * 0.4,
+                              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    nombre,
-                                    style: TextStyle(fontSize: screenWidth * 0.04), // Tamaño del texto
+                                  Expanded(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                                      child: Image.network(
+                                        producto.foto,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Icon(
+                                            Icons.image,
+                                            size: screenWidth * 0.1,
+                                            color: Colors.grey,
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ),
-                                  SizedBox(height: screenHeight * 0.005), // Espaciado entre el texto y el ícono
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end, // Alinea el ícono a la derecha
+                                  SizedBox(height: screenHeight * 0.01),
+                                  esCompra
+                                      ? Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Icon(
-                                        Icons.favorite,
-                                        size: screenWidth * 0.05, // Tamaño ajustado al ancho
-                                        color: Colors.red, // Cambia el color si lo necesitas
+                                      Text(
+                                        nombre,
+                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                      ),
+                                      SizedBox(height: screenHeight * 0.005),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          setState(() {
+                                            if (tieneTick) {
+                                              listaCompraService.DB_Tick_quitar(producto);
+                                            } else {
+                                              listaCompraService.DB_Tick_annadir(producto);
+                                            }
+                                          });
+                                        },
+                                        child: Image.asset(
+                                          iconPath,
+                                          width: screenWidth * 0.08,
+                                          height: screenWidth * 0.08,
+                                        ),
                                       ),
                                     ],
+                                  )
+                                      : Text(
+                                    nombre,
+                                    style: TextStyle(fontSize: screenWidth * 0.04),
                                   ),
                                 ],
-                              )
-                                  : Text(
-                                nombre,
-                                style: TextStyle(fontSize: screenWidth * 0.04), // Tamaño de texto basado en el ancho
                               ),
-                            ],
-                          ),
-                        ),
-                        // Separador vertical
-                        if (index != productos.length - 1) // Evitar barra al final
-                          Container(
-                            width: screenWidth * 0.0055, // Ancho en relación al ancho del contenedor
-                            height: screenHeight * 0.25, // Altura igual a la del contenedor
-                            color: Color(0xFF95B3FF), // Color de la barra
-                          ),
-                      ],
+                            ),
+                            if (index != productos.length - 1)
+                              Container(
+                                width: screenWidth * 0.0055,
+                                height: screenHeight * 0.25,
+                                color: Color(0xFF95B3FF),
+                              ),
+                          ],
+                        );
+                      },
                     );
                   },
                 ),
