@@ -110,12 +110,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
           icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
           color: Color.fromARGB(255,18,18,18),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ListaInterfaz(), // Redirige a lista.dart
-              ),
-            );
+            Navigator.pop(context);
           },
         ),
         title: Text('Lista de compra'),
