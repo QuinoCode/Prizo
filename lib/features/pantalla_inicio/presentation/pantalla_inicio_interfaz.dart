@@ -108,6 +108,21 @@ class _PantallaInicioState extends State<PantallaInicio> {
     }
   }
 
+  String obtenerLogoSupermercado(String? nombreSupermercado) {
+    // Definir una lógica para obtener el logo según el nombre del supermercado
+    if (nombreSupermercado != null) {
+      if (nombreSupermercado.toLowerCase().contains('dia')) {
+        return 'assets/images/logo_dia.png';
+      } else if (nombreSupermercado.toLowerCase().contains('consum')) {
+        return 'assets/images/logo_consum.png';
+      } else if (nombreSupermercado.toLowerCase().contains('carrefour')) {
+        return 'assets/images/logo_carrefour.png';
+      }
+    }
+    // Si no se encuentra un logo, devolver uno por defecto
+    return 'assets/logos/logo_default.png';
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -350,7 +365,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   ],
                 ),
               ),
-              SizedBox(height: height * 0.05),
+              SizedBox(height: height * 0.02),
               Text(
                 'Tus supermercados cercanos',
                 style: TextStyle(
@@ -374,27 +389,82 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 ),
               )
                   : Container(
-                height: height * 0.15,
+                height: height * 0.24, // Altura de los items, ajusta como desees
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: supermercadosCercanos.length,
                   itemBuilder: (context, index) {
                     final supermercado = supermercadosCercanos[index];
-                    return Container(
-                      width: width * 0.5,
-                      margin: EdgeInsets.symmetric(horizontal: width * 0.02),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.blue,
-                          child: Icon(Icons.store, color: Colors.white),
-                        ),
-                        title: Text(supermercado["title"] ?? "Supermercado"),
-                        subtitle: Text(
-                          "Distancia: ${(supermercado["distance"] / 1000).toStringAsFixed(2)} km",
-                        ),
-                        onTap: () {
-                          shopDistance.launchMapQuery(supermercado["title"]);
-                        },
+
+                    // Obtener el título de forma segura
+                    final String title = supermercado["title"] is String ? supermercado["title"] : "Supermercado Desconocido";
+
+                    // Obtener el logo
+                    final logo = obtenerLogoSupermercado(title);
+
+                    // Obtener la distancia
+                    final distancia = (supermercado["distance"] / 1000).toStringAsFixed(2);
+
+                    // Obtener la dirección de forma segura
+                    final String direccion = supermercado["address"] is String ? supermercado["address"] : "Dirección no disponible";
+
+                    return Padding(
+                      padding: EdgeInsets.only(right: width * 0.03),  // Separación horizontal entre los items
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,  // Centra los elementos en el eje vertical de la fila
+                        children: [
+                          // Contenedor para el logo y el texto
+                          Container(
+                            width: width * 0.6,  // Ancho fijo para cada item
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,  // Centra los elementos verticalmente dentro del contenedor
+                              crossAxisAlignment: CrossAxisAlignment.center,  // Asegura que los elementos estén alineados al centro horizontalmente
+                              children: [
+                                // Logo con tamaño fijo
+                                Image.asset(
+                                  logo,
+                                  width: width * 0.3,  // Tamaño fijo para todos los logos
+                                  height: width * 0.3,  // Asegura que todos los logos tengan la misma altura
+                                  fit: BoxFit.contain,
+                                ),
+                                SizedBox(height: height * 0.01),  // Espacio entre el logo y el texto
+                                // Row para alinear la distancia y dirección a la izquierda
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,  // Alinea los textos a la izquierda
+                                  children: [
+                                    // Distancia
+                                    Text(
+                                      "A $distancia km",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontFamily: 'Geist',
+                                        fontSize: width * 0.050,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(height: height * 0.01),  // Espacio entre distancia y dirección
+                                    // Dirección
+                                    Text(
+                                      direccion,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontFamily: 'Geist',
+                                        fontSize: width * 0.035,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Barra azul vertical
+                          Container(
+                            width: 2.0,  // Ancho de la barra azul
+                            height: height * 0.12,  // Ajusta la altura de la barra
+                            color: Color(0xFF95B3FF),  // Color azul
+                          ),
+                        ],
                       ),
                     );
                   },
