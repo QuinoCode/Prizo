@@ -14,13 +14,13 @@ class ListaFavoritosService {
 
     // Verifica si el producto ya existe en la tabla de productos
     bool exists = await dbOps.existsInProductTable(db, producto);
+    String nombre = producto.nombre;
     if (exists) {
       // Verifica si el producto ya está en la lista de compra
       bool existsInListaFavoritos = await dbOps.existsInListaFavoritosTable(db, producto);
-      String nombre = producto.nombre;
       if (!existsInListaFavoritos) {
         await dbOps.registerIntoListaFavoritosTable(db, producto);
-        print("$nombre - añadido por primera vez");
+        print("$nombre - añadido de nuevo");
       } else {
         print("$nombre - ya existía");
       }
@@ -28,6 +28,7 @@ class ListaFavoritosService {
       // Registra el producto en la tabla de productos y luego en la lista de compra
       await dbOps.registerIntoProductTable(db, producto);
       await dbOps.registerIntoListaFavoritosTable(db, producto);
+      print("$nombre - añadido por primera vez");
     }
   }
   void DB_quitarProducto(Producto producto)  async {
