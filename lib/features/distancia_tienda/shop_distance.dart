@@ -5,7 +5,7 @@ import 'package:map_launcher/map_launcher.dart';
 import 'package:location/location.dart';
 
 class ShopDistance {
-  final String HEREapi = "https://discover.search.hereapi.com/v1/discover?at=%a&q=%b&limit=3&apiKey=%c";
+  final String HEREapi = "https://discover.search.hereapi.com/v1/discover?at=%a&q=%b&limit=30&radius=50000&apiKey=%c";
   final String HEREkey = "cWq-x6-p6dQ007TjTfvpfuhKsQKFyDBtzJZ8dbjEH6Y";
 
   Location location = Location();

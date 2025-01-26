@@ -59,19 +59,42 @@ class _PantallaInicioState extends State<PantallaInicio> {
         cargandoSupermercados = true;
       });
 
+      // Obtener las coordenadas actuales
       final coords = await shopDistance.location.getLocation();
+
+      // Construir la URL para la solicitud
       final url = shopDistance.getFullUri(coords, "supermercado");
+
+      // Llamar a la API
       final response = await http.get(Uri.parse(url), headers: {"Accept": "application/json"});
 
       if (response.statusCode == 200) {
         final jsonMap = json.decode(response.body);
         final List<dynamic> items = jsonMap["items"];
-        final List<Map<String, dynamic>> supermarkets = items.map((item) {
+
+        // Filtrar resultados por nombre específico o categoría "Supermercado"
+        final List<Map<String, dynamic>> filteredSupermarkets = items.where((item) {
+          final title = item["title"]?.toString().toLowerCase() ?? "";
+          final categories = item["categories"] as List<dynamic>? ?? [];
+
+          // Verificar si el título contiene "Dia", "Consum" o "Carrefour"
+          final matchesName = title.contains("dia") ||
+              title.contains("consum") ||
+              title.contains("carrefour");
+
+          // Verificar si pertenece a la categoría "Supermercado"
+          final isSupermarket = categories.any((category) =>
+          category["name"].toString().toLowerCase() == "supermercado" &&
+              category["primary"] == true);
+
+          return matchesName && isSupermarket;
+        }).map((item) {
           return Map<String, dynamic>.from(item);
         }).toList();
 
+        // Actualizar el estado con los supermercados filtrados
         setState(() {
-          supermercadosCercanos = supermarkets;
+          supermercadosCercanos = filteredSupermarkets;
           cargandoSupermercados = false;
         });
       } else {
