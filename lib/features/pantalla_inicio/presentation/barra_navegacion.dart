@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import '/features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
 import '/features/productsearch/product_search_ui.dart';
+import '/features/lista/lista.dart';
+import '/features/perfil/perfil.dart';
 
 class BarraNavegacion extends StatefulWidget {
   @override
@@ -19,8 +21,8 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
   final List<Widget> _screens = [
     PantallaInicio(),
     ProductSearchScreen(),
-    // Center(child: Text('Favoritos')),
-    // Center(child: Text('Perfil')),
+    ListaInterfaz(),
+    PerfilInterfaz(),
   ];
 
   void _onTabTapped(int index) {
