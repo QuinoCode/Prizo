@@ -20,16 +20,17 @@ class ListaCompraService {
       bool existsInListaCompra = await dbOps.existsInListaCompraTable(db, producto);
       if (!existsInListaCompra) {
         await dbOps.registerIntoListaCompraTable(db, producto);
-        print("$nombre - añadido de nuevo");
+        print("$nombre - añadido a Lista de Compra");
       } else {
         DB_increaseCantidad(producto);
-        print("$nombre - ya existía");
+        print("$nombre - ya existía en Lista de Compra");
       }
     } else {
       // Registra el producto en la tabla de productos y luego en la lista de compra
       await dbOps.registerIntoProductTable(db, producto);
       await dbOps.registerIntoListaCompraTable(db, producto);
-      print("$nombre - añadido por primera vez");
+      print("$nombre - añadido por primera vez a Productos");
+      print("$nombre - añadido a Lista de Compra");
     }
   }
   void DB_quitarProducto(Producto producto) async {
