@@ -86,6 +86,18 @@ class ListaFavoritosService {
     return listaFavoritos;
   }
 
+  // Método para verificar si un producto está en favoritos
+  Future<bool> isProductoEnFavoritos(Producto producto) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    // Verificamos si el producto está en la tabla de favoritos
+    return await dbOps.existsInListaFavoritosTable(db, producto);
+  }
+
   final ProductoService productoService = new ProductoService();
 
   void quitarProducto(ListaFavoritos list, Producto product) {

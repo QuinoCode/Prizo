@@ -38,7 +38,11 @@ class DetallesProducto extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Image.asset(
+            'assets/icons/arrow.png',
+            width: 24,
+            height: 24,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -76,7 +80,7 @@ class DetallesProducto extends StatelessWidget {
                           }
                         },
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: screenWidth * 0.03),
 
                       // Botón de favoritos
                       BotonFavoritos(
@@ -88,7 +92,7 @@ class DetallesProducto extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.02),
 
               // Imagen del producto
               Center(
@@ -104,32 +108,32 @@ class DetallesProducto extends StatelessWidget {
                 )
                     : const Icon(Icons.image_not_supported, size: 100),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.01),
 
               // Nombre del producto
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                 child: Text(
                   producto.nombre,
-                  style: const TextStyle(fontFamily: 'Geist', fontSize: 22, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontFamily: 'Geist', fontSize: 24, fontWeight: FontWeight.bold),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: screenHeight * 0.01),
 
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                 child: Text(
                   producto.marca,
                   style: const TextStyle(fontFamily: 'Geist', fontSize: 17, color: Colors.black),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: screenHeight * 0.02),
 
               // Precio y botón de añadir al carrito
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -146,12 +150,12 @@ class DetallesProducto extends StatelessWidget {
                                 '${producto.precioOferta.toStringAsFixed(2)}€',
                                 style: const TextStyle(
                                   fontFamily: 'Geist',
-                                  fontSize: 32,
+                                  fontSize: 34,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red,
                                 ),
                               ),
-                              const SizedBox(width: 20), // Separación aumentada
+                              SizedBox(width: screenWidth * 0.05), // Separación aumentada
                               Text(
                                 '${producto.precio.toStringAsFixed(2)}€',
                                 style: const TextStyle(
@@ -169,11 +173,11 @@ class DetallesProducto extends StatelessWidget {
                             '${producto.precio.toStringAsFixed(2)}€',
                             style: const TextStyle(
                               fontFamily: 'Geist',
-                              fontSize: 32,
+                              fontSize: 34,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: screenHeight * 0.005),
                         Text(
                           precioMedida,
                           style: const TextStyle(fontFamily: 'Geist', fontSize: 15, color: Colors.grey),
@@ -188,21 +192,21 @@ class DetallesProducto extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 50),
+              SizedBox(height: screenHeight * 0.04),
 
               // Barra azul de separación
               Container(
                 height: 2,
-                color: Color(0xFF95B3FF),
+                color: const Color(0xFF95B3FF),
               ),
-              const SizedBox(height: 50),
+              SizedBox(height: screenHeight * 0.05),
 
               // Productos relacionados
               Text(
                 'Productos relacionados',
                 style: const TextStyle(fontFamily: 'Geist', fontSize: 20),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.02),
 
               // FutureBuilder para mostrar productos relacionados
               FutureBuilder<List<Producto>>(
@@ -246,7 +250,7 @@ class DetallesProducto extends StatelessWidget {
                                     width: screenWidth * 0.1,
                                     child: pantallaProductoService.obtenerLogoSupermercado(productoRelacionado),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: screenHeight * 0.01),
 
                                   // Imagen del producto
                                   Image.network(
@@ -258,7 +262,7 @@ class DetallesProducto extends StatelessWidget {
                                       return const Icon(Icons.broken_image, size: 60);
                                     },
                                   ),
-                                  const SizedBox(height: 8),
+                                  SizedBox(height: screenHeight * 0.01),
 
                                   // Nombre del producto
                                   SizedBox(
@@ -271,7 +275,7 @@ class DetallesProducto extends StatelessWidget {
                                       maxLines: 2,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: screenHeight * 0.01),
 
                                   // Precio del producto
                                   Text(
@@ -318,8 +322,18 @@ class _BotonFavoritosState extends State<BotonFavoritos> {
   @override
   void initState() {
     super.initState();
-    // Verificamos si el producto ya está en favoritos al iniciar
-    _isFavorito = widget.listaFavoritosService.productoEnFavoritos(widget.listaFavoritos, widget.producto);
+    // Usamos addPostFrameCallback para esperar al siguiente ciclo de renderizado
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _verificarFavorito();
+    });
+  }
+
+  // Función asincrónica para verificar si el producto está en favoritos
+  Future<void> _verificarFavorito() async {
+    bool isFavorito = await widget.listaFavoritosService.isProductoEnFavoritos(widget.producto);
+    setState(() {
+      _isFavorito = isFavorito;
+    });
   }
 
   @override
@@ -329,10 +343,10 @@ class _BotonFavoritosState extends State<BotonFavoritos> {
         setState(() {
           // Si el producto está en favoritos, lo eliminamos
           if (_isFavorito) {
-            widget.listaFavoritosService.quitarProducto(widget.listaFavoritos, widget.producto);
+            widget.listaFavoritosService.DB_quitarProducto(widget.producto);
           } else {
             // Si el producto no está en favoritos, lo añadimos
-            widget.listaFavoritosService.annadirProducto(widget.listaFavoritos, widget.producto);
+            widget.listaFavoritosService.DB_annadirProducto(widget.producto);
           }
 
           // Cambiar el estado de favorito
