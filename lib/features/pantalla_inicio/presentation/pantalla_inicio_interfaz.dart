@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 import 'package:prizo/shared/data_entities/DAO/lista_favoritos_DAO.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared//database/database_operations.dart';
@@ -199,7 +200,12 @@ class _PantallaInicioState extends State<PantallaInicio> {
                         AssetImage('assets/icons/escaner_icono.png'),
                         size: width * 0.06,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ScannerInterface()), // Reemplaza con tu pantalla
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -405,8 +411,17 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     // Obtener la distancia
                     final distancia = (supermercado["distance"] / 1000).toStringAsFixed(2);
 
-                    // Obtener la dirección de forma segura
-                    final String direccion = supermercado["address"] is String ? supermercado["address"] : "Dirección no disponible";
+                    final String direccionCompleta = supermercado["address"]?["label"] ?? "Dirección no disponible";
+
+                    final direccionCorregida = utf8.decode(latin1.encode(direccionCompleta));
+
+                    final List<String> partesDireccion = direccionCorregida.split(',');
+
+                    final String calle = partesDireccion.isNotEmpty ? partesDireccion[1] : "Calle no disponible";
+
+                    final String numero = partesDireccion.length > 1 ? partesDireccion[2].trim() : "Número no disponible";
+
+                    final String calleYNumero = "$calle, $numero";
 
                     return Padding(
                       padding: EdgeInsets.only(right: width * 0.03),  // Separación horizontal entre los items
@@ -445,13 +460,15 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                     SizedBox(height: height * 0.01),  // Espacio entre distancia y dirección
                                     // Dirección
                                     Text(
-                                      direccion,
-                                      textAlign: TextAlign.left,
+                                      calleYNumero,
                                       style: TextStyle(
                                         fontFamily: 'Geist',
                                         fontSize: width * 0.035,
-                                        color: Colors.grey,
+                                        color: Colors.black,
                                       ),
+                                      overflow: TextOverflow.ellipsis,  // Agrega "..." si el texto es muy largo
+                                      maxLines: 2,  // Limita el número de líneas
+                                      textAlign: TextAlign.left,  // Alinea la dirección a la izquierda
                                     ),
                                   ],
                                 ),
