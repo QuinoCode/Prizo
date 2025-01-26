@@ -134,7 +134,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
                 child: Text(
-                  "$title no tiene elementos",
+                  "    $title no tiene elementos",
                   style: TextStyle(
                     fontSize: screenWidth * 0.04,
                     fontStyle: FontStyle.italic,
