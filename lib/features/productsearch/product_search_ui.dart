@@ -551,7 +551,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
         ),
       ),
       //navigator unused at the moment
-      bottomNavigationBar: NavigationBar(
+      /*bottomNavigationBar: NavigationBar(
         selectedIndex: 1,
         destinations: const [
           NavigationDestination(
@@ -575,7 +575,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
             label: 'Profile',
           ),
         ],
-      ),
+      ),*/
     );
   }
 }
