@@ -17,11 +17,13 @@ class ListaCompraService {
     if (exists) {
       // Verifica si el producto ya está en la lista de compra
       bool existsInListaCompra = await dbOps.existsInListaCompraTable(db, producto);
+      String nombre = producto.nombre;
       if (!existsInListaCompra) {
         await dbOps.registerIntoListaCompraTable(db, producto);
+        print("$nombre - añadido por primera vez");
       } else {
         DB_increaseCantidad(producto);
-        print("hell yea");
+        print("$nombre - ya existía");
       }
     } else {
       // Registra el producto en la tabla de productos y luego en la lista de compra
@@ -91,22 +93,21 @@ class ListaCompraService {
     List<String> BD_nombres = [];
 
     for (Producto producto in BD_productos) {
+      // Verificar si la longitud del nombre es suficiente para los índices usados
       if (producto.nombre.length >= 17 && producto.nombre[16] == ' ') {
+        // Tomar los primeros 16 caracteres y validar el rango
         String auxiliar = producto.nombre.substring(0, 16);
-        if (auxiliar.length < producto.nombre.length) {
-          auxiliar += producto.nombre.substring(auxiliar.length, 17) + "...";
-          BD_nombres.add(auxiliar);
-        } else {
-          BD_nombres.add(auxiliar);
+        if (producto.nombre.length > 16) {
+          auxiliar += producto.nombre.substring(16, producto.nombre.length.clamp(16, 17)) + "...";
         }
+        BD_nombres.add(auxiliar);
       } else {
-        String auxiliar = producto.nombre.substring(0, 8);
-        if (auxiliar.length < producto.nombre.length) {
-          auxiliar += producto.nombre.substring(auxiliar.length, 17) + "...";
-          BD_nombres.add(auxiliar);
-        } else {
-          BD_nombres.add(auxiliar);
+        // Validar rango para nombres cortos
+        String auxiliar = producto.nombre.substring(0, producto.nombre.length.clamp(0, 8));
+        if (producto.nombre.length > 8) {
+          auxiliar += producto.nombre.substring(8, producto.nombre.length.clamp(8, 17)) + "...";
         }
+        BD_nombres.add(auxiliar);
       }
     }
 
