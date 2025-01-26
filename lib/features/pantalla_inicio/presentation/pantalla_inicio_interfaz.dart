@@ -360,7 +360,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     ),
                     SizedBox(height: height * 0.01),
                     Text(
-                      '¡Recuerda llevarte tu bolsa\nde tela!',
+                      '¡Recuerda llevarte tu\nbolsa de tela!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Geist',
