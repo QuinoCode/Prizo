@@ -242,10 +242,16 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: ListView(
         children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.03, // Ajusta el espacio aquí
+          ),
           _buildProductList("Lista de compra", productosCompra, productosCompraNombre, _navigateToListaCompra, true),
-          Divider(),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.03, // Ajusta el espacio aquí
+          ),
           _buildProductList("Lista de favoritos", productosFavoritos, productosFavoritosNombre, _navigateToListaFavoritos, false),
         ],
       ),
