@@ -5,6 +5,7 @@ import 'package:prizo/shared/data_entities/DAO/lista_favoritos_DAO.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared//database/database_operations.dart';
 import '/features/distancia_tienda/shop_distance.dart';
+import '/features/lista_favoritos/application/lista_favoritos_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -17,6 +18,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
   final PageController _pageController = PageController();
   int currentIndex = 0;
   final ListaFavoritosDAO listaFavoritosDAO = ListaFavoritosDAO(DatabaseOperations.instance.prizoDatabase);
+  final ListaFavoritosService listaFavoritosService = new ListaFavoritosService();
   List<Producto> productosEnOferta = [];
   bool cargandoOfertas = true;
 
@@ -34,18 +36,18 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
   Future<void> cargarProductosEnOferta() async {
     try {
-      final String? idListaFavoritos = await listaFavoritosDAO.getIdListaFavoritosPorUsuario('usuario_actual');
-      if (idListaFavoritos != null) {
-        final productos = await listaFavoritosDAO.getProductosEnOfertaDeFavoritos(idListaFavoritos);
-        setState(() {
-          productosEnOferta = productos;
-          cargandoOfertas = false;
-        });
-      } else {
-        setState(() {
-          cargandoOfertas = false;
-        });
-      }
+      // Obtener los productos de la lista de favoritos
+      List<Producto> productosFavoritos = await listaFavoritosService.DB_fetchProducts();
+
+      // Filtrar productos que están en oferta (se asume que el atributo es bool oferta)
+      List<Producto> productosFiltrados = productosFavoritos.where((producto) {
+        return producto.oferta; // Solo seleccionamos productos con el atributo 'oferta' en true
+      }).toList();
+
+      setState(() {
+        productosEnOferta = productosFiltrados;
+        cargandoOfertas = false;
+      });
     } catch (e) {
       print("Error cargando productos en oferta: $e");
       setState(() {
