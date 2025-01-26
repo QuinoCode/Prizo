@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prizo/shared/database/database_operations.dart';
 import '/features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
 import '/features/productsearch/product_search_ui.dart';
 
@@ -9,6 +10,11 @@ class BarraNavegacion extends StatefulWidget {
 
 class _BarraNavegacionState extends State<BarraNavegacion> {
   int _currentIndex = 0;
+
+  void initDB() async{
+    await DatabaseOperations.instance.openOrCreateDB();
+    DatabaseOperations DO = DatabaseOperations.instance;
+  }
 
   final List<Widget> _screens = [
     PantallaInicio(),
@@ -25,6 +31,7 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
 
   @override
   Widget build(BuildContext context) {
+    initDB();
     return Scaffold(
       body: Stack(
         children: [
