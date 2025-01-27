@@ -457,7 +457,7 @@ class _BotonCarritoState extends State<BotonCarrito> {
 
   void _addToCart() async {
     // Añadimos el producto al carrito
-    widget.listaCompraService.DB_annadirProducto(widget.producto);
+    // widget.listaCompraService.DB_annadirProducto(widget.producto);
     final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
     setState(() {
       _counter = cantidad;
@@ -467,10 +467,11 @@ class _BotonCarritoState extends State<BotonCarrito> {
 
   void _incrementCounter() async {
     if (_counter < widget.listaCompraService.LIMITE) {
-      widget.listaCompraService.DB_increaseCantidad(widget.producto);
-      final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
+      // widget.listaCompraService.DB_increaseCantidad(widget.producto);
+      widget.listaCompraService.DB_annadirProducto(widget.producto);
+      // final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
       setState(() {
-        _counter = cantidad;
+        _counter++;
       });
     }
   }
