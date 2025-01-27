@@ -479,9 +479,9 @@ class _BotonCarritoState extends State<BotonCarrito> {
   void _decrementCounter() async {
     if (_counter > 1) {
       widget.listaCompraService.DB_decreaseCantidad(widget.producto);
-      final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
+      // final cantidad = await widget.listaCompraService.DB_fetchCantidad(widget.producto);
       setState(() {
-        _counter = cantidad;
+        _counter--;
       });
     } else {
       widget.listaCompraService.DB_quitarProducto(widget.producto);

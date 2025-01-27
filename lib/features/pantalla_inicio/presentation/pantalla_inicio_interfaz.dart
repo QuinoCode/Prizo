@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
+import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 import 'package:prizo/shared/data_entities/DAO/lista_favoritos_DAO.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
+import 'package:prizo/shared/data_entities/models/lista_compra.dart';
+import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/shared//database/database_operations.dart';
 import '/features/distancia_tienda/shop_distance.dart';
 import '/features/lista_favoritos/application/lista_favoritos_service.dart';
@@ -252,71 +255,85 @@ class _PantallaInicioState extends State<PantallaInicio> {
                           },
                           itemBuilder: (context, index) {
                             final producto = productosEnOferta[index];
+                            ListaCompra listaCompra = ListaCompra(
+                                id: '1', usuario: 'usuario_demo', productos: []);
+                            ListaFavoritos listaFavoritos = ListaFavoritos(
+                                id: '1', usuario: 'usuario_demo', productos: []);
 
                             // Calcular el porcentaje de descuento
                             double descuento = ((producto.precio - producto.precioOferta) / producto.precio) * 100;
                             String descuentoTexto = descuento.toStringAsFixed(0) + '%';
 
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: width * 0.02),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(width * 0.03),
-                                ),
-                                child: Row(
-                                  children: [
-                                    // Imagen del producto
-                                    Container(
-                                      width: width * 0.4,
-                                      height: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(width * 0.03),
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(width * 0.03),
-                                        child: Image.network(
-                                          producto.foto,
-                                          fit: BoxFit.contain,
-                                          errorBuilder: (context, error, stackTrace) =>
-                                              Icon(Icons.image_not_supported),
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(width * 0.03),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      // Imagen del producto
+                                      Container(
+                                        width: width * 0.4,
+                                        height: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(width * 0.03),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(width * 0.03),
+                                          child: Image.network(
+                                            producto.foto,
+                                            fit: BoxFit.contain,
+                                            errorBuilder: (context, error, stackTrace) =>
+                                                Icon(Icons.image_not_supported),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(width: width * 0.07),  // Espacio entre la imagen y el texto
+                                      SizedBox(width: width * 0.07),  // Espacio entre la imagen y el texto
 
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          // Nombre del producto
-                                          SizedBox(height: height * 0.04),
-                                          Text(
-                                            producto.nombre,
-                                            style: TextStyle(
-                                              fontFamily: 'Geist',
-                                              fontSize: width * 0.04,
-                                              fontWeight: FontWeight.normal,
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            // Nombre del producto
+                                            SizedBox(height: height * 0.04),
+                                            Text(
+                                              producto.nombre,
+                                              style: TextStyle(
+                                                fontFamily: 'Geist',
+                                                fontSize: width * 0.04,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              overflow: TextOverflow.ellipsis, // Para cortar el nombre largo
+                                              maxLines: 4,
                                             ),
-                                            overflow: TextOverflow.ellipsis, // Para cortar el nombre largo
-                                            maxLines: 4,
-                                          ),
-                                          SizedBox(height: height * 0.02),  // Espacio entre el nombre y el precio
+                                            SizedBox(height: height * 0.02),  // Espacio entre el nombre y el precio
 
-                                          // Precio del producto
-                                          Text(
-                                            '-$descuentoTexto',
-                                            style: TextStyle(
-                                              fontFamily: 'Geist',
-                                              fontSize: width * 0.09,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
+                                            // Precio del producto
+                                            Text(
+                                              '-$descuentoTexto',
+                                              style: TextStyle(
+                                                fontFamily: 'Geist',
+                                                fontSize: width * 0.09,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
