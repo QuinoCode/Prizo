@@ -110,7 +110,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
           icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
           color: Color.fromARGB(255,18,18,18),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           },
         ),
         title: Text('Lista de compra'),

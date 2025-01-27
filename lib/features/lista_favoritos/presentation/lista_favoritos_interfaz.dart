@@ -116,7 +116,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back), // Ícono de la flecha
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           },
         ),
       ),

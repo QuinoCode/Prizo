@@ -79,30 +79,48 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     });
   }
 
-  void _navigateToListaCompra() {
-    Navigator.push(
+  void _navigateToListaFavoritos() async {
+    // Espera al resultado de la pantalla secundaria
+    bool? changesMade = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            ListaCompraInterfaz(
-              listaCompra: listaCompra,
-            ),
+        builder: (context) => ListaFavoritosInterfaz(
+          listaFavoritos: listaFavoritos,
+          listaCompra: listaCompra,
+          original: listaFavoritos,
+        ),
       ),
     );
+
+    // Si hubo cambios, actualiza la interfaz
+    if (changesMade ?? false) {
+      setState(() {
+        // Aquí puedes actualizar las variables que desees
+        _initializeProductosFavoritos();
+        _initializeNombresFavoritos();
+      });
+    }
   }
 
-  void _navigateToListaFavoritos() {
-    Navigator.push(
+  void _navigateToListaCompra() async {
+    // Espera al resultado de la pantalla secundaria
+    bool? changesMade = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            ListaFavoritosInterfaz(
-              listaFavoritos: listaFavoritos,
-              listaCompra: listaCompra,
-              original: listaFavoritos,
-            ),
+        builder: (context) => ListaCompraInterfaz(
+          listaCompra: listaCompra,
+        ),
       ),
     );
+
+    // Si hubo cambios, actualiza la interfaz
+    if (changesMade ?? false) {
+      setState(() {
+        // Aquí puedes actualizar las variables que desees
+        _initializeProductosCompra();
+        _initializeNombresCompra();
+      });
+    }
   }
 
   Widget _buildProductList(String title, List<Producto> productos, List<String> nombres, VoidCallback onNavigate, bool esCompra) {
