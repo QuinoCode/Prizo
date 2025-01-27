@@ -484,6 +484,7 @@ class _BotonCarritoState extends State<BotonCarrito> {
       });
     } else {
       widget.listaCompraService.DB_quitarProducto(widget.producto);
+      widget.listaCompraService.DB_Tick_quitar(widget.producto);
       setState(() {
         _counter = 0;
         _showButton = true; // El botón vuelve a aparecer y el contador se reinicia

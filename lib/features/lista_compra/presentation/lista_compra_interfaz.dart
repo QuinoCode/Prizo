@@ -280,6 +280,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 /* Eliminar el producto completo de la lista */
                 //DatabaseOperations.instance.deleteFromListaCompraTable(db, producto);
                 listaCompraService.DB_quitarProducto(producto);
+                listaCompraService.DB_Tick_quitar(producto);
                 widget.onAction();
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },

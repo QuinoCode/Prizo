@@ -730,6 +730,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                                   if (_counter > 0) {
                                     if(_counter == 1) {
                                       listaCompraService.DB_quitarProducto(widget.producto);
+                                      listaCompraService.DB_Tick_quitar(widget.producto);
                                     } else {
                                       listaCompraService.DB_decreaseCantidad(widget.producto);
                                     }
@@ -738,6 +739,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                                     _counter--;
                                   } else {
                                     listaCompraService.DB_quitarProducto(widget.producto);
+                                    listaCompraService.DB_Tick_quitar(widget.producto);
                                     //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
                                     _showButton = true;
                                   }

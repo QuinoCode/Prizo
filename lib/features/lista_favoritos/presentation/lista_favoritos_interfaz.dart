@@ -402,6 +402,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                                   } else {
                                     //DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
                                     listaCompraService.DB_quitarProducto(widget.producto);
+                                    listaCompraService.DB_Tick_quitar(widget.producto);
                                     _showButton = true;
                                   }
                                 });

@@ -164,7 +164,7 @@ class ListaCompraService {
     if (exists) {
       // Borra el producto en la tabla de productos tick
       await dbOps.deleteFromProductTickTable(db, producto);
-      print("borrado");
+      print("borrado de tick");
     }
   }
   Future<bool> DB_Tick_tiene_tick(Producto producto) async {
