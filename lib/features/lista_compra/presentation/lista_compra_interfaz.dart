@@ -238,6 +238,15 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     _cargarBoton();
   }
 
+  @override
+  void didUpdateWidget(covariant StatefulStoreItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    //recargar los ticks al borrado
+    if (widget.producto != oldWidget.producto) {
+      _cargarBoton();
+    } 
+  }
+
   String shortenText(String nombre){
     if(nombre.length >= 18){
       return nombre.substring(0,18) +'...';
@@ -270,6 +279,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
+                
                 _counter = await DatabaseOperations.instance.fetchCantidadListaCompra(db, producto);
                 Navigator.of(context).pop();
               },
@@ -281,6 +291,9 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 //DatabaseOperations.instance.deleteFromListaCompraTable(db, producto);
                 listaCompraService.DB_quitarProducto(producto);
                 listaCompraService.DB_Tick_quitar(producto);
+                setState(() {
+                _showButton = false;
+                });
                 widget.onAction();
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
@@ -387,6 +400,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             listaCompraService.DB_Tick_quitar(widget.producto);
                           }
                       ),
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                       Container(
                         height: MediaQuery.of(context).size.height * 0.0473,
                         width: MediaQuery.of(context).size.width * 0.21,
@@ -400,13 +414,13 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             Positioned(
                               top: 0,
                               bottom: 0,
-                              right: MediaQuery.of(context).size.width * 0.085,
+                              right: MediaQuery.of(context).size.width * 0.09,
                               child: IconButton(
                                 iconSize: MediaQuery.of(context).size.width * 0.06,
                                 padding: EdgeInsets.zero,
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
-                                icon: Icon(Icons.remove),
+                                icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
                                 onPressed: () {
                                   setState(() {
                                     if (_counter > 1) {
@@ -421,11 +435,11 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               ),
                             ),
                             Positioned(
-                              left: _counter > 10
+                              left: _counter > 9
                                   ? _counter > 19
-                                  ? MediaQuery.of(context).size.width * 0.075
-                                  : MediaQuery.of(context).size.width * 0.082
-                                  : MediaQuery.of(context).size.width * (_counter == 1 ? 0.098 : 0.09),
+                                    ? MediaQuery.of(context).size.width * 0.085
+                                    : MediaQuery.of(context).size.width * (_counter == 11 ? 0.096 : 0.091)
+                                  : MediaQuery.of(context).size.width * (_counter == 1 ? 0.106 : 0.101),
                               top: MediaQuery.of(context).size.height * (_counter < 10 ? 0.004 : 0.007),
                               bottom: 0,
                               child: Text(
@@ -434,19 +448,19 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                                   fontSize: MediaQuery.of(context).size.width *
                                       (_counter < 10 ? 0.06 : 0.053),
                                   fontFamily: 'Geist',
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
                             Positioned(
                               top: 0,
                               bottom: MediaQuery.of(context).size.height * 0.001,
-                              left: MediaQuery.of(context).size.width * 0.105,
+                              left: MediaQuery.of(context).size.width * 0.115,
                               child: IconButton(
                                 padding: EdgeInsets.zero,
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
-                                icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06),
+                                icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
                                 onPressed: () {
                                   if (_counter < 99) {
                                     //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
