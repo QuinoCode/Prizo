@@ -17,6 +17,7 @@ class ListaInterfaz extends StatefulWidget {
 class _ListaInterfazState extends State<ListaInterfaz> {
   final ListaCompraService listaCompraService = ListaCompraService();
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
+  List<(Producto, int)> productosCompra2 = [];
   List<Producto> productosCompra = [];
   List<String> productosCompraNombre = [];
   List<Producto> productosFavoritos = [];
@@ -70,6 +71,12 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     List<Producto> productos = await listaCompraService.DB_fetchProducts();
     setState(() {
       productosCompra = productos;
+    });
+  }
+  void _initializeProductosCompra2() async {
+    List<(Producto,int)> productos = await listaCompraService.DB_fetchProductsInt();
+    setState(() {
+      productosCompra2 = productos;
     });
   }
   void _initializeNombresCompra() async {
