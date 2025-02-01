@@ -17,7 +17,6 @@ class ListaInterfaz extends StatefulWidget {
 class _ListaInterfazState extends State<ListaInterfaz> {
   final ListaCompraService listaCompraService = ListaCompraService();
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
-  List<(Producto, int)> productosCompra2 = [];
   List<Producto> productosCompra = [];
   List<String> productosCompraNombre = [];
   List<Producto> productosFavoritos = [];
@@ -30,59 +29,62 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   @override
   void initState() {
     super.initState();
-    _initializeProductosFavoritos();
-    _initializeNombresFavoritos();
-    _initializeProductosCompra();
-    _initializeNombresCompra();
-    _initializeListaFavoritos();
-    _initializeListaCompra();
+    _initializeProductosFavoritos2();
+    _initializeProductosCompra2();
   }
-  void _initializeListaFavoritos() async {
-    // Llama a generar_ListaFavoritos y espera el resultado
-    ListaFavoritos fetchedListaFavoritos = await listaFavoritosService.generar_ListaFavoritos();
-
-    // Actualiza el estado con los datos obtenidos
-    setState(() {
-      listaFavoritos = fetchedListaFavoritos;
-    });
-  }
-  void _initializeListaCompra() async {
-    // Llama a generar_ListaCompra y espera el resultado
-    ListaCompra fetchedListaCompra = await listaCompraService.generar_ListaCompra();
-
-    // Actualiza el estado con los datos obtenidos
-    setState(() {
-      listaCompra = fetchedListaCompra;
-    });
-  }
-  void _initializeProductosFavoritos() async {
+  void _initializeProductosFavoritos2() async {
     List<Producto> productos = await listaFavoritosService.DB_fetchProducts();
     setState(() {
       productosFavoritos = productos;
-    });
-  }
-  void _initializeNombresFavoritos() async {
-    List<String> nombres = await listaFavoritosService.DB_generarNombres();
-    setState(() {
-      productosFavoritosNombre = nombres;
-    });
-  }
-  void _initializeProductosCompra() async {
-    List<Producto> productos = await listaCompraService.DB_fetchProducts();
-    setState(() {
-      productosCompra = productos;
+      productosFavoritosNombre = [];
+      for(Producto producto in productosFavoritos) {
+        // Verificar si la longitud del nombre es suficiente para los índices usados
+        if (producto.nombre.length >= 17 && producto.nombre[16] == ' ') {
+          // Tomar los primeros 16 caracteres y validar el rango
+          String auxiliar = producto.nombre.substring(0, 16);
+          if (producto.nombre.length > 16) {
+            auxiliar += producto.nombre.substring(16, producto.nombre.length.clamp(16, 17)) + "...";
+          }
+          productosFavoritosNombre.add(auxiliar);
+        } else {
+          // Validar rango para nombres cortos
+          String auxiliar = producto.nombre.substring(0, producto.nombre.length.clamp(0, 8));
+          if (producto.nombre.length > 8) {
+            auxiliar += producto.nombre.substring(8, producto.nombre.length.clamp(8, 17)) + "...";
+          }
+          productosFavoritosNombre.add(auxiliar);
+        }
+      }
+      listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: productosFavoritos);
     });
   }
   void _initializeProductosCompra2() async {
     List<(Producto,int)> productos = await listaCompraService.DB_fetchProductsInt();
     setState(() {
-      productosCompra2 = productos;
-    });
-  }
-  void _initializeNombresCompra() async {
-    List<String> nombres = await listaCompraService.DB_generarNombres();
-    setState(() {
-      productosCompraNombre = nombres;
+      productosCompra = [];
+      for(var tupla in productos) {
+        productosCompra.add(tupla.$1);
+      }
+      productosCompraNombre = [];
+      for(Producto producto in productosCompra) {
+        // Verificar si la longitud del nombre es suficiente para los índices usados
+        if (producto.nombre.length >= 17 && producto.nombre[16] == ' ') {
+          // Tomar los primeros 16 caracteres y validar el rango
+          String auxiliar = producto.nombre.substring(0, 16);
+          if (producto.nombre.length > 16) {
+            auxiliar += producto.nombre.substring(16, producto.nombre.length.clamp(16, 17)) + "...";
+          }
+          productosCompraNombre.add(auxiliar);
+        } else {
+          // Validar rango para nombres cortos
+          String auxiliar = producto.nombre.substring(0, producto.nombre.length.clamp(0, 8));
+          if (producto.nombre.length > 8) {
+            auxiliar += producto.nombre.substring(8, producto.nombre.length.clamp(8, 17)) + "...";
+          }
+          productosCompraNombre.add(auxiliar);
+        }
+      }
+      listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: productos);
     });
   }
 
@@ -102,9 +104,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     // Si hubo cambios, actualiza la interfaz
     if (changesMade ?? false) {
       setState(() {
-        // Aquí puedes actualizar las variables que desees
-        _initializeProductosFavoritos();
-        _initializeNombresFavoritos();
+        _initializeProductosFavoritos2();
       });
     }
   }
@@ -123,9 +123,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     // Si hubo cambios, actualiza la interfaz
     if (changesMade ?? false) {
       setState(() {
-        // Aquí puedes actualizar las variables que desees
-        _initializeProductosCompra();
-        _initializeNombresCompra();
+        _initializeProductosCompra2();
       });
     }
   }
