@@ -26,57 +26,46 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   ListaFavoritos listaFavoritos = ListaFavoritos(
       id: '1', usuario: 'usuario_demo', productos: []);
 
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    _initializeProductosFavoritos();
-    _initializeNombresFavoritos();
-    _initializeProductosCompra();
-    _initializeNombresCompra();
-    _initializeListaFavoritos();
-    _initializeListaCompra();
+    initializeData();
   }
-  void _initializeListaFavoritos() async {
-    // Llama a generar_ListaFavoritos y espera el resultado
-    ListaFavoritos fetchedListaFavoritos = await listaFavoritosService.generar_ListaFavoritos();
 
-    // Actualiza el estado con los datos obtenidos
-    setState(() {
-      listaFavoritos = fetchedListaFavoritos;
-    });
-  }
-  void _initializeListaCompra() async {
-    // Llama a generar_ListaCompra y espera el resultado
-    ListaCompra fetchedListaCompra = await listaCompraService.generar_ListaCompra();
+  Future<void> initializeData() async {
+    // Cargar todas las listas y productos en paralelo
+    await Future.wait([
+      _initializeListaCompra(),
+      _initializeListaFavoritos(),
+      _initializeProductosCompra(),
+      _initializeNombresCompra(),
+      _initializeProductosFavoritos(),
+      _initializeNombresFavoritos(),
+    ]);
 
-    // Actualiza el estado con los datos obtenidos
     setState(() {
-      listaCompra = fetchedListaCompra;
+      _isLoading = false;
     });
   }
-  void _initializeProductosFavoritos() async {
-    List<Producto> productos = await listaFavoritosService.DB_fetchProducts();
-    setState(() {
-      productosFavoritos = productos;
-    });
+  Future<void> _initializeListaFavoritos() async {
+    listaFavoritos = await listaFavoritosService.generar_ListaFavoritos();
   }
-  void _initializeNombresFavoritos() async {
-    List<String> nombres = await listaFavoritosService.DB_generarNombres();
-    setState(() {
-      productosFavoritosNombre = nombres;
-    });
+  Future<void> _initializeListaCompra() async {
+    listaCompra = await listaCompraService.generar_ListaCompra();
   }
-  void _initializeProductosCompra() async {
-    List<Producto> productos = await listaCompraService.DB_fetchProducts();
-    setState(() {
-      productosCompra = productos;
-    });
+  Future<void> _initializeProductosFavoritos() async {
+    productosFavoritos = await listaFavoritosService.DB_fetchProducts();
   }
-  void _initializeNombresCompra() async {
-    List<String> nombres = await listaCompraService.DB_generarNombres();
-    setState(() {
-      productosCompraNombre = nombres;
-    });
+  Future<void> _initializeNombresFavoritos() async {
+    productosFavoritosNombre = await listaFavoritosService.DB_generarNombres();
+  }
+  Future<void> _initializeProductosCompra() async {
+    productosCompra = await listaCompraService.DB_fetchProducts();
+  }
+  Future<void> _initializeNombresCompra() async {
+    productosCompraNombre = await listaCompraService.DB_generarNombres();
   }
 
   void _navigateToListaFavoritos() async {
@@ -95,9 +84,16 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     // Si hubo cambios, actualiza la interfaz
     if (changesMade ?? false) {
       setState(() {
-        // Aquí puedes actualizar las variables que desees
-        _initializeProductosFavoritos();
-        _initializeNombresFavoritos();
+        _isLoading = true;
+      });
+
+      await Future.wait([
+        _initializeProductosFavoritos(),
+        _initializeNombresFavoritos(),
+      ]);
+
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -116,9 +112,16 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     // Si hubo cambios, actualiza la interfaz
     if (changesMade ?? false) {
       setState(() {
-        // Aquí puedes actualizar las variables que desees
-        _initializeProductosCompra();
-        _initializeNombresCompra();
+        _isLoading = true;
+      });
+
+      await Future.wait([
+        _initializeProductosCompra(),
+        _initializeNombresCompra(),
+      ]);
+
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -269,17 +272,22 @@ class _ListaInterfazState extends State<ListaInterfaz> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.03, // Ajusta el espacio aquí
-          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
           _buildProductList("Lista de compra", productosCompra, productosCompraNombre, _navigateToListaCompra, true),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.03, // Ajusta el espacio aquí
-          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
           _buildProductList("Lista de favoritos", productosFavoritos, productosFavoritosNombre, _navigateToListaFavoritos, false),
         ],
       ),
