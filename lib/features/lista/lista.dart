@@ -139,14 +139,24 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: screenWidth * 0.085,
+                      fontFamily: 'Geist',
+                      fontSize: screenWidth * 0.0966,
                     ),
                   ),
-                  SizedBox(width: screenWidth * 0.01),
-                  Icon(Icons.arrow_forward, size: screenWidth * 0.085),
+                  SizedBox(width: screenWidth * 0.048),
+                  GestureDetector(
+                    onTap: onNavigate, // Navegar solo cuando se pulse la flecha
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationY(3.1416), // Invierte horizontalmente
+                      child: ImageIcon(
+                        AssetImage('assets/icons/arrow.png'),
+                        size: screenWidth * 0.057,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              onTap: onNavigate,
             ),
             if (productos.isEmpty || nombres.isEmpty)
               Padding(
@@ -154,7 +164,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                 child: Text(
                   "    $title no tiene elementos",
                   style: TextStyle(
-                    fontSize: screenWidth * 0.04,
+                    fontSize: screenWidth * 0.04293,
                     fontStyle: FontStyle.italic,
                     color: Colors.grey,
                   ),
@@ -210,7 +220,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                     children: [
                                       Text(
                                         nombre,
-                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                        style: TextStyle(fontSize: screenWidth * 0.04293),
                                       ),
                                       SizedBox(height: screenHeight * 0.005),
                                       GestureDetector(
@@ -233,7 +243,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                   )
                                       : Text(
                                     nombre,
-                                    style: TextStyle(fontSize: screenWidth * 0.04),
+                                    style: TextStyle(fontSize: screenWidth * 0.04293),
                                   ),
                                 ],
                               ),
