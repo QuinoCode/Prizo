@@ -139,8 +139,8 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   Text(
                     title,
                     style: TextStyle(
-                      fontFamily: 'Kanit',
-                      fontSize: screenWidth * 0.085,
+                      fontFamily: 'Geist',
+                      fontSize: screenWidth * 0.0966,
                     ),
                   ),
                   SizedBox(width: screenWidth * 0.048),
@@ -164,7 +164,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                 child: Text(
                   "    $title no tiene elementos",
                   style: TextStyle(
-                    fontSize: screenWidth * 0.04,
+                    fontSize: screenWidth * 0.04293,
                     fontStyle: FontStyle.italic,
                     color: Colors.grey,
                   ),
@@ -220,7 +220,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                     children: [
                                       Text(
                                         nombre,
-                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                        style: TextStyle(fontSize: screenWidth * 0.04293),
                                       ),
                                       SizedBox(height: screenHeight * 0.005),
                                       GestureDetector(
@@ -243,7 +243,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                   )
                                       : Text(
                                     nombre,
-                                    style: TextStyle(fontSize: screenWidth * 0.04),
+                                    style: TextStyle(fontSize: screenWidth * 0.04293),
                                   ),
                                 ],
                               ),
