@@ -222,7 +222,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   'Ofertas de la semana',
                   style: TextStyle(
                     fontFamily: 'Geist',
-                    fontSize: width * 0.058,
+                    fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
