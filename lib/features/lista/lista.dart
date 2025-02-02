@@ -143,14 +143,20 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                       fontSize: screenWidth * 0.085,
                     ),
                   ),
-                  SizedBox(width: screenWidth * 0.01),
-                  ImageIcon(
-                    AssetImage('assets/icons/arrow.png'),
-                    size: screenWidth * 0.085,
+                  SizedBox(width: screenWidth * 0.048),
+                  GestureDetector(
+                    onTap: onNavigate, // Navegar solo cuando se pulse la flecha
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationY(3.1416), // Invierte horizontalmente
+                      child: ImageIcon(
+                        AssetImage('assets/icons/arrow.png'),
+                        size: screenWidth * 0.057,
+                      ),
+                    ),
                   ),
                 ],
               ),
-              onTap: onNavigate,
             ),
             if (productos.isEmpty || nombres.isEmpty)
               Padding(
