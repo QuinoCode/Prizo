@@ -416,7 +416,14 @@ class _BotonDistanciaState extends State<BotonDistancia> {
           shape: BoxShape.circle,
           color: _color,
         ),
-        child: const Icon(Icons.map_outlined, color: Colors.black),
+        child: Center(
+          child: ImageIcon(
+            AssetImage(
+              'assets/icons/mapa_icono.png'
+            ),
+            size: 24,
+          ),
+        ),
       ),
     );
   }
