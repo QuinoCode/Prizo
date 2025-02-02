@@ -51,7 +51,7 @@ class DetallesProducto extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.04),
+          padding: EdgeInsets.only(left: screenWidth * 0.04, right: screenWidth * 0.04, top: screenHeight * 0.001),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
