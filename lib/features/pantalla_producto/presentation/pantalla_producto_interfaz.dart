@@ -223,7 +223,7 @@ class DetallesProducto extends StatelessWidget {
                   } else {
                     List<Producto> productosRelacionados = snapshot.data!;
                     return SizedBox(
-                      height: screenHeight * 0.25,
+                      height: screenHeight * 0.3,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: productosRelacionados.length,
@@ -243,7 +243,7 @@ class DetallesProducto extends StatelessWidget {
                               );
                             },
                             child: Padding(
-                              padding: EdgeInsets.only(right: screenWidth * 0.04),
+                              padding: EdgeInsets.only(right: screenWidth * 0.06),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start, // Alinear a la izquierda
                                 children: [
@@ -256,8 +256,8 @@ class DetallesProducto extends StatelessWidget {
                                   // Imagen del producto
                                   Image.network(
                                     productoRelacionado.foto,
-                                    width: screenWidth * 0.2,
-                                    height: screenWidth * 0.2,
+                                    width: screenWidth * 0.3,
+                                    height: screenWidth * 0.3,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(Icons.broken_image, size: 60);
@@ -267,10 +267,10 @@ class DetallesProducto extends StatelessWidget {
 
                                   // Nombre del producto
                                   SizedBox(
-                                    width: screenWidth * 0.24,
+                                    width: screenWidth * 0.26,
                                     child: Text(
                                       productoRelacionado.nombre,
-                                      style: const TextStyle(fontFamily: 'Geist', fontSize: 10),
+                                      style: const TextStyle(fontFamily: 'Geist', fontSize: 12),
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
