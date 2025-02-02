@@ -243,7 +243,7 @@ class DetallesProducto extends StatelessWidget {
                               );
                             },
                             child: Padding(
-                              padding: EdgeInsets.only(right: screenWidth * 0.055),
+                              padding: EdgeInsets.only(right: screenWidth * 0.06),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start, // Alinear a la izquierda
                                 children: [
