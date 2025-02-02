@@ -35,37 +35,27 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   }
 
   Future<void> initializeData() async {
-    // Cargar todas las listas y productos en paralelo
-    await Future.wait([
-      _initializeListaCompra(),
-      _initializeListaFavoritos(),
-      _initializeProductosCompra(),
-      _initializeNombresCompra(),
-      _initializeProductosFavoritos(),
-      _initializeNombresFavoritos(),
+    // Cargar todas las listas y productos en paralelo y asignarlas correctamente
+    final resultados = await Future.wait([
+      listaFavoritosService.generar_ListaFavoritos(),
+      listaCompraService.generar_ListaCompra(),
+      listaFavoritosService.DB_fetchProducts(),
+      listaFavoritosService.DB_generarNombres(),
+      listaCompraService.DB_fetchProducts(),
+      listaCompraService.DB_generarNombres(),
     ]);
+
+    // Asignar los resultados obtenidos
+    listaFavoritos = resultados[0] as ListaFavoritos;
+    listaCompra = resultados[1] as ListaCompra;
+    productosFavoritos = resultados[2] as List<Producto>;
+    productosFavoritosNombre = resultados[3] as List<String>;
+    productosCompra = resultados[4] as List<Producto>;
+    productosCompraNombre = resultados[5] as List<String>;
 
     setState(() {
       _isLoading = false;
     });
-  }
-  Future<void> _initializeListaFavoritos() async {
-    listaFavoritos = await listaFavoritosService.generar_ListaFavoritos();
-  }
-  Future<void> _initializeListaCompra() async {
-    listaCompra = await listaCompraService.generar_ListaCompra();
-  }
-  Future<void> _initializeProductosFavoritos() async {
-    productosFavoritos = await listaFavoritosService.DB_fetchProducts();
-  }
-  Future<void> _initializeNombresFavoritos() async {
-    productosFavoritosNombre = await listaFavoritosService.DB_generarNombres();
-  }
-  Future<void> _initializeProductosCompra() async {
-    productosCompra = await listaCompraService.DB_fetchProducts();
-  }
-  Future<void> _initializeNombresCompra() async {
-    productosCompraNombre = await listaCompraService.DB_generarNombres();
   }
 
   void _navigateToListaFavoritos() async {
@@ -87,10 +77,13 @@ class _ListaInterfazState extends State<ListaInterfaz> {
         _isLoading = true;
       });
 
-      await Future.wait([
-        _initializeProductosFavoritos(),
-        _initializeNombresFavoritos(),
+      final resultados = await Future.wait([
+        listaFavoritosService.DB_fetchProducts(),
+        listaFavoritosService.DB_generarNombres(),
       ]);
+
+      productosFavoritos = resultados[0] as List<Producto>;
+      productosFavoritosNombre = resultados[1] as List<String>;
 
       setState(() {
         _isLoading = false;
@@ -115,10 +108,13 @@ class _ListaInterfazState extends State<ListaInterfaz> {
         _isLoading = true;
       });
 
-      await Future.wait([
-        _initializeProductosCompra(),
-        _initializeNombresCompra(),
+      final resultados = await Future.wait([
+        listaCompraService.DB_fetchProducts(),
+        listaCompraService.DB_generarNombres(),
       ]);
+
+      productosCompra = resultados[0] as List<Producto>;
+      productosCompraNombre = resultados[1] as List<String>;
 
       setState(() {
         _isLoading = false;
