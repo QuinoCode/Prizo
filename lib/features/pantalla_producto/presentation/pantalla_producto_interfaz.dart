@@ -137,53 +137,120 @@ class DetallesProducto extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        // Mostrar precio con descuento si está en oferta
-                        if (producto.oferta)
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic, // Alineación precisa
-                            children: [
-                              Text(
-                                '${producto.precioOferta.toStringAsFixed(2)}€',
-                                style: const TextStyle(
-                                  fontFamily: 'Geist',
-                                  fontSize: 34,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                              SizedBox(width: screenWidth * 0.05), // Separación aumentada
-                              Text(
-                                '${producto.precio.toStringAsFixed(2)}€',
-                                style: const TextStyle(
-                                  fontFamily: 'Geist',
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              ),
-                            ],
-                          )
-                        else
-                        // Mostrar precio normal si no está en oferta
+                    if (producto.oferta)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${producto.precioOferta.toStringAsFixed(2)}€',
+                            style: TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: MediaQuery.of(context).size.shortestSide * 0.0966,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.red,
+                            ),
+                          ),
+                          SizedBox(width: screenWidth * 0.05), // Separación aumentada
+                          //Precio kilo normal
+                          Text(
+                            precioMedida,
+                            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, color: Colors.red),
+                          ),
+                        ],
+                      )
+                    else
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                        //Precio normal
                           Text(
                             '${producto.precio.toStringAsFixed(2)}€',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontFamily: 'Geist',
-                              fontSize: 34,
+                              fontSize: MediaQuery.of(context).size.shortestSide * 0.0966,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        SizedBox(height: screenHeight * 0.005),
-                        Text(
-                          precioMedida,
-                          style: const TextStyle(fontFamily: 'Geist', fontSize: 15, color: Colors.grey),
-                        ),
-                      ],
-                    ),
+                          SizedBox(width: screenWidth * 0.05), // Separación aumentada
+                          //Precio kilo normal
+                          Text(
+                            precioMedida,
+                            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.040,),
+                    if (producto.oferta)
+                      //Precio normal
+                      Column(
+                        children: [
+                          Text(
+                            '${producto.precio.toStringAsFixed(2)}€',
+                            style: TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                              color: Colors.black,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.018,)
+                        ],
+                      ),
+                    Expanded(child: SizedBox(),),
+
+                    //Column(
+                    //  crossAxisAlignment: CrossAxisAlignment.end,
+                    //  children: [
+                    //    // Mostrar precio con descuento si está en oferta
+                    //    if (producto.oferta)
+                    //    // Precio oferta y precio normal
+                    //      Row(
+                    //        crossAxisAlignment: CrossAxisAlignment.baseline,
+                    //        textBaseline: TextBaseline.alphabetic, // Alineación precisa
+                    //        children: [
+                    //        //Precio oferta
+                    //          Text(
+                    //            '${producto.precioOferta.toStringAsFixed(2)}€',
+                    //            style: const TextStyle(
+                    //              fontFamily: 'Geist',
+                    //              fontSize: 34,
+                    //              fontWeight: FontWeight.bold,
+                    //              color: Colors.red,
+                    //            ),
+                    //          ),
+                    //          SizedBox(width: screenWidth * 0.05), // Separación aumentada
+                    //        //Precio normal
+                    //          Text(
+                    //            '${producto.precio.toStringAsFixed(2)}€',
+                    //            style: const TextStyle(
+                    //              fontFamily: 'Geist',
+                    //              fontSize: 20,
+                    //              color: Colors.black,
+                    //              decoration: TextDecoration.lineThrough,
+                    //            ),
+                    //          ),
+                    //        ],
+                    //      )
+                    //    else
+                    //    // Mostrar precio normal si no está en oferta
+                    //    //Precio normal
+                    //      Text(
+                    //        '${producto.precio.toStringAsFixed(2)}€',
+                    //        style: const TextStyle(
+                    //          fontFamily: 'Geist',
+                    //          fontSize: 34,
+                    //          fontWeight: FontWeight.bold,
+                    //        ),
+                    //      ),
+                    //    //-------------------------
+                    //    SizedBox(height: screenHeight * 0.005),
+                    //    //Precio kilo normal
+                    //    Text(
+                    //      precioMedida,
+                    //      style: const TextStyle(fontFamily: 'Geist', fontSize: 15, color: Colors.grey),
+                    //    ),
+                    //  ],
+                    //),
                     // Botón añadir al carrito
                     BotonCarrito(
                       producto: producto,
