@@ -59,10 +59,10 @@ class DetallesProducto extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: screenWidth * 0.02),
+                    padding: EdgeInsets.only(left: screenWidth * 0.03),
                     child: SizedBox(
                       width: screenWidth * 0.2,
-                      height: screenWidth * 0.2,
+                      height: screenWidth * 0.1,
                       child: pantallaProductoService.obtenerLogoSupermercado(producto),
                     ),
                   ),
@@ -80,7 +80,7 @@ class DetallesProducto extends StatelessWidget {
                           }
                         },
                       ),
-                      SizedBox(width: screenWidth * 0.03),
+                      SizedBox(width: screenWidth * 0.05),
 
                       // Botón de favoritos
                       BotonFavoritos(
@@ -88,6 +88,7 @@ class DetallesProducto extends StatelessWidget {
                         listaFavoritos: listaFavoritos,
                         listaFavoritosService: listaFavoritosService,
                       ),
+                      SizedBox(width: screenWidth * 0.05),
                     ],
                   ),
                 ],
