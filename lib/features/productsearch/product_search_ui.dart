@@ -574,6 +574,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     _counter = 0;
   }
 
+
   void _navigateToProductInfo(Producto producto) {
     Navigator.push(
       context,
