@@ -139,11 +139,15 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   Text(
                     title,
                     style: TextStyle(
+                      fontFamily: 'Kanit',
                       fontSize: screenWidth * 0.085,
                     ),
                   ),
                   SizedBox(width: screenWidth * 0.01),
-                  Icon(Icons.arrow_forward, size: screenWidth * 0.085),
+                  ImageIcon(
+                    AssetImage('assets/icons/arrow.png'),
+                    size: screenWidth * 0.085,
+                  ),
                 ],
               ),
               onTap: onNavigate,
