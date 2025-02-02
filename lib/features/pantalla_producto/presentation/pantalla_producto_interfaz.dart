@@ -256,8 +256,8 @@ class DetallesProducto extends StatelessWidget {
                                   // Imagen del producto
                                   Image.network(
                                     productoRelacionado.foto,
-                                    width: screenWidth * 0.3,
-                                    height: screenWidth * 0.3,
+                                    width: screenWidth * 0.25,
+                                    height: screenWidth * 0.25,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(Icons.broken_image, size: 60);
