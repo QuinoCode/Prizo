@@ -62,7 +62,7 @@ class DetallesProducto extends StatelessWidget {
                     padding: EdgeInsets.only(left: screenWidth * 0.03),
                     child: SizedBox(
                       width: screenWidth * 0.2,
-                      height: screenWidth * 0.1,
+                      height: screenWidth * 0.2,
                       child: pantallaProductoService.obtenerLogoSupermercado(producto),
                     ),
                   ),
