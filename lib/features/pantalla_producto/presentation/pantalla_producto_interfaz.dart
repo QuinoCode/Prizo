@@ -138,7 +138,7 @@ class DetallesProducto extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         // Mostrar precio con descuento si está en oferta
                         if (producto.oferta)
@@ -269,7 +269,7 @@ class DetallesProducto extends StatelessWidget {
                                     width: screenWidth * 0.24,
                                     child: Text(
                                       productoRelacionado.nombre,
-                                      style: const TextStyle(fontFamily: 'Geist', fontSize: 10),
+                                      style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322),
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
@@ -280,7 +280,7 @@ class DetallesProducto extends StatelessWidget {
                                   // Precio del producto
                                   Text(
                                     '${productoRelacionado.precio.toStringAsFixed(2)}€',
-                                    style: const TextStyle(fontFamily: 'Geist', fontSize: 12),
+                                    style:  TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322),
                                   ),
                                 ],
                               ),
