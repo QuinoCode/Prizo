@@ -51,7 +51,7 @@ class DetallesProducto extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.04),
+          padding: EdgeInsets.only(left: screenWidth * 0.04, right: screenWidth * 0.04, top: screenHeight * 0.001),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,7 +59,7 @@ class DetallesProducto extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: screenWidth * 0.02),
+                    padding: EdgeInsets.only(left: screenWidth * 0.03),
                     child: SizedBox(
                       width: screenWidth * 0.2,
                       height: screenWidth * 0.2,
@@ -80,7 +80,7 @@ class DetallesProducto extends StatelessWidget {
                           }
                         },
                       ),
-                      SizedBox(width: screenWidth * 0.03),
+                      SizedBox(width: screenWidth * 0.05),
 
                       // Botón de favoritos
                       BotonFavoritos(
@@ -88,6 +88,7 @@ class DetallesProducto extends StatelessWidget {
                         listaFavoritos: listaFavoritos,
                         listaFavoritosService: listaFavoritosService,
                       ),
+                      SizedBox(width: screenWidth * 0.05),
                     ],
                   ),
                 ],
@@ -222,7 +223,7 @@ class DetallesProducto extends StatelessWidget {
                   } else {
                     List<Producto> productosRelacionados = snapshot.data!;
                     return SizedBox(
-                      height: screenHeight * 0.25,
+                      height: screenHeight * 0.3,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: productosRelacionados.length,
@@ -242,7 +243,7 @@ class DetallesProducto extends StatelessWidget {
                               );
                             },
                             child: Padding(
-                              padding: EdgeInsets.only(right: screenWidth * 0.04),
+                              padding: EdgeInsets.only(right: screenWidth * 0.06),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start, // Alinear a la izquierda
                                 children: [
@@ -255,8 +256,8 @@ class DetallesProducto extends StatelessWidget {
                                   // Imagen del producto
                                   Image.network(
                                     productoRelacionado.foto,
-                                    width: screenWidth * 0.2,
-                                    height: screenWidth * 0.2,
+                                    width: screenWidth * 0.3,
+                                    height: screenWidth * 0.3,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(Icons.broken_image, size: 60);
@@ -266,10 +267,10 @@ class DetallesProducto extends StatelessWidget {
 
                                   // Nombre del producto
                                   SizedBox(
-                                    width: screenWidth * 0.24,
+                                    width: screenWidth * 0.26,
                                     child: Text(
                                       productoRelacionado.nombre,
-                                      style: const TextStyle(fontFamily: 'Geist', fontSize: 10),
+                                      style: const TextStyle(fontFamily: 'Geist', fontSize: 12),
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
@@ -416,7 +417,14 @@ class _BotonDistanciaState extends State<BotonDistancia> {
           shape: BoxShape.circle,
           color: _color,
         ),
-        child: const Icon(Icons.map_outlined, color: Colors.black),
+        child: Center(
+          child: ImageIcon(
+            AssetImage(
+              'assets/icons/mapa_icono.png'
+            ),
+            size: 24,
+          ),
+        ),
       ),
     );
   }
