@@ -13,9 +13,9 @@ class BarraNavegacion extends StatefulWidget {
 class _BarraNavegacionState extends State<BarraNavegacion> {
   int _currentIndex = 0;
 
-  void initDB() async{
+  void initDB() async {
     await DatabaseOperations.instance.openOrCreateDB();
-    DatabaseOperations DO = DatabaseOperations.instance;
+    // DatabaseOperations DO = DatabaseOperations.instance;
   }
 
   final List<Widget> _screens = [
@@ -34,6 +34,12 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
   @override
   Widget build(BuildContext context) {
     initDB();
+
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final navBarHeight = screenWidth < 360 ? 50.0 : 63.0;
+    final iconSizeFactor = screenWidth / 375;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -45,10 +51,10 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
             left: 16,
             right: 16,
             child: Container(
-              height: 63,
+              height: navBarHeight,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(50), // Forma ovalada
+                borderRadius: BorderRadius.circular(50),
                 border: Border.all(
                   color: Color(0xFF95B3FF),
                   width: 3,
@@ -57,26 +63,10 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildNavItem(
-                    index: 0,
-                    iconPath: 'assets/icons/casa_icono.png',
-                    iconSize: 28,
-                  ),
-                  _buildNavItem(
-                    index: 1,
-                    iconPath: 'assets/icons/lupa_icono.png',
-                    iconSize: 24.5,
-                  ),
-                  _buildNavItem(
-                    index: 2,
-                    iconPath: 'assets/icons/listas_icono.png',
-                    iconSize: 26,
-                  ),
-                  _buildNavItem(
-                    index: 3,
-                    iconPath: 'assets/icons/usuario_icono.png',
-                    iconSize: 25,
-                  ),
+                  _buildNavItem(index: 0, iconPath: 'assets/icons/casa_icono.png', iconSize: 26 * iconSizeFactor),
+                  _buildNavItem(index: 1, iconPath: 'assets/icons/lupa_icono.png', iconSize: 22.5 * iconSizeFactor),
+                  _buildNavItem(index: 2, iconPath: 'assets/icons/listas_icono.png', iconSize: 24 * iconSizeFactor),
+                  _buildNavItem(index: 3, iconPath: 'assets/icons/usuario_icono.png', iconSize: 23 * iconSizeFactor),
                 ],
               ),
             ),
@@ -92,20 +82,28 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
     required double iconSize,
   }) {
     final isSelected = _currentIndex == index;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final itemWidth = screenWidth < 360 ? 70.0 : 86.0;
+    final itemHeight = screenWidth < 360 ? 45.0 : 52.0;
 
     return GestureDetector(
       onTap: () => _onTabTapped(index),
+      behavior: HitTestBehavior.translucent, // Permite detectar toques en áreas vacías
       child: Container(
-        width: 86,
-        height: 52,
+        width: itemWidth,
+        height: itemHeight,
         alignment: Alignment.center,
+        constraints: BoxConstraints(
+          minWidth: 48, // Área mínima de toque
+          minHeight: 48,
+        ),
         child: Stack(
           alignment: Alignment.center,
           children: [
             if (isSelected)
               Container(
-                width: 86,
-                height: 52,
+                width: itemWidth,
+                height: itemHeight,
                 decoration: BoxDecoration(
                   color: Color(0xFF95B3FF).withOpacity(1.0),
                   borderRadius: BorderRadius.circular(30),
