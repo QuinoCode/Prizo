@@ -243,7 +243,7 @@ class DetallesProducto extends StatelessWidget {
                               );
                             },
                             child: Padding(
-                              padding: EdgeInsets.only(right: screenWidth * 0.06),
+                              padding: EdgeInsets.only(right: screenWidth * 0.055),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start, // Alinear a la izquierda
                                 children: [
@@ -256,8 +256,8 @@ class DetallesProducto extends StatelessWidget {
                                   // Imagen del producto
                                   Image.network(
                                     productoRelacionado.foto,
-                                    width: screenWidth * 0.3,
-                                    height: screenWidth * 0.3,
+                                    width: screenWidth * 0.25,
+                                    height: screenWidth * 0.25,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(Icons.broken_image, size: 60);
