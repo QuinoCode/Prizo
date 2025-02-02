@@ -87,6 +87,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   Text(
                     title,
                     style: TextStyle(
+                      fontFamily: 'Kanit',
                       fontSize: screenWidth * 0.085,
                     ),
                   ),
