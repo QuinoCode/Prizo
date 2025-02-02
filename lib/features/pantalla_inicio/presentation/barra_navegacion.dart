@@ -15,7 +15,6 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
 
   void initDB() async {
     await DatabaseOperations.instance.openOrCreateDB();
-    // DatabaseOperations DO = DatabaseOperations.instance;
   }
 
   final List<Widget> _screens = [
@@ -37,8 +36,8 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
 
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final navBarHeight = screenWidth < 360 ? 50.0 : 63.0;
-    final iconSizeFactor = screenWidth / 375;
+    final baseWidth = 375.0;
+    final scaleFactor = screenWidth / baseWidth;
 
     return Scaffold(
       body: Stack(
@@ -47,26 +46,26 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
             child: _screens[_currentIndex],
           ),
           Positioned(
-            bottom: 16,
-            left: 16,
-            right: 16,
+            bottom: 16 * scaleFactor,
+            left: 16 * scaleFactor,
+            right: 16 * scaleFactor,
             child: Container(
-              height: navBarHeight,
+              height: 60 * scaleFactor,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(50),
+                borderRadius: BorderRadius.circular(50 * scaleFactor),
                 border: Border.all(
                   color: Color(0xFF95B3FF),
-                  width: 3,
+                  width: 2.8 * scaleFactor,
                 ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildNavItem(index: 0, iconPath: 'assets/icons/casa_icono.png', iconSize: 26 * iconSizeFactor),
-                  _buildNavItem(index: 1, iconPath: 'assets/icons/lupa_icono.png', iconSize: 22.5 * iconSizeFactor),
-                  _buildNavItem(index: 2, iconPath: 'assets/icons/listas_icono.png', iconSize: 24 * iconSizeFactor),
-                  _buildNavItem(index: 3, iconPath: 'assets/icons/usuario_icono.png', iconSize: 23 * iconSizeFactor),
+                  _buildNavItem(index: 0, iconPath: 'assets/icons/casa_icono.png', iconSize: 26 * scaleFactor),
+                  _buildNavItem(index: 1, iconPath: 'assets/icons/lupa_icono.png', iconSize: 22.5 * scaleFactor),
+                  _buildNavItem(index: 2, iconPath: 'assets/icons/listas_icono.png', iconSize: 24 * scaleFactor),
+                  _buildNavItem(index: 3, iconPath: 'assets/icons/usuario_icono.png', iconSize: 23 * scaleFactor),
                 ],
               ),
             ),
@@ -83,30 +82,30 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
   }) {
     final isSelected = _currentIndex == index;
     final screenWidth = MediaQuery.of(context).size.width;
-    final itemWidth = screenWidth < 360 ? 70.0 : 86.0;
-    final itemHeight = screenWidth < 360 ? 45.0 : 52.0;
+    final baseWidth = 375.0;
+    final scaleFactor = screenWidth / baseWidth;
 
     return GestureDetector(
       onTap: () => _onTabTapped(index),
-      behavior: HitTestBehavior.translucent, // Permite detectar toques en áreas vacías
+      behavior: HitTestBehavior.translucent,
       child: Container(
-        width: itemWidth,
-        height: itemHeight,
+        width: 80 * scaleFactor,
+        height: 50 * scaleFactor,
         alignment: Alignment.center,
         constraints: BoxConstraints(
-          minWidth: 48, // Área mínima de toque
-          minHeight: 48,
+          minWidth: 48 * scaleFactor,
+          minHeight: 48 * scaleFactor,
         ),
         child: Stack(
           alignment: Alignment.center,
           children: [
             if (isSelected)
               Container(
-                width: itemWidth,
-                height: itemHeight,
+                width: 80 * scaleFactor,
+                height: 50 * scaleFactor,
                 decoration: BoxDecoration(
-                  color: Color(0xFF95B3FF).withOpacity(1.0),
-                  borderRadius: BorderRadius.circular(30),
+                  color: Color(0xFF95B3FF),
+                  borderRadius: BorderRadius.circular(30 * scaleFactor),
                 ),
               ),
             ImageIcon(
