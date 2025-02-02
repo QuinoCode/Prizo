@@ -223,7 +223,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   style: TextStyle(
                     fontFamily: 'Geist',
                     fontSize: width * 0.058,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: height * 0.01),
@@ -326,7 +326,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                                 fontFamily: 'Geist',
                                                 fontSize: width * 0.09,
                                                 color: Colors.black,
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w500,
                                               ),
                                             ),
                                           ],
