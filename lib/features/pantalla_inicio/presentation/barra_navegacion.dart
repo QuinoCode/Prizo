@@ -60,22 +60,22 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
                   _buildNavItem(
                     index: 0,
                     iconPath: 'assets/icons/casa_icono.png',
-                    iconSize: 24,
+                    iconSize: 28,
                   ),
                   _buildNavItem(
                     index: 1,
                     iconPath: 'assets/icons/lupa_icono.png',
-                    iconSize: 20,
+                    iconSize: 24.5,
                   ),
                   _buildNavItem(
                     index: 2,
                     iconPath: 'assets/icons/listas_icono.png',
-                    iconSize: 22,
+                    iconSize: 26,
                   ),
                   _buildNavItem(
                     index: 3,
                     iconPath: 'assets/icons/usuario_icono.png',
-                    iconSize: 22,
+                    iconSize: 25,
                   ),
                 ],
               ),

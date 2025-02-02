@@ -99,9 +99,9 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
               style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0923, fontFamily: 'Geist', fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Alérgenos',
-              style: TextStyle(fontSize: 22, fontFamily: 'Geist', fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.0644, fontFamily: 'Geist', fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
             SingleChildScrollView(
