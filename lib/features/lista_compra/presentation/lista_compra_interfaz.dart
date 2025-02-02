@@ -352,7 +352,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           fontFamily: 'Geist',
                           color: Color.fromARGB(255,33,33,33),
                           fontSize: MediaQuery.of(context).size.width * 0.04,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                       SizedBox(height: MediaQuery.of(context).size.width * 0.023),
