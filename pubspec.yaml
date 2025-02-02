@@ -51,6 +51,7 @@ flutter:
     - assets/icons/empty_checkbox.png
     - assets/icons/checked_checkbox.png
     - assets/icons/x.png
+    - assets/icons/mapa_icono.png
 
   fonts:
     - family: Kanit
