@@ -140,7 +140,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
-      child: Text(text, style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontFamily: 'Geist', fontWeight: FontWeight.w400)),
+      child: Text(text, style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontFamily: 'Geist', fontWeight: FontWeight.w400, color: Color.fromARGB(255, 80, 79, 79))),
     );
   }
 
@@ -157,7 +157,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
-      child: Text(text, style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontFamily: 'Geist', fontWeight: FontWeight.w400, color: Color.fromARGB(255, 33, 33, 33))),
+      child: Text(text, style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontFamily: 'Geist', fontWeight: FontWeight.w400, color: Color.fromARGB(255, 80, 79, 79))),
     );
   }
 }
