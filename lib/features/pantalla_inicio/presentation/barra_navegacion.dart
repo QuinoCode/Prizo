@@ -6,8 +6,8 @@ import '/features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
 import '/features/productsearch/product_search_ui.dart';
 import '/features/lista/lista.dart';
 import '/features/perfil/perfil.dart';
+import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
 import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
-import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 
 
 class BarraNavegacion extends StatefulWidget {
