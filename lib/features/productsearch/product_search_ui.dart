@@ -72,9 +72,9 @@ class MultiMarketProductSearcher implements ProductSearcher {
 }
 
 
-String shortenText(String nombre, int limit, String replacement){
-  if(nombre.length > limit){
-    return nombre.substring(0,limit) +replacement;
+String shortenText(String nombre, int limit, String replacement) {
+  if (nombre.length > limit) {
+    return nombre.substring(0, limit).trimRight() + replacement;
   } else {
     return nombre;
   }
@@ -198,6 +198,11 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
 
   void _backButtonBhvr() {
     //if has text, empty, else pop
+    if (_searchController.text.isNotEmpty){
+      _searchController.text = "";
+    } else {
+      Navigator.pop(context, true);
+    }
   }
 
   List<List<Producto>> filtrarAlergeno(List<List<Producto>> productos) {
@@ -309,45 +314,48 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
               SizedBox(
                 height: MediaQuery.of(context).size.longestSide * 0.6,
                 width: MediaQuery.of(context).size.shortestSide,
-                child: Wrap(
-                  spacing: MediaQuery.of(context).size.shortestSide * 0.0333,
-                  runSpacing: MediaQuery.of(context).size.longestSide * 0.009,
-                  children: List.generate(recentElements.length, (index) {
-                    return GestureDetector(
-                      onPanStart: (_) {
-                        _colorNotifiers[index].value = Color.fromARGB(255, 149, 179, 252);  // Highlight color on pan start
-                      },
-                      onPanEnd: (_) {
-                        _colorNotifiers[index].value = Colors.white;  // Reset color on pan end
-                      },
-                      child: ValueListenableBuilder<Color>(
-                        valueListenable: _colorNotifiers[index],
-                        builder: (context, color, child) {
-                          return ElevatedButton(
-                            onPressed: () {
-                              _searchController.text = recentElements[index];
-                              _searchProducts();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: MediaQuery.of(context).size.shortestSide * 0.048,
-                                vertical: MediaQuery.of(context).size.longestSide * 0.012,
-                              ),
-                              textStyle: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400, color: Color.fromARGB(255,18,18,18)),
-                              shadowColor: Colors.transparent,
-                              foregroundColor: Color.fromARGB(255, 80, 79, 79),
-                              backgroundColor: color, // Dynamically change the background color
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(23),
-                                side: BorderSide(color: Color.fromARGB(255, 149, 179, 255)),
-                              ),
-                            ),
-                            child: Text(shortenText(recentElements[index],15,'...')),
-                          );
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 3, 0),
+                  child: Wrap(
+                    spacing: MediaQuery.of(context).size.shortestSide * 0.0333,
+                    runSpacing: MediaQuery.of(context).size.longestSide * 0.009,
+                    children: List.generate(recentElements.length, (index) {
+                      return GestureDetector(
+                        onPanStart: (_) {
+                          _colorNotifiers[index].value = Color.fromARGB(255, 149, 179, 252);  // Highlight color on pan start
                         },
-                      ),
-                    );
-                  }),
+                        onPanEnd: (_) {
+                          _colorNotifiers[index].value = Colors.white;  // Reset color on pan end
+                        },
+                        child: ValueListenableBuilder<Color>(
+                          valueListenable: _colorNotifiers[index],
+                          builder: (context, color, child) {
+                            return ElevatedButton(
+                              onPressed: () {
+                                _searchController.text = recentElements[index];
+                                _searchProducts();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: MediaQuery.of(context).size.shortestSide * 0.048,
+                                  vertical: MediaQuery.of(context).size.longestSide * 0.012,
+                                ),
+                                textStyle: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400, color: Color.fromARGB(255,18,18,18)),
+                                shadowColor: Colors.transparent,
+                                foregroundColor: Color.fromARGB(255, 80, 79, 79),
+                                backgroundColor: color, // Dynamically change the background color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(23),
+                                  side: BorderSide(color: Color.fromARGB(255, 149, 179, 255)),
+                                ),
+                              ),
+                              child: Text(shortenText(recentElements[index],15,'...')),
+                            );
+                          },
+                        ),
+                      );
+                    }),
+                  ),
                 )
               ),
             ],
@@ -501,9 +509,10 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                             prefixIcon: IconButton(
                               padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.shortestSide*0.057,0,MediaQuery.of(context).size.shortestSide*0.0206,0),
                               icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
+                              highlightColor: Colors.transparent,  
                               splashColor: Colors.transparent,
                               color: Color.fromARGB(255,18,18,18),
-                              onPressed: () {},
+                              onPressed: () {_backButtonBhvr;},
                             ),
                             suffixIcon: IconButton(
                               padding: EdgeInsets.fromLTRB(0,0,MediaQuery.of(context).size.shortestSide*0.057,0),
@@ -608,7 +617,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                   height: MediaQuery.of(context).size.longestSide * 0.128,
                 ),
               ),
-              SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.007), 
+              SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.03), 
               SizedBox(
                 height: MediaQuery.of(context).size.longestSide * 0.128,
                 child: VerticalDivider(
@@ -665,7 +674,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-                            SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.014),
+                            SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.01),
                             Padding(
                               padding: EdgeInsets.fromLTRB(0,3,0,0),
                               child: Text(
