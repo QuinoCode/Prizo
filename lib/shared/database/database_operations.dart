@@ -279,7 +279,7 @@ class DatabaseOperations {
     return result;
   }
   Future<List<Map<String, Object?>>> fetchItemsListaRecientes(Database db) async{
-    var result = await db.rawQuery('SELECT busqueda FROM Lista_Recientes');
+    var result = await db.rawQuery('SELECT busqueda FROM Lista_Recientes ORDER BY id DESC');
     return result;
   }
 
@@ -386,6 +386,14 @@ class DatabaseOperations {
       var countResult = await db.rawQuery('SELECT id FROM Lista_Recientes');
       int currentCount = countResult.length;
 
+      var existingResult = await db.rawQuery(
+        'SELECT id FROM Lista_Recientes WHERE LOWER(busqueda) = ?',
+        [bus.toLowerCase()]);
+
+      if (existingResult.isNotEmpty) {
+        return;
+      }
+
       // If the table already has 5 items, delete the first one and shift the rest up
       if (currentCount >= 5) {
         await db.delete(
@@ -448,12 +456,12 @@ class DatabaseOperations {
         await registerIntoListaCompraTable(db, producto);
       } else {
         var result = await db.rawQuery(
-            '''
+          '''
           SELECT cantidad 
           FROM Lista_Compra_Producto 
           WHERE producto_id = ?
           ''',
-            [producto.id]
+          [producto.id]
         );
         return result.first['cantidad'] as int;
       }
