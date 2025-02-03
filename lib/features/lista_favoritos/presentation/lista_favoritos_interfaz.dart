@@ -392,80 +392,94 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 )
               )
               : Container(
-                height: MediaQuery.of(context).size.longestSide * 0.0473,
-                width: MediaQuery.of(context).size.shortestSide * 0.21,
-                padding: EdgeInsets.zero,
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 246, 246, 246),
-                    borderRadius: BorderRadius.circular(20)
-                ),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      top: 0,
-                      bottom: 0,
-                      right: MediaQuery.of(context).size.shortestSide * 0.097,
-                      child: IconButton(
-                        iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
-                        padding: EdgeInsets.zero,
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        icon: Icon(Icons.remove),
-                        onPressed: () {
-                          setState(() {
-                            if (_counter > 0) {
-                              //DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
-                              listaCompraService.DB_decreaseCantidad(widget.producto);
-                              _counter--;
-                            } else {
-                              //DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
-                              listaCompraService.DB_quitarProducto(widget.producto);
-                              listaCompraService.DB_Tick_quitar(widget.producto);
-                              _showButton = true;
-                            }
-                          });
-                        },
+                      height: MediaQuery.of(context).size.longestSide * 0.0473,
+                      width: MediaQuery.of(context).size.shortestSide * 0.21,
+                      padding: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 246, 246, 246),
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 0,
+                            bottom: 0,
+                            right: MediaQuery.of(context).size.shortestSide * 0.110,
+                            child: IconButton(
+                              iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
+                              padding: EdgeInsets.zero,
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,  
+                              icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
+                              onPressed: () {
+                                setState(() {
+                                  if (_counter > 0) {
+                                    if(_counter == 1) {
+                                      listaCompraService.DB_quitarProducto(widget.producto);
+                                      listaCompraService.DB_Tick_quitar(widget.producto);
+                                    } else {
+                                      listaCompraService.DB_decreaseCantidad(widget.producto);
+                                    }
+                                    //listaCompraService.DB_decreaseCantidad(widget.producto);
+                                    //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
+                                    _counter--;
+                                  } else {
+                                    listaCompraService.DB_quitarProducto(widget.producto);
+                                    listaCompraService.DB_Tick_quitar(widget.producto);
+                                    //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
+                                    _showButton = true;
+                                  }
+                                });
+                              },
+                            ),
+                          ),
+                          Positioned(
+                              left: (MediaQuery.of(context).size.shortestSide * 0.21 - 
+                              (TextPainter(
+                                text: TextSpan(
+                                  text: '$_counter',
+                                  style: TextStyle(
+                                    fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                                    fontFamily: 'Geist',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                textDirection: TextDirection.ltr,
+                              )..layout()).width)/2,
+                              bottom: MediaQuery.of(context).size.longestSide * 0.002,
+                              child: Text(
+                                '$_counter',
+                                style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                                  
+                                  fontFamily: 'Geist',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          Positioned(
+                            top: 0,
+                            bottom: MediaQuery.of(context).size.longestSide * 0.002,
+                            left: MediaQuery.of(context).size.shortestSide * 0.110,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,  
+                              icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
+                              onPressed: () {
+                                if (_counter < 99) {
+                                  listaCompraService.DB_annadirProducto(widget.producto);
+                                  //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
+                                  setState(() {
+                                    _counter++;
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Positioned(
-                      left: _counter > 10
-                          ? _counter > 19
-                          ? MediaQuery.of(context).size.shortestSide * 0.075
-                          : MediaQuery.of(context).size.shortestSide * 0.082
-                          : MediaQuery.of(context).size.shortestSide * (_counter == 1 ? 0.098 : 0.09),
-                      top: MediaQuery.of(context).size.longestSide * (_counter < 10 ? 0.004 : 0.007),
-                      bottom: 0,
-                      child: Text('$_counter',
-                        style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.shortestSide * (_counter < 10 ? 0.06 : 0.053),
-                          fontFamily: 'Geist',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 0,
-                      bottom: MediaQuery.of(context).size.longestSide * 0.001,
-                      left: MediaQuery.of(context).size.shortestSide * 0.1,
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06),
-                        onPressed: () {
-                          if (_counter < 99) {
-                            //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
-                            listaCompraService.DB_increaseCantidad(widget.producto);
-                            setState(() {
-                              _counter++;
-                            });
-                          }
-                        },
-                      ),
-                    ), 
-                  ],
-                ),
-              ),
           )
         ],
       ),

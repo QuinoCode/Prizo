@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:sqflite/sqflite.dart';
@@ -750,7 +751,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           Positioned(
                             top: 0,
                             bottom: 0,
-                            right: MediaQuery.of(context).size.shortestSide * 0.1,
+                            right: MediaQuery.of(context).size.shortestSide * 0.110,
                             child: IconButton(
                               iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
                               padding: EdgeInsets.zero,
@@ -780,18 +781,24 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             ),
                           ),
                           Positioned(
-                              left: _counter > 9
-                                  ? _counter > 19
-                                    ? MediaQuery.of(context).size.shortestSide * 0.072
-                                    : MediaQuery.of(context).size.shortestSide * (_counter == 11 ? 0.086 : 0.079)
-                                  : MediaQuery.of(context).size.shortestSide * (_counter == 1 ? 0.095 : 0.089),
-                              top: MediaQuery.of(context).size.longestSide * (_counter < 10 ? 0.004 : 0.004),
-                              bottom: 0,
+                              left: (MediaQuery.of(context).size.shortestSide * 0.21 - 
+                              (TextPainter(
+                                text: TextSpan(
+                                  text: '$_counter',
+                                  style: TextStyle(
+                                    fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                                    fontFamily: 'Geist',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                textDirection: TextDirection.ltr,
+                              )..layout()).width)/2,
+                              bottom: MediaQuery.of(context).size.longestSide * 0.002,
                               child: Text(
                                 '$_counter',
                                 style: TextStyle(
-                                  fontSize: MediaQuery.of(context).size.shortestSide *
-                                      (_counter < 10 ? 0.06 : 0.056),
+                                  fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                                  
                                   fontFamily: 'Geist',
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -799,8 +806,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             ),
                           Positioned(
                             top: 0,
-                            bottom: MediaQuery.of(context).size.longestSide * 0.001,
-                            left: MediaQuery.of(context).size.shortestSide * 0.102,
+                            bottom: MediaQuery.of(context).size.longestSide * 0.002,
+                            left: MediaQuery.of(context).size.shortestSide * 0.110,
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               splashColor: Colors.transparent,
