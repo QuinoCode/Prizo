@@ -369,8 +369,8 @@ class _BotonFavoritosState extends State<BotonFavoritos> {
         });
       },
       child: Container(
-        width: 40,
-        height: 40,
+        width: MediaQuery.of(context).size.height * 0.0473,
+        height: MediaQuery.of(context).size.height * 0.0473,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Color(0xFF95B3FF),
@@ -425,8 +425,8 @@ class _BotonDistanciaState extends State<BotonDistancia> {
         widget.onTap();  // Llamar al onTap pasado desde el widget principal
       },
       child: Container(
-        width: 40,
-        height: 40,
+        width: MediaQuery.of(context).size.height * 0.0473,
+        height: MediaQuery.of(context).size.height * 0.0473,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: _color,
