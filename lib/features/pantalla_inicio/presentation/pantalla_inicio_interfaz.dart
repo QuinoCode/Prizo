@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart';
 import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import 'package:prizo/main.dart';
 import 'package:prizo/shared/data_entities/DAO/lista_favoritos_DAO.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/shared//database/database_operations.dart';
+import 'package:provider/provider.dart';
 import '/features/distancia_tienda/shop_distance.dart';
 import '/features/lista_favoritos/application/lista_favoritos_service.dart';
 import 'package:http/http.dart' as http;
@@ -204,6 +206,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
                             fontWeight: FontWeight.normal,
                             color: Colors.black,
                           ),
+                          onSubmitted: (query) {
+                            Provider.of<PrizoState>(context, listen: false).setIndex(1, query);
+                          },
                         ),
                       ),
                       IconButton(

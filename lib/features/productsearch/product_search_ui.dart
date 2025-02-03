@@ -2,7 +2,9 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:prizo/main.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 
@@ -70,7 +72,6 @@ class MultiMarketProductSearcher implements ProductSearcher {
     }
   }
 }
-
 
 String shortenText(String nombre, int limit, String replacement) {
   if (nombre.length > limit) {
@@ -141,10 +142,11 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   @override
   void initState() {
     super.initState();
-    _searchController.text = widget.query;
-    if (widget.query.isNotEmpty) {
+    final navState = Provider.of<PrizoState>(context, listen: false);
+    _searchController.text = navState.searchQuery;
+    if (navState.searchQuery.isNotEmpty) {
       Database db = DatabaseOperations.instance.prizoDatabase;
-      DatabaseOperations.instance.registerReciente(db, widget.query);
+      DatabaseOperations.instance.registerReciente(db, navState.searchQuery);
       _searchProducts();
     }
     // Add a listener to check when the text becomes empty
@@ -203,7 +205,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
         _searchController.text = "";
       });
     } else {
-      Navigator.pop(context, true);
+      Provider.of<PrizoState>(context, listen: false).setIndex(0);
     }
   }
 
@@ -342,6 +344,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                                   horizontal: MediaQuery.of(context).size.shortestSide * 0.048,
                                   vertical: MediaQuery.of(context).size.longestSide * 0.012,
                                 ),
+                                overlayColor: Color.fromARGB(255, 149, 179, 252),
                                 textStyle: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400, color: Color.fromARGB(255,18,18,18)),
                                 shadowColor: Colors.transparent,
                                 foregroundColor: Color.fromARGB(255, 80, 79, 79),
@@ -434,41 +437,44 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
               ),
             ],
           ),
-          SizedBox(height: MediaQuery.of(context).size.longestSide * 0.0379),
+          SizedBox(height: MediaQuery.of(context).size.longestSide * 0.025),
           // Scrollable list
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Display the first list of products
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _productos.length,
-                    itemBuilder: (context, index) {
-                      final producto = _productos[index];
-                      return _buildProductTile(context, producto);
-                    },
-                  ),
-                  // Display the second list if there are remaining products
-                  if (_productosRestantes.isNotEmpty) ...[
-                    SizedBox(height: MediaQuery.of(context).size.longestSide * 0.026),
-                    Text('Quizás estabas buscando...',
-                      style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0644, fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.longestSide * 0.032),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, MediaQuery.of(context).size.shortestSide * 0.123),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Display the first list of products
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _productosRestantes.length,
+                      itemCount: _productos.length,
                       itemBuilder: (context, index) {
-                        final producto = _productosRestantes[index];
+                        final producto = _productos[index];
                         return _buildProductTile(context, producto);
                       },
                     ),
+                    // Display the second list if there are remaining products
+                    if (_productosRestantes.isNotEmpty) ...[
+                      SizedBox(height: MediaQuery.of(context).size.longestSide * 0.026),
+                      Text('Quizás estabas buscando...',
+                        style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0644, fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.longestSide * 0.032),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _productosRestantes.length,
+                        itemBuilder: (context, index) {
+                          final producto = _productosRestantes[index];
+                          return _buildProductTile(context, producto);
+                        },
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           ),
@@ -514,7 +520,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                               highlightColor: Colors.transparent,  
                               splashColor: Colors.transparent,
                               color: Color.fromARGB(255,18,18,18),
-                              onPressed: () {_backButtonBhvr;},
+                              onPressed: _backButtonBhvr,
                             ),
                             suffixIcon: IconButton(
                               padding: EdgeInsets.fromLTRB(0,0,MediaQuery.of(context).size.shortestSide*0.057,0),

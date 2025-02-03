@@ -7,7 +7,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:prizo/shared//database/database_operations.dart';
 import 'package:flutter/services.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //await DatabaseOperations.instance.deleteDB();
@@ -67,5 +66,19 @@ class _SplashScreenState extends State<SplashScreen>{
 }
 
 class PrizoState extends ChangeNotifier {
-  var displayTest = 'Hello World';
+  int _currentIndex = 0;
+  String _searchQuery = "";
+
+  int get currentIndex => _currentIndex;
+  String get searchQuery => _searchQuery;
+
+  void setIndex(int index, [String? query]) {
+    _currentIndex = index;
+    
+    if (query!= null) {
+      _searchQuery = query;
+    }
+
+    notifyListeners(); // Notify UI updates
+  }
 }
