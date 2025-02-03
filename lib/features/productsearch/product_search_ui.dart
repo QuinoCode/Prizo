@@ -342,7 +342,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                                 side: BorderSide(color: Color.fromARGB(255, 149, 179, 255)),
                               ),
                             ),
-                            child: Text(shortenText(recentElements[index],15,'')),
+                            child: Text(shortenText(recentElements[index],15,'...')),
                           );
                         },
                       ),
