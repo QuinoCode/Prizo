@@ -158,7 +158,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                         'PRIZO',
                         style: TextStyle(
                           fontFamily: 'Kanit',
-                          fontSize: width * 0.09,
+                          fontSize: width * 0.0966,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -166,7 +166,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                         '¿Qué quieres comprar hoy?',
                         style: TextStyle(
                           fontFamily: 'Geist',
-                          fontSize: width * 0.045,
+                          fontSize: width * 0.04293,
                           color: Color(0xFF504F4F),
                         ),
                       ),
@@ -176,7 +176,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 SizedBox(height: height * 0.04),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: Color(0xFFF6F6F6),
                     borderRadius: BorderRadius.circular(width * 0.06),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: width * 0.04),
@@ -191,18 +191,18 @@ class _PantallaInicioState extends State<PantallaInicio> {
                           decoration: InputDecoration(
                             hintText: 'Buscar productos...',
                             hintStyle: TextStyle(
-                              color: Colors.grey,
+                              color: Color(0xFF504F4F),
                               fontFamily: 'Geist',
-                              fontSize: width * 0.04,
+                              fontSize: width * 0.04293,
                             ),
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.only(left: width * 0.03),
                           ),
                           style: TextStyle(
                             fontFamily: 'Geist',
-                            fontSize: width * 0.04,
+                            fontSize: width * 0.04293,
                             fontWeight: FontWeight.normal,
-                            color: Colors.black,
+                            color: Color(0xFF121212),
                           ),
                         ),
                       ),
@@ -227,27 +227,27 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   style: TextStyle(
                     fontFamily: 'Geist',
                     fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(height: height * 0.01),
                 Column(
                   children: [
                     if (cargandoOfertas)
-                      Container(
+                      SizedBox(
                           height: height * 0.264,
                           child: Center(child: CircularProgressIndicator())
                       )
                     else if (productosEnOferta.isEmpty)
-                      Container(
+                      SizedBox(
                         height: height * 0.264,
                         child: Center(
                           child: Text(
                             'No hay productos en oferta en tu lista de favoritos.',
                             style: TextStyle(
                               fontFamily: 'Geist',
-                              fontSize: width * 0.04,
-                              color: Colors.grey,
+                              fontSize: width * 0.04293,
+                              color: Color(0xFF504F4F),
                             ),
                           ),
                         ),
@@ -321,7 +321,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                               producto.nombre,
                                               style: TextStyle(
                                                 fontFamily: 'Geist',
-                                                fontSize: width * 0.04,
+                                                fontSize: width * 0.04293,
                                                 fontWeight: FontWeight.normal,
                                               ),
                                               overflow: TextOverflow.ellipsis, // Para cortar el nombre largo
@@ -334,8 +334,8 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                               '-$descuentoTexto',
                                               style: TextStyle(
                                                 fontFamily: 'Geist',
-                                                fontSize: width * 0.09,
-                                                color: Colors.black,
+                                                fontSize: width * 0.0966,
+                                                color: Color(0xFF121212),
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
@@ -362,7 +362,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                             height: currentIndex == index ? width * 0.03 : width * 0.02,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: currentIndex == index ? Colors.black : Colors.grey,
+                              color: currentIndex == index ? Color(0xFF121212) :Color(0xFF504F4F),
                             ),
                           ),
                         ),
@@ -377,7 +377,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     '¡Hoy es $currentDay de compra!',
                     style: TextStyle(
                       fontFamily: 'Geist',
-                      fontSize: width * 0.045,
+                      fontSize: width * 0.04293,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -389,13 +389,13 @@ class _PantallaInicioState extends State<PantallaInicio> {
                       .map((day) => CircleAvatar(
                     backgroundColor: day == currentDay[0].toUpperCase()
                         ? Color(0xFF95B3FF)
-                        : Colors.grey[300],
+                        : Color(0xFFF6F6F6),
                     child: Text(
                       day,
                       style: TextStyle(
                         color: day == currentDay[0].toUpperCase()
-                            ? Colors.black
-                            : Colors.black,
+                            ? Color(0xFF121212)
+                            : Color(0xFF121212),
                         fontFamily: 'Geist',
                       ),
                     ),
@@ -417,7 +417,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Geist',
-                          fontSize: width * 0.046,
+                          fontSize: width * 0.04293,
                           color: Color(0xFF504F4F),
                         ),
                       ),
@@ -431,8 +431,8 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   'Tus supermercados cercanos',
                   style: TextStyle(
                     fontFamily: 'Geist',
-                    fontSize: width * 0.055,
-                    fontWeight: FontWeight.bold,
+                    fontSize: width * 0.0644,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(height: height * 0.02),
@@ -444,8 +444,8 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     'No se encontraron supermercados cercanos.',
                     style: TextStyle(
                       fontFamily: 'Geist',
-                      fontSize: width * 0.04,
-                      color: Colors.grey,
+                      fontSize: width * 0.04293,
+                      color: Color(0xFF504F4F),
                     ),
                   ),
                 )
@@ -496,7 +496,6 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                     height: width * 0.3,
                                     fit: BoxFit.contain,
                                   ),
-                                  SizedBox(height: height * 0.01),  // Espacio entre el logo y el texto
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,  // Alinea los textos a la izquierda
                                     children: [
@@ -505,18 +504,17 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                         "A $distancia km",
                                         style: TextStyle(
                                           fontFamily: 'Geist',
-                                          fontSize: width * 0.050,
-                                          color: Colors.black,
+                                          fontSize: width * 0.0644,
+                                          color: Color(0xFF121212),
                                         ),
                                       ),
-                                      SizedBox(height: height * 0.01),  // Espacio entre distancia y dirección
                                       // Dirección
                                       Text(
                                         calleYNumero,
                                         style: TextStyle(
                                           fontFamily: 'Geist',
-                                          fontSize: width * 0.035,
-                                          color: Colors.black,
+                                          fontSize: width * 0.0322,
+                                          color: Color(0xFF121212),
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
