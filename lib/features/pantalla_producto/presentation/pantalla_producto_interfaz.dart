@@ -382,7 +382,7 @@ class _BotonFavoritosState extends State<BotonFavoritos> {
                   ? 'assets/icons/corazonnegro_icono.png'  // Ícono cuando está en favoritos
                   : 'assets/icons/corazon_icono.png',  // Ícono cuando no está en favoritos
             ),
-            size: 24,
+            size: MediaQuery.of(context).size.shortestSide * 0.0615,
           ),
         ),
       ),
@@ -436,7 +436,7 @@ class _BotonDistanciaState extends State<BotonDistancia> {
             AssetImage(
               'assets/icons/mapa_icono.png'
             ),
-            size: 24,
+            size: MediaQuery.of(context).size.shortestSide * 0.0615,
           ),
         ),
       ),
