@@ -1,15 +1,18 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
+import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import 'package:prizo/shared/application/producto_service.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
+import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
-import 'package:prizo/features/lista/lista.dart';
-
-Database db = DatabaseOperations.instance.prizoDatabase;
 
 class ListaCompraInterfaz extends StatefulWidget {
   final ListaCompra listaCompra;
+
 
   ListaCompraInterfaz({super.key, required this.listaCompra});
 
@@ -20,8 +23,10 @@ class ListaCompraInterfaz extends StatefulWidget {
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsBindingObserver  {
   List<String> tiendasSeleccionadas = [];
   List<Producto> _productos = [];
+  final ListaCompraService listaCompraService = ListaCompraService();
+  final ProductoService productoService = ProductoService();
 
-  void fetchAndStoreProductos(Database db, ) {
+  void fetchAndStoreProductos(Database db) {
     DatabaseOperations.instance.fetchProductsListaCompra(db).then((result) {
       setState(() {
         _productos = result;
@@ -32,6 +37,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
   @override
   void initState() {
     super.initState();
+    Database db = DatabaseOperations.instance.prizoDatabase;
     fetchAndStoreProductos(db);
     WidgetsBinding.instance.addObserver(this);
   }
@@ -45,12 +51,14 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      Database db = DatabaseOperations.instance.prizoDatabase;
       fetchAndStoreProductos(db); // Force refresh when returning to the UI
     }
   }
 
   void applyFilter() {
     if (tiendasSeleccionadas.isEmpty) {
+      Database db = DatabaseOperations.instance.prizoDatabase;
       fetchAndStoreProductos(db); // Show all products when no filters are applied.
     } else {
       setState(() {
@@ -60,32 +68,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
       });
     }
   }
-
-  /*void _manejadorTextField(String input) {
-    /* Verificar que solo se introduzcan números */
-    if (input.isNotEmpty && RegExp(r'[^0-9]').hasMatch(input)) {
-      /* Si no es un número, mostrar un mensaje de advertencia*/
-      setState(() {
-        _mensajeAdvertencia = 'Solo números';
-      });
-      /* Evitar que se agregue el carácter no permitido */
-      /* Esta parte lo hace imposible */
-      _mapaControladorCantidad.forEach((key, controller) {
-        controller.text = controller.text.substring(0, controller.text.length - 1);
-      });
-      Future.delayed(Duration(seconds: 2), () {
-        /* Limpiar el mensaje de advertencia si han pasado 2 segundos */
-        setState(() {
-          _mensajeAdvertencia = null;
-        });
-      });
-    } else {
-      /* Limpiar el mensaje de advertencia si el input es válido */
-      setState(() {
-        _mensajeAdvertencia = null;
-      });
-    }
-  }*/
 
   void _toggleTienda(String tienda) {
     setState(() {
@@ -100,24 +82,26 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
 
   @override
   Widget build(BuildContext context) {
+    Database db = DatabaseOperations.instance.prizoDatabase;
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading:
-        IconButton(
-          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.057,0,0,0),
+        leading: IconButton(
+          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.shortestSide*0.057, 0, 0, 0),
           icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
           color: Color.fromARGB(255,18,18,18),
+          splashColor: Colors.transparent,
           onPressed: () {
             Navigator.pop(context, true);
           },
         ),
+        surfaceTintColor: Colors.transparent,
         title: Text('Lista de compra'),
         centerTitle: true,
-        toolbarHeight: MediaQuery.of(context).size.height * 0.092,
+        toolbarHeight: MediaQuery.of(context).size.longestSide * 0.092,
         backgroundColor: Colors.white,
-        titleTextStyle: TextStyle(color: Color.fromARGB(255,18,18,18), fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.059, fontWeight: FontWeight.w600),
+        titleTextStyle: TextStyle(color: Color.fromARGB(255,18,18,18), fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0644, fontWeight: FontWeight.w500),
       ),
       body: SafeArea(
         child: Padding(
@@ -132,8 +116,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.0379,
-                      width: MediaQuery.of(context).size.width * 0.169,
+                      height: MediaQuery.of(context).size.longestSide * 0.0379,
+                      width: MediaQuery.of(context).size.shortestSide * 0.169,
                       child: ElevatedButton(
                         onPressed: () => _toggleTienda("DIA"),
                         style: ElevatedButton.styleFrom(
@@ -143,15 +127,14 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                           foregroundColor: Color.fromARGB(255,80,79,79),
                           side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
                         ),
-                        child: Text(
-                            'Día',
-                            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
+                        child: Text('DIA', 
+                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.0379,
-                      width: MediaQuery.of(context).size.width * 0.274,
+                      height: MediaQuery.of(context).size.longestSide * 0.0379,
+                      width: MediaQuery.of(context).size.shortestSide * 0.274,
                       child: ElevatedButton(
                         onPressed: () => _toggleTienda("CONSUM"),
                         style: ElevatedButton.styleFrom(
@@ -161,15 +144,14 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                           foregroundColor: Color.fromARGB(255,80,79,79),
                           side: BorderSide(color: Color(0xFF95B3FF),width: 2),
                         ),
-                        child: Text(
-                            'Consum',
-                            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
+                        child: Text('Consum',
+                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.0379,
-                      width: MediaQuery.of(context).size.width * 0.305,
+                      height: MediaQuery.of(context).size.longestSide * 0.0379,
+                      width: MediaQuery.of(context).size.shortestSide * 0.305,
                       child: ElevatedButton(
                         onPressed: () => _toggleTienda("Carrefour"),
                         style: ElevatedButton.styleFrom(
@@ -179,34 +161,42 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                           foregroundColor: Color.fromARGB(255,80,79,79),
                           side: BorderSide(color: Color(0xFF95B3FF),width: 2),
                         ),
-                        child: Text(
-                            'Carrefour',
-                            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w400)
+                        child: Text('Carrefour',
+                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.018),
+              SizedBox(height: MediaQuery.of(context).size.longestSide * 0.018),
               // Scrollable list
               Expanded(
                   child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Display the first list of products
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: _productos.length,
-                              itemBuilder: (context, index) {
-                                final producto = _productos[index];
-                                return StatefulStoreItem(producto: producto, onAction: () => fetchAndStoreProductos(db));
-                              },
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _productos.length,
+                        itemBuilder: (context, index) {
+                          final producto = _productos[index];
+                          return Dismissible(
+                            key: Key(productoService.generarClave(producto)),
+                            direction: DismissDirection.startToEnd,
+                            onDismissed: (direction) {
+                              listaCompraService.quitarProducto(widget.listaCompra, producto);
+                              listaCompraService.DB_quitarProducto(producto);
+                            },
+                            background: Container(
+                              //color: Color(0xFF95B3FF),
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
+                              child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
                             ),
-                          ]
-                      )
+                            child: StatefulStoreItem(producto: producto, onAction: () => fetchAndStoreProductos(db))
+                        );
+                        },
+                      ),
                   )
               )
             ],
@@ -220,7 +210,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
 class StatefulStoreItem extends StatefulWidget {
   final Producto producto;
   final VoidCallback onAction;
-  const StatefulStoreItem({required this.producto, required this.onAction});
+  const StatefulStoreItem({super.key, required this.producto, required this.onAction});
 
   @override
   _ProductTileItemState createState() => _ProductTileItemState();
@@ -247,6 +237,18 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     }
   }
 
+  void _navigateToProductInfo(Producto producto) {
+    ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
+    ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+          DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos,),
+      ),
+    );
+  }
+
   String shortenText(String nombre){
     if(nombre.length >= 18){
       return nombre.substring(0,18) +'...';
@@ -255,12 +257,22 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     }
   }
 
+  String correctText(String tienda){
+    if (tienda == 'CONSUM') {
+      return 'Consum';
+    } else {
+      return tienda;
+    }
+  }
+
   Future<void> _cargarContador () async {
+    Database db = DatabaseOperations.instance.prizoDatabase;
     int count = await DatabaseOperations.instance.fetchCantidadListaCompra(db, widget.producto);
     setState(() {
       _counter = count;
     });
   }
+
   Future<void> _cargarBoton () async {
     bool boton = await listaCompraService.DB_Tick_tiene_tick(widget.producto);
     setState(() {
@@ -269,21 +281,24 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
   }
 
   Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
+    Database db = DatabaseOperations.instance.prizoDatabase;
     return showDialog<void>(
       context: context,
       barrierDismissible: false, /* Evita cerrar el diálogo tocando fuera de él */
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('¿Eliminar producto?'),
-          content: Text('¿Estás seguro de que deseas eliminar el producto ${producto.nombre}?'),
+          title: Text('¿Eliminar producto?',
+            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w500),),
+          content: Text('¿Estás seguro de que deseas eliminar el producto ${producto.nombre}?',
+            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
-
                 _counter = await DatabaseOperations.instance.fetchCantidadListaCompra(db, producto);
                 Navigator.of(context).pop();
               },
-              child: Text('Cancelar'),
+              child: Text('Cancelar',
+                style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
             ),
             TextButton(
               onPressed: () {
@@ -297,7 +312,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 widget.onAction();
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
-              child: Text('Eliminar'),
+              child: Text('Eliminar',
+                style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
             ),
           ],
         );
@@ -307,172 +323,170 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+      child: Row(
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
-            child: Row(
-              children: [
-                Image.network(
-                  widget.producto.foto,
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  height: MediaQuery.of(context).size.width * 0.2,
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.019),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.12,
-                  child: VerticalDivider(
-                    thickness: 1,
-                    color: Color.fromARGB(255,175,198,255),
-                  ),
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                Expanded(
-                  child:
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.283,
-                          child:
-                          Text(
-                            shortenText(widget.producto.nombre),
-                            maxLines: 2,
-                            style: TextStyle(
-                              height: 1.2,
-                              fontFamily: 'Geist',
-                              color: Color.fromARGB(255,18,18,18),
-                              fontSize: MediaQuery.of(context).size.width * 0.04,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.001),
+          GestureDetector(
+            onTap: () => _navigateToProductInfo(widget.producto),
+            child: Image.network(
+              widget.producto.foto,
+              width: MediaQuery.of(context).size.shortestSide * 0.205,
+              height: MediaQuery.of(context).size.shortestSide * 0.205,
+            ),
+          ),
+          SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.007),
+          SizedBox(
+            height: MediaQuery.of(context).size.longestSide * 0.12,
+            child: VerticalDivider(
+              thickness: 1,
+              color: Color.fromARGB(255,175,198,255),
+            ),
+          ),
+          SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.03),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => _navigateToProductInfo(widget.producto),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                      width: MediaQuery.of(context).size.shortestSide * 0.283,
+                      child:
                       Text(
-                        widget.producto.tienda,
+                        shortenText(widget.producto.nombre),
+                        maxLines: 2,
                         style: TextStyle(
+                          height: 1.2,
                           fontFamily: 'Geist',
-                          fontWeight: FontWeight.w300,
-                          color: Color.fromARGB(255,33,33,33),
-                          fontSize: MediaQuery.of(context).size.width * 0.0332,
+                          color: Color.fromARGB(255,18,18,18),
+                          fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.width * 0.023),
-                      Text(
-                        '${widget.producto.precio}€',
-                        style: TextStyle(
-                          fontFamily: 'Geist',
-                          color: Color.fromARGB(255,33,33,33),
-                          fontSize: MediaQuery.of(context).size.width * 0.04,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.width * 0.023),
-                    ],
-                  ),
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.053),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10,0,0,16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      _showButton
-                          ? IconButton(
-                          padding: EdgeInsets.all(0),
-                          icon: Image.asset('assets/icons/empty_checkbox.png', width: MediaQuery.of(context).size.width * 0.099, height: MediaQuery.of(context).size.width * 0.102),
-                          onPressed: () {
-                            setState(() {
-                              _showButton = false;
-                            });
-                            listaCompraService.DB_Tick_annadir(widget.producto);
-                          }
                       )
-                          : IconButton(
-                          padding: EdgeInsets.all(0),
-                          icon: Image.asset('assets/icons/checked_checkbox.png', width: MediaQuery.of(context).size.width * 0.099, height: MediaQuery.of(context).size.width * 0.102),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.longestSide * 0.001),
+                  Text(
+                    correctText(widget.producto.tienda),
+                    style: TextStyle(
+                      fontFamily: 'Geist',
+                      fontWeight: FontWeight.w300,
+                      color: Color.fromARGB(255,33,33,33),
+                      fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.023),
+                  Text(
+                    '${(widget.producto.precio * _counter).toStringAsFixed(2)}€',
+                    style: TextStyle(
+                      fontFamily: 'Geist',
+                      color: Color.fromARGB(255,33,33,33),
+                      fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.023),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.053),
+          Padding(
+            padding: EdgeInsets.fromLTRB(10,0,0,16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _showButton
+                    ? IconButton(
+                    padding: EdgeInsets.all(0),
+                    icon: Image.asset('assets/icons/empty_checkbox.png', width: MediaQuery.of(context).size.shortestSide * 0.099, height: MediaQuery.of(context).size.shortestSide * 0.102),
+                    onPressed: () {
+                      setState(() {
+                        _showButton = false;
+                      });
+                      listaCompraService.DB_Tick_annadir(widget.producto);
+                    }
+                )
+                    : IconButton(
+                    padding: EdgeInsets.all(0),
+                    icon: Image.asset('assets/icons/checked_checkbox.png', width: MediaQuery.of(context).size.shortestSide * 0.099, height: MediaQuery.of(context).size.shortestSide * 0.102),
+                    onPressed: () {
+                      setState(() {
+                        _showButton = true;
+                      });
+                      listaCompraService.DB_Tick_quitar(widget.producto);
+                    }
+                ),
+                SizedBox(height: MediaQuery.of(context).size.longestSide * 0.01),
+                Container(
+                  height: MediaQuery.of(context).size.longestSide * 0.0473,
+                  width: MediaQuery.of(context).size.shortestSide * 0.21,
+                  padding: EdgeInsets.zero,
+                  decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 0,
+                        bottom: 0,
+                        right: MediaQuery.of(context).size.shortestSide * 0.09,
+                        child: IconButton(
+                          iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
+                          padding: EdgeInsets.zero,
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
                           onPressed: () {
                             setState(() {
-                              _showButton = true;
+                              if (_counter > 1) {
+                                //DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
+                                listaCompraService.DB_decreaseCantidad(widget.producto);
+                                _counter--;
+                              } else {
+                                _ventanaConfirmacion(context, widget.producto);
+                              }
                             });
-                            listaCompraService.DB_Tick_quitar(widget.producto);
-                          }
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.0473,
-                        width: MediaQuery.of(context).size.width * 0.21,
-                        padding: EdgeInsets.zero,
-                        decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(20)
+                          },
                         ),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              top: 0,
-                              bottom: 0,
-                              right: MediaQuery.of(context).size.width * 0.09,
-                              child: IconButton(
-                                iconSize: MediaQuery.of(context).size.width * 0.06,
-                                padding: EdgeInsets.zero,
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
-                                onPressed: () {
-                                  setState(() {
-                                    if (_counter > 1) {
-                                      //DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
-                                      listaCompraService.DB_decreaseCantidad(widget.producto);
-                                      _counter--;
-                                    } else {
-                                      _ventanaConfirmacion(context, widget.producto);
-                                    }
-                                  });
-                                },
-                              ),
-                            ),
-                            Positioned(
-                              left: _counter > 9
-                                  ? _counter > 19
-                                  ? MediaQuery.of(context).size.width * 0.085
-                                  : MediaQuery.of(context).size.width * (_counter == 11 ? 0.096 : 0.091)
-                                  : MediaQuery.of(context).size.width * (_counter == 1 ? 0.106 : 0.101),
-                              top: MediaQuery.of(context).size.height * (_counter < 10 ? 0.004 : 0.007),
-                              bottom: 0,
-                              child: Text(
-                                '$_counter',
-                                style: TextStyle(
-                                  fontSize: MediaQuery.of(context).size.width *
-                                      (_counter < 10 ? 0.06 : 0.053),
-                                  fontFamily: 'Geist',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 0,
-                              bottom: MediaQuery.of(context).size.height * 0.001,
-                              left: MediaQuery.of(context).size.width * 0.115,
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                icon: Icon(Icons.add, size: MediaQuery.of(context).size.width * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
-                                onPressed: () {
-                                  if (_counter < 99) {
-                                    //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
-                                    listaCompraService.DB_increaseCantidad(widget.producto);
-                                    setState(() {
-                                      _counter++;
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
+                      ),
+                      Positioned(
+                        left: _counter > 9
+                            ? _counter > 19
+                              ? MediaQuery.of(context).size.shortestSide * 0.085
+                              : MediaQuery.of(context).size.shortestSide * (_counter == 11 ? 0.096 : 0.091)
+                            : MediaQuery.of(context).size.shortestSide * (_counter == 1 ? 0.106 : 0.101),
+                        top: MediaQuery.of(context).size.longestSide * (_counter < 10 ? 0.004 : 0.007),
+                        bottom: 0,
+                        child: Text( '$_counter',
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.shortestSide * (_counter < 10 ? 0.06 : 0.053),
+                            fontFamily: 'Geist',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 0,
+                        bottom: MediaQuery.of(context).size.longestSide * 0.001,
+                        left: MediaQuery.of(context).size.shortestSide * 0.115,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
+                          onPressed: () {
+                            if (_counter < 99) {
+                              //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
+                              listaCompraService.DB_increaseCantidad(widget.producto);
+                              setState(() {
+                                _counter++;
+                              });
+                            }
+                          },
                         ),
                       ),
                     ],
@@ -481,7 +495,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
               ],
             ),
           ),
-        ]
+        ],
+      ),
     );
   }
 }
