@@ -41,18 +41,18 @@ class _ListaInterfazState extends State<ListaInterfaz> {
       listaFavoritosService.generar_ListaFavoritos(),
       listaCompraService.generar_ListaCompra(),
       listaFavoritosService.DB_fetchProducts(),
-      listaFavoritosService.DB_generarNombres(),
+      listaFavoritosService.DB_generarNombres_JR(),
       listaCompraService.DB_fetchProducts(),
-      listaCompraService.DB_generarNombres(),
+      listaCompraService.DB_generarNombres_JR(),
     ]);
 
     // Asignar los resultados obtenidos
     listaFavoritos = resultados[0] as ListaFavoritos;
     listaCompra = resultados[1] as ListaCompra;
     productosFavoritos = resultados[2] as List<Producto>;
-    productosFavoritosNombre = ajustarNombre(resultados[3] as List<String>);
+    productosFavoritosNombre = resultados[3] as List<String>;
     productosCompra = resultados[4] as List<Producto>;
-    productosCompraNombre = ajustarNombre(resultados[5] as List<String>);
+    productosCompraNombre = resultados[5] as List<String>;
 
     setState(() {
       _isLoading = false;
@@ -83,18 +83,18 @@ class _ListaInterfazState extends State<ListaInterfaz> {
         listaFavoritosService.generar_ListaFavoritos(),
         listaCompraService.generar_ListaCompra(),
         listaFavoritosService.DB_fetchProducts(),
-        listaFavoritosService.DB_generarNombres(),
+        listaFavoritosService.DB_generarNombres_JR(),
         listaCompraService.DB_fetchProducts(),
-        listaCompraService.DB_generarNombres(),
+        listaCompraService.DB_generarNombres_JR(),
       ]);
 
       // Asignar los resultados obtenidos
       listaFavoritos = resultados[0] as ListaFavoritos;
       listaCompra = resultados[1] as ListaCompra;
       productosFavoritos = resultados[2] as List<Producto>;
-      productosFavoritosNombre = ajustarNombre(resultados[3] as List<String>);
+      productosFavoritosNombre = resultados[3] as List<String>;
       productosCompra = resultados[4] as List<Producto>;
-      productosCompraNombre = ajustarNombre(resultados[5] as List<String>);
+      productosCompraNombre = resultados[5] as List<String>;
 
       setState(() {
         _isLoading = false;
@@ -124,18 +124,18 @@ class _ListaInterfazState extends State<ListaInterfaz> {
         listaFavoritosService.generar_ListaFavoritos(),
         listaCompraService.generar_ListaCompra(),
         listaFavoritosService.DB_fetchProducts(),
-        listaFavoritosService.DB_generarNombres(),
+        listaFavoritosService.DB_generarNombres_JR(),
         listaCompraService.DB_fetchProducts(),
-        listaCompraService.DB_generarNombres(),
+        listaCompraService.DB_generarNombres_JR(),
       ]);
 
       // Asignar los resultados obtenidos
       listaFavoritos = resultados[0] as ListaFavoritos;
       listaCompra = resultados[1] as ListaCompra;
       productosFavoritos = resultados[2] as List<Producto>;
-      productosFavoritosNombre = ajustarNombre(resultados[3] as List<String>);
+      productosFavoritosNombre = resultados[3] as List<String>;
       productosCompra = resultados[4] as List<Producto>;
-      productosCompraNombre = ajustarNombre(resultados[5] as List<String>);
+      productosCompraNombre = resultados[5] as List<String>;
 
       setState(() {
         _isLoading = false;
@@ -163,36 +163,22 @@ class _ListaInterfazState extends State<ListaInterfaz> {
       listaFavoritosService.generar_ListaFavoritos(),
       listaCompraService.generar_ListaCompra(),
       listaFavoritosService.DB_fetchProducts(),
-      listaFavoritosService.DB_generarNombres(),
+      listaFavoritosService.DB_generarNombres_JR(),
       listaCompraService.DB_fetchProducts(),
-      listaCompraService.DB_generarNombres(),
+      listaCompraService.DB_generarNombres_JR(),
     ]);
 
     // Asignar los resultados obtenidos
     listaFavoritos = resultados[0] as ListaFavoritos;
     listaCompra = resultados[1] as ListaCompra;
     productosFavoritos = resultados[2] as List<Producto>;
-    productosFavoritosNombre = ajustarNombre(resultados[3] as List<String>);
+    productosFavoritosNombre = resultados[3] as List<String>;
     productosCompra = resultados[4] as List<Producto>;
-    productosCompraNombre = ajustarNombre(resultados[5] as List<String>);
+    productosCompraNombre = resultados[5] as List<String>;
 
     setState(() {
       _isLoading = false;
     });
-  }
-
-  List<String> ajustarNombre(List<String> nombres) {
-    List<String> resultado = [];
-    for(String nombre in nombres) {
-      if(nombre.length <= 13) {
-        resultado.add(nombre + "\n" + " ");
-      } else {
-        String aux_1 = nombre.substring(0, 13);
-        String aux_2 = (nombre.length > 19) ? (nombre.substring(13, 19) + "...") : nombre.substring(13);
-        resultado.add(aux_1 + "\n" + aux_2.trim());
-      }
-    }
-    return resultado;
   }
 
   Widget _buildProductList(String title, List<Producto> productos, List<String> nombres, VoidCallback onNavigate, bool esCompra) {

@@ -63,6 +63,30 @@ class ListaFavoritosService {
 
     return BD_nombres;
   }
+  Future<List<String>> DB_generarNombres_JR() async {
+    // Llamar a DB_fetchProducts para obtener la lista de productos
+    List<Producto> BD_productos = await DB_fetchProducts();
+
+    // Generar lista de nombres
+    List<String> BD_nombres = [];
+
+    for (Producto producto in BD_productos) {
+      BD_nombres.add(producto.nombre);
+    }
+
+    List<String> resultado = [];
+    for(String nombre in BD_nombres) {
+      if(nombre.length <= 13) {
+        resultado.add(nombre + "\n" + " ");
+      } else {
+        String aux_1 = nombre.substring(0, 13);
+        String aux_2 = (nombre.length > 19) ? (nombre.substring(13, 19) + "...") : nombre.substring(13);
+        resultado.add(aux_1 + "\n" + aux_2.trim());
+      }
+    }
+
+    return resultado;
+  }
   Future<ListaFavoritos> generar_ListaFavoritos() async {
     // Llamar a DB_fetchProducts para obtener la lista de productos
     List<Producto> BD_productos = await DB_fetchProducts();
