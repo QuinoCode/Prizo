@@ -337,7 +337,6 @@ class _ListaInterfazState extends State<ListaInterfaz> {
 
   @override
   void didUpdateWidget(covariant ListaInterfaz oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     initializeData();
   }
