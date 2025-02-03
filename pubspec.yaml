@@ -54,6 +54,7 @@ flutter:
     - assets/icons/basura.png
     - assets/icons/mapa_icono.png
     - assets/images/placeholder.png
+    - assets/images/perfil_falso.png
 
   fonts:
     - family: Kanit

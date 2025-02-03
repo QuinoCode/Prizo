@@ -47,7 +47,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
           backgroundColor: Colors.white,
           title: Padding(
             padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-            child: Text('Filtrar', style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0966, fontWeight: FontWeight.w500)),
+            child: Text('Filtrar', style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0644, fontWeight: FontWeight.w400)),
           ),
           centerTitle: true,
           actions: [
