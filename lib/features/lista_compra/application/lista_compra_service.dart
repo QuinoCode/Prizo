@@ -115,21 +115,6 @@ class ListaCompraService {
 
     return BD_nombres;
   }
-  Future<List<(Producto, int)>> DB_fetchProductsInt() async {
-    // Llamar a DB_fetchProducts para obtener la lista de productos
-    List<Producto> BD_productos = await DB_fetchProducts();
-
-    // Generar tuplas de producto-cantidad
-    List<(Producto, int)> BD_tuplas = [];
-
-    for (Producto producto in BD_productos) {
-      // Llamar a DB_fetchCantidad para cada producto
-      int cantidad = await DB_fetchCantidad(producto);
-      BD_tuplas.add((producto, cantidad));
-    }
-
-    return BD_tuplas;
-  }
   Future<ListaCompra> generar_ListaCompra() async {
     // Llamar a DB_fetchProducts para obtener la lista de productos
     List<Producto> BD_productos = await DB_fetchProducts();

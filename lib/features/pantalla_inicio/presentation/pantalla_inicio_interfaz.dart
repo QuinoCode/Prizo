@@ -222,8 +222,8 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   'Ofertas de la semana',
                   style: TextStyle(
                     fontFamily: 'Geist',
-                    fontSize: width * 0.058,
-                    fontWeight: FontWeight.bold,
+                    fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: height * 0.01),
@@ -326,7 +326,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                                 fontFamily: 'Geist',
                                                 fontSize: width * 0.09,
                                                 color: Colors.black,
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w500,
                                               ),
                                             ),
                                           ],
@@ -462,7 +462,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
                       final List<String> partesDireccion = direccionCorregida.split(',');
 
-                      final String calle = partesDireccion.isNotEmpty ? partesDireccion[1] : "Calle no disponible";
+                      final String calle = partesDireccion.isNotEmpty ? partesDireccion[1].trim() : "Calle no disponible";
 
                       final String numero = partesDireccion.length > 1 ? partesDireccion[2].trim() : "Número no disponible";
 
@@ -473,7 +473,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
+                            SizedBox(
                               width: width * 0.6,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -493,7 +493,6 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                       // Distancia
                                       Text(
                                         "A $distancia km",
-                                        textAlign: TextAlign.left,
                                         style: TextStyle(
                                           fontFamily: 'Geist',
                                           fontSize: width * 0.050,
@@ -511,7 +510,6 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
-                                        textAlign: TextAlign.left,
                                       ),
                                     ],
                                   ),

@@ -630,7 +630,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                                     height: 1.2,
                                     fontFamily: 'Geist',
                                     color: Color.fromARGB(255,18,18,18),
-                                    fontSize: MediaQuery.of(context).size.width * 0.04,
+                                    fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
                                     fontWeight: FontWeight.w500,
                                   ),
                             )
@@ -641,7 +641,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           style: TextStyle(
                                 fontFamily: 'Geist',
                                 color: Color.fromARGB(255,33,33,33),
-                                fontSize: MediaQuery.of(context).size.width * 0.0332,
+                                fontSize: MediaQuery.of(context).size.width * 0.0322,
                               ),
                         ),
                         SizedBox(height: MediaQuery.of(context).size.width * 0.023),
@@ -653,7 +653,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               style: TextStyle(
                                   fontFamily: 'Geist',
                                   color: Color.fromARGB(255,33,33,33),
-                                  fontSize: MediaQuery.of(context).size.width * 0.04,
+                                  fontSize: MediaQuery.of(context).size.width * 0.04293,
                                   fontWeight: FontWeight.w500,
                                 ),
                             ),
@@ -663,7 +663,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                               style: TextStyle(
                                   fontFamily: 'Geist',
                                   color: Color.fromARGB(255,33,33,33),
-                                  fontSize: MediaQuery.of(context).size.width * 0.028,
+                                  fontSize: MediaQuery.of(context).size.width * 0.0322,
                                 ),
                             ),
                           ]

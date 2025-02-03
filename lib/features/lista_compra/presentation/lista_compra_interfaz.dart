@@ -244,7 +244,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     //recargar los ticks al borrado
     if (widget.producto != oldWidget.producto) {
       _cargarBoton();
-    } 
+    }
   }
 
   String shortenText(String nombre){
@@ -279,7 +279,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
-                
+
                 _counter = await DatabaseOperations.instance.fetchCantidadListaCompra(db, producto);
                 Navigator.of(context).pop();
               },
@@ -292,7 +292,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 listaCompraService.DB_quitarProducto(producto);
                 listaCompraService.DB_Tick_quitar(producto);
                 setState(() {
-                _showButton = false;
+                  _showButton = false;
                 });
                 widget.onAction();
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
@@ -365,7 +365,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           fontFamily: 'Geist',
                           color: Color.fromARGB(255,33,33,33),
                           fontSize: MediaQuery.of(context).size.width * 0.04,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                       SizedBox(height: MediaQuery.of(context).size.width * 0.023),
@@ -437,8 +437,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             Positioned(
                               left: _counter > 9
                                   ? _counter > 19
-                                    ? MediaQuery.of(context).size.width * 0.085
-                                    : MediaQuery.of(context).size.width * (_counter == 11 ? 0.096 : 0.091)
+                                  ? MediaQuery.of(context).size.width * 0.085
+                                  : MediaQuery.of(context).size.width * (_counter == 11 ? 0.096 : 0.091)
                                   : MediaQuery.of(context).size.width * (_counter == 1 ? 0.106 : 0.101),
                               top: MediaQuery.of(context).size.height * (_counter < 10 ? 0.004 : 0.007),
                               bottom: 0,

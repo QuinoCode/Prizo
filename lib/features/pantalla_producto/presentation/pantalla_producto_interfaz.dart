@@ -51,7 +51,7 @@ class DetallesProducto extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.04),
+          padding: EdgeInsets.only(left: screenWidth * 0.04, right: screenWidth * 0.04, top: screenHeight * 0.001),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,7 +59,7 @@ class DetallesProducto extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: screenWidth * 0.02),
+                    padding: EdgeInsets.only(left: screenWidth * 0.03),
                     child: SizedBox(
                       width: screenWidth * 0.2,
                       height: screenWidth * 0.2,
@@ -80,7 +80,7 @@ class DetallesProducto extends StatelessWidget {
                           }
                         },
                       ),
-                      SizedBox(width: screenWidth * 0.03),
+                      SizedBox(width: screenWidth * 0.05),
 
                       // Botón de favoritos
                       BotonFavoritos(
@@ -88,6 +88,7 @@ class DetallesProducto extends StatelessWidget {
                         listaFavoritos: listaFavoritos,
                         listaFavoritosService: listaFavoritosService,
                       ),
+                      SizedBox(width: screenWidth * 0.05),
                     ],
                   ),
                 ],
@@ -137,53 +138,67 @@ class DetallesProducto extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Mostrar precio con descuento si está en oferta
-                        if (producto.oferta)
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic, // Alineación precisa
-                            children: [
-                              Text(
-                                '${producto.precioOferta.toStringAsFixed(2)}€',
-                                style: const TextStyle(
-                                  fontFamily: 'Geist',
-                                  fontSize: 34,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                              SizedBox(width: screenWidth * 0.05), // Separación aumentada
-                              Text(
-                                '${producto.precio.toStringAsFixed(2)}€',
-                                style: const TextStyle(
-                                  fontFamily: 'Geist',
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              ),
-                            ],
-                          )
-                        else
-                        // Mostrar precio normal si no está en oferta
+                    if (producto.oferta)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
                           Text(
-                            '${producto.precio.toStringAsFixed(2)}€',
-                            style: const TextStyle(
+                            '${producto.precioOferta.toStringAsFixed(2)}€',
+                            style: TextStyle(
                               fontFamily: 'Geist',
-                              fontSize: 34,
-                              fontWeight: FontWeight.bold,
+                              fontSize: MediaQuery.of(context).size.shortestSide * 0.0966,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.red,
                             ),
                           ),
-                        SizedBox(height: screenHeight * 0.005),
-                        Text(
-                          precioMedida,
-                          style: const TextStyle(fontFamily: 'Geist', fontSize: 15, color: Colors.grey),
-                        ),
-                      ],
-                    ),
+                          SizedBox(width: screenWidth * 0.05), // Separación aumentada
+                          //Precio kilo normal
+                          Text(
+                            precioMedida,
+                            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, color: Colors.red),
+                          ),
+                        ],
+                      )
+                    else
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                        //Precio normal
+                          Text(
+                            '${producto.precio.toStringAsFixed(2)}€',
+                            style: TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: MediaQuery.of(context).size.shortestSide * 0.0966,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(width: screenWidth * 0.05), // Separación aumentada
+                          //Precio kilo normal
+                          Text(
+                            precioMedida,
+                            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.040,),
+                    if (producto.oferta)
+                      //Precio normal tachado
+                      Column(
+                        children: [
+                          Text(
+                            '${producto.precio.toStringAsFixed(2)}€',
+                            style: TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                              color: Colors.black,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.018,)
+                        ],
+                      ),
+                    Expanded(child: SizedBox(),),
+
                     // Botón añadir al carrito
                     BotonCarrito(
                       producto: producto,
@@ -222,7 +237,7 @@ class DetallesProducto extends StatelessWidget {
                   } else {
                     List<Producto> productosRelacionados = snapshot.data!;
                     return SizedBox(
-                      height: screenHeight * 0.25,
+                      height: screenHeight * 0.3,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: productosRelacionados.length,
@@ -242,7 +257,7 @@ class DetallesProducto extends StatelessWidget {
                               );
                             },
                             child: Padding(
-                              padding: EdgeInsets.only(right: screenWidth * 0.04),
+                              padding: EdgeInsets.only(right: screenWidth * 0.06),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start, // Alinear a la izquierda
                                 children: [
@@ -255,8 +270,8 @@ class DetallesProducto extends StatelessWidget {
                                   // Imagen del producto
                                   Image.network(
                                     productoRelacionado.foto,
-                                    width: screenWidth * 0.2,
-                                    height: screenWidth * 0.2,
+                                    width: screenWidth * 0.25,
+                                    height: screenWidth * 0.25,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(Icons.broken_image, size: 60);
@@ -266,10 +281,10 @@ class DetallesProducto extends StatelessWidget {
 
                                   // Nombre del producto
                                   SizedBox(
-                                    width: screenWidth * 0.24,
+                                    width: screenWidth * 0.26,
                                     child: Text(
                                       productoRelacionado.nombre,
-                                      style: const TextStyle(fontFamily: 'Geist', fontSize: 10),
+                                      style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322),
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
@@ -280,7 +295,7 @@ class DetallesProducto extends StatelessWidget {
                                   // Precio del producto
                                   Text(
                                     '${productoRelacionado.precio.toStringAsFixed(2)}€',
-                                    style: const TextStyle(fontFamily: 'Geist', fontSize: 12),
+                                    style:  TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322),
                                   ),
                                 ],
                               ),
@@ -354,8 +369,8 @@ class _BotonFavoritosState extends State<BotonFavoritos> {
         });
       },
       child: Container(
-        width: 40,
-        height: 40,
+        width: MediaQuery.of(context).size.height * 0.0473,
+        height: MediaQuery.of(context).size.height * 0.0473,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Color(0xFF95B3FF),
@@ -367,7 +382,7 @@ class _BotonFavoritosState extends State<BotonFavoritos> {
                   ? 'assets/icons/corazonnegro_icono.png'  // Ícono cuando está en favoritos
                   : 'assets/icons/corazon_icono.png',  // Ícono cuando no está en favoritos
             ),
-            size: 24,
+            size: MediaQuery.of(context).size.shortestSide * 0.0615,
           ),
         ),
       ),
@@ -410,13 +425,20 @@ class _BotonDistanciaState extends State<BotonDistancia> {
         widget.onTap();  // Llamar al onTap pasado desde el widget principal
       },
       child: Container(
-        width: 40,
-        height: 40,
+        width: MediaQuery.of(context).size.height * 0.0473,
+        height: MediaQuery.of(context).size.height * 0.0473,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: _color,
         ),
-        child: const Icon(Icons.map_outlined, color: Colors.black),
+        child: Center(
+          child: ImageIcon(
+            AssetImage(
+              'assets/icons/mapa_icono.png'
+            ),
+            size: MediaQuery.of(context).size.shortestSide * 0.0615,
+          ),
+        ),
       ),
     );
   }

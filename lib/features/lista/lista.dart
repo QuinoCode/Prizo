@@ -6,6 +6,7 @@ import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
 import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 
 class ListaInterfaz extends StatefulWidget {
   ListaInterfaz({super.key});
@@ -26,65 +27,35 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   ListaFavoritos listaFavoritos = ListaFavoritos(
       id: '1', usuario: 'usuario_demo', productos: []);
 
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    _initializeProductosFavoritos2();
-    _initializeProductosCompra2();
+    initializeData();
   }
-  void _initializeProductosFavoritos2() async {
-    List<Producto> productos = await listaFavoritosService.DB_fetchProducts();
+
+  Future<void> initializeData() async {
+    // Cargar todas las listas y productos en paralelo y asignarlas correctamente
+    final resultados = await Future.wait([
+      listaFavoritosService.generar_ListaFavoritos(),
+      listaCompraService.generar_ListaCompra(),
+      listaFavoritosService.DB_fetchProducts(),
+      listaFavoritosService.DB_generarNombres(),
+      listaCompraService.DB_fetchProducts(),
+      listaCompraService.DB_generarNombres(),
+    ]);
+
+    // Asignar los resultados obtenidos
+    listaFavoritos = resultados[0] as ListaFavoritos;
+    listaCompra = resultados[1] as ListaCompra;
+    productosFavoritos = resultados[2] as List<Producto>;
+    productosFavoritosNombre = resultados[3] as List<String>;
+    productosCompra = resultados[4] as List<Producto>;
+    productosCompraNombre = resultados[5] as List<String>;
+
     setState(() {
-      productosFavoritos = productos;
-      productosFavoritosNombre = [];
-      for(Producto producto in productosFavoritos) {
-        // Verificar si la longitud del nombre es suficiente para los índices usados
-        if (producto.nombre.length >= 17 && producto.nombre[16] == ' ') {
-          // Tomar los primeros 16 caracteres y validar el rango
-          String auxiliar = producto.nombre.substring(0, 16);
-          if (producto.nombre.length > 16) {
-            auxiliar += producto.nombre.substring(16, producto.nombre.length.clamp(16, 17)) + "...";
-          }
-          productosFavoritosNombre.add(auxiliar);
-        } else {
-          // Validar rango para nombres cortos
-          String auxiliar = producto.nombre.substring(0, producto.nombre.length.clamp(0, 8));
-          if (producto.nombre.length > 8) {
-            auxiliar += producto.nombre.substring(8, producto.nombre.length.clamp(8, 17)) + "...";
-          }
-          productosFavoritosNombre.add(auxiliar);
-        }
-      }
-      listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: productosFavoritos);
-    });
-  }
-  void _initializeProductosCompra2() async {
-    List<(Producto,int)> productos = await listaCompraService.DB_fetchProductsInt();
-    setState(() {
-      productosCompra = [];
-      for(var tupla in productos) {
-        productosCompra.add(tupla.$1);
-      }
-      productosCompraNombre = [];
-      for(Producto producto in productosCompra) {
-        // Verificar si la longitud del nombre es suficiente para los índices usados
-        if (producto.nombre.length >= 17 && producto.nombre[16] == ' ') {
-          // Tomar los primeros 16 caracteres y validar el rango
-          String auxiliar = producto.nombre.substring(0, 16);
-          if (producto.nombre.length > 16) {
-            auxiliar += producto.nombre.substring(16, producto.nombre.length.clamp(16, 17)) + "...";
-          }
-          productosCompraNombre.add(auxiliar);
-        } else {
-          // Validar rango para nombres cortos
-          String auxiliar = producto.nombre.substring(0, producto.nombre.length.clamp(0, 8));
-          if (producto.nombre.length > 8) {
-            auxiliar += producto.nombre.substring(8, producto.nombre.length.clamp(8, 17)) + "...";
-          }
-          productosCompraNombre.add(auxiliar);
-        }
-      }
-      listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: productos);
+      _isLoading = false;
     });
   }
 
@@ -104,7 +75,19 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     // Si hubo cambios, actualiza la interfaz
     if (changesMade ?? false) {
       setState(() {
-        _initializeProductosFavoritos2();
+        _isLoading = true;
+      });
+
+      final resultados = await Future.wait([
+        listaFavoritosService.DB_fetchProducts(),
+        listaFavoritosService.DB_generarNombres(),
+      ]);
+
+      productosFavoritos = resultados[0] as List<Producto>;
+      productosFavoritosNombre = resultados[1] as List<String>;
+
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -123,9 +106,35 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     // Si hubo cambios, actualiza la interfaz
     if (changesMade ?? false) {
       setState(() {
-        _initializeProductosCompra2();
+        _isLoading = true;
+      });
+
+      final resultados = await Future.wait([
+        listaCompraService.DB_fetchProducts(),
+        listaCompraService.DB_generarNombres(),
+      ]);
+
+      productosCompra = resultados[0] as List<Producto>;
+      productosCompraNombre = resultados[1] as List<String>;
+
+      setState(() {
+        _isLoading = false;
       });
     }
+  }
+
+  void _navigateToProductInfo(Producto producto) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetallesProducto(
+          producto: producto,
+          listaCompra: listaCompra,
+          listaFavoritos: listaFavoritos,
+        ),
+      ),
+    );
+    setState(() {});
   }
 
   Widget _buildProductList(String title, List<Producto> productos, List<String> nombres, VoidCallback onNavigate, bool esCompra) {
@@ -144,14 +153,24 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: screenWidth * 0.085,
+                      fontFamily: 'Geist',
+                      fontSize: screenWidth * 0.0966,
                     ),
                   ),
-                  SizedBox(width: screenWidth * 0.01),
-                  Icon(Icons.arrow_forward, size: screenWidth * 0.085),
+                  SizedBox(width: screenWidth * 0.048),
+                  GestureDetector(
+                    onTap: onNavigate, // Navegar solo cuando se pulse la flecha
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationY(3.1416), // Invierte horizontalmente
+                      child: ImageIcon(
+                        AssetImage('assets/icons/arrow.png'),
+                        size: screenWidth * 0.057,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              onTap: onNavigate,
             ),
             if (productos.isEmpty || nombres.isEmpty)
               Padding(
@@ -159,7 +178,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                 child: Text(
                   "    $title no tiene elementos",
                   style: TextStyle(
-                    fontSize: screenWidth * 0.04,
+                    fontSize: screenWidth * 0.04293,
                     fontStyle: FontStyle.italic,
                     color: Colors.grey,
                   ),
@@ -215,7 +234,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                     children: [
                                       Text(
                                         nombre,
-                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                        style: TextStyle(fontSize: screenWidth * 0.04293),
                                       ),
                                       SizedBox(height: screenHeight * 0.005),
                                       GestureDetector(
@@ -238,7 +257,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                   )
                                       : Text(
                                     nombre,
-                                    style: TextStyle(fontSize: screenWidth * 0.04),
+                                    style: TextStyle(fontSize: screenWidth * 0.04293),
                                   ),
                                 ],
                               ),
@@ -264,17 +283,22 @@ class _ListaInterfazState extends State<ListaInterfaz> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.03, // Ajusta el espacio aquí
-          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
           _buildProductList("Lista de compra", productosCompra, productosCompraNombre, _navigateToListaCompra, true),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.03, // Ajusta el espacio aquí
-          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
           _buildProductList("Lista de favoritos", productosFavoritos, productosFavoritosNombre, _navigateToListaFavoritos, false),
         ],
       ),

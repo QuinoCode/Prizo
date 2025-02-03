@@ -96,12 +96,12 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
             const SizedBox(height: 54),
             Text(
               'Filtrar por:',
-              style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0923, fontFamily: 'Geist', fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.0966, fontFamily: 'Geist', fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Alérgenos',
-              style: TextStyle(fontSize: 22, fontFamily: 'Geist', fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.0644, fontFamily: 'Geist', fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
             SingleChildScrollView(
@@ -155,7 +155,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
-      child: Text(text, style: TextStyle(fontSize: 14, fontFamily: 'Geist', fontWeight: FontWeight.w400)),
+      child: Text(text, style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontFamily: 'Geist', fontWeight: FontWeight.w400)),
     );
   }
 }
