@@ -230,15 +230,21 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 Column(
                   children: [
                     if (cargandoOfertas)
-                      Center(child: CircularProgressIndicator())
+                      Container(
+                          height: height * 0.264,
+                          child: Center(child: CircularProgressIndicator())
+                      )
                     else if (productosEnOferta.isEmpty)
-                      Center(
-                        child: Text(
-                          'No hay productos en oferta en tu lista de favoritos.',
-                          style: TextStyle(
-                            fontFamily: 'Geist',
-                            fontSize: width * 0.04,
-                            color: Colors.grey,
+                      Container(
+                        height: height * 0.264,
+                        child: Center(
+                          child: Text(
+                            'No hay productos en oferta en tu lista de favoritos.',
+                            style: TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: width * 0.04,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       )
