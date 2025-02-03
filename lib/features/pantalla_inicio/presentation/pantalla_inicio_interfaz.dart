@@ -53,9 +53,11 @@ class _PantallaInicioState extends State<PantallaInicio> {
       });
     } catch (e) {
       print("Error cargando productos en oferta: $e");
-      setState(() {
-        cargandoOfertas = false;
-      });
+      if (mounted){
+        setState(() {
+          cargandoOfertas = false;
+        });
+      }
     }
   }
 
@@ -108,9 +110,11 @@ class _PantallaInicioState extends State<PantallaInicio> {
       }
     } catch (e) {
       print("Error cargando supermercados cercanos: $e");
-      setState(() {
-        cargandoSupermercados = false;
-      });
+      if (mounted){
+        setState(() {
+          cargandoSupermercados = false;
+        });
+      }
     }
   }
 
