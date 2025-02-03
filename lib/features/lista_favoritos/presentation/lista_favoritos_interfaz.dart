@@ -255,14 +255,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     }
   }
 
-  String correctText(String tienda){
-    if (tienda == 'CONSUM') {
-      return 'Consum';
-    } else {
-      return tienda;
-    }
-  }
-
   void _navigateToProductInfo(Producto producto) {
     ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
     ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
@@ -327,7 +319,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.longestSide * 0.001),
                   Text(
-                    correctText(widget.producto.tienda),
+                    widget.producto.tienda,
                     style: TextStyle(
                       fontFamily: 'Geist',
                       fontWeight: FontWeight.w300,

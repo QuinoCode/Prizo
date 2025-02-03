@@ -48,7 +48,7 @@ class ConsumFinderService implements FinderWrapper{
       /*crear producto */
       final product = Producto(
           id: productJson["ean"] ?? "",
-          tienda: "CONSUM",
+          tienda: "Consum",
           marca: marca["name"] ?? "-",
           precio: priceVal["centAmount"],
           precioMedida: priceVal["centUnitAmount"],
