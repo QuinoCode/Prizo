@@ -310,7 +310,6 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
