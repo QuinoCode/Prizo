@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/main.dart';
+import 'package:provider/provider.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
@@ -60,6 +62,8 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   }
 
   void _navigateToListaFavoritos() async {
+    //Provider.of<PrizoState>(context, listen: false).setIndex(4);
+    //No está implementado
     // Espera al resultado de la pantalla secundaria
     bool? changesMade = await Navigator.push(
       context,
@@ -103,6 +107,8 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   }
 
   void _navigateToListaCompra() async {
+    //Provider.of<PrizoState>(context, listen: false).setIndex(4);
+    //No está implementado
     // Espera al resultado de la pantalla secundaria
     bool? changesMade = await Navigator.push(
       context,
@@ -205,11 +211,11 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   ),
                   SizedBox(width: screenWidth * 0.041),
                   GestureDetector(
-                    onTap: onNavigate, // Navegar solo cuando se pulse la flecha
+                    onTap: onNavigate,
                     child: Transform(
                       alignment: Alignment.center,
-                      transform: Matrix4.rotationY(3.1416) // Invierte horizontalmente
-                        ..translate(0.0, -screenHeight * -0.0045), // Mueve el ícono hacia arriba
+                      transform: Matrix4.rotationY(3.1416)
+                        ..translate(0.0, -screenHeight * -0.0045),
                       child: ImageIcon(
                         AssetImage('assets/icons/arrow.png'),
                         size: screenWidth * 0.0622748,
@@ -236,9 +242,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
             else
               SizedBox(
                 height: screenHeight * 0.25,
-                child: _isLoading
-                    ? Center(child: CircularProgressIndicator()) // Muestra un indicador de carga si _isLoading es true
-                    : ListView.builder(
+                child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: productos.length,
                   itemBuilder: (context, index) {
@@ -247,9 +251,6 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                     return FutureBuilder<bool>(
                       future: listaCompraService.DB_Tick_tiene_tick(producto),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator();
-                        }
                         final tieneTick = snapshot.data ?? false;
                         final iconPath = tieneTick
                             ? 'assets/icons/checked_checkbox.png'
@@ -264,7 +265,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                 children: [
                                   Expanded(
                                     child: GestureDetector(
-                                      onTap: () => _navigateToProductInfo(producto), // Al tocar la imagen, navegar a detalles
+                                      onTap: () => _navigateToProductInfo(producto),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(screenWidth * 0.02),
                                         child: Image.network(
@@ -283,7 +284,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                   ),
                                   SizedBox(height: screenHeight * 0.01),
                                   GestureDetector(
-                                    onTap: () => _navigateToProductInfo(producto), // Al tocar el nombre, navegar a detalles
+                                    onTap: () => _navigateToProductInfo(producto),
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: Text(
@@ -332,6 +333,12 @@ class _ListaInterfazState extends State<ListaInterfaz> {
         );
       },
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant ListaInterfaz oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    initializeData();
   }
 
   @override

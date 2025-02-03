@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:prizo/main.dart';
 import 'package:prizo/shared/database/database_operations.dart';
+import 'package:provider/provider.dart';
 import '/features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
 import '/features/productsearch/product_search_ui.dart';
 import '/features/lista/lista.dart';
 import '/features/perfil/perfil.dart';
+import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+
 
 class BarraNavegacion extends StatefulWidget {
   @override
@@ -22,24 +27,22 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
     ProductSearchScreen(),
     ListaInterfaz(),
     PerfilInterfaz(),
+    //ListaFavoritosInterfaz(),
+    //ListaCompraInterfaz(),
   ];
 
   void _onTabTapped(int index) {
-    if (mounted){
-      setState(() {
-        _currentIndex = index;
-      });
-    }
+    Provider.of<PrizoState>(context, listen: false).setIndex(index);
   }
 
   @override
   Widget build(BuildContext context) {
     initDB();
+    final navState = Provider.of<PrizoState>(context);
 
     final screenWidth = MediaQuery.of(context).size.shortestSide;
     final screenHeight = MediaQuery.of(context).size.longestSide;
     final baseWidth = 375.0;
-    final baseHeight = 800.0;
     final scaleFactorWidth = screenWidth / baseWidth;
     final scaleFactorHeight = screenHeight / baseWidth;
 
@@ -47,7 +50,7 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: _screens[_currentIndex],
+            child: _screens[navState.currentIndex],
           ),
           Positioned(
             bottom: 8 * scaleFactorHeight,
@@ -84,13 +87,14 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
     required String iconPath,
     required double iconSize,
   }) {
-    final isSelected = _currentIndex == index;
+    final navState = Provider.of<PrizoState>(context); // Get the current tab index
+    final isSelected = navState.currentIndex == index;
     final screenWidth = MediaQuery.of(context).size.width;
     final baseWidth = 375.0;
     final scaleFactor = screenWidth / baseWidth;
 
     return GestureDetector(
-      onTap: () => _onTabTapped(index),
+      onTap: () => navState.setIndex(index),
       behavior: HitTestBehavior.translucent,
       child: Container(
         width: 80 * scaleFactor,
