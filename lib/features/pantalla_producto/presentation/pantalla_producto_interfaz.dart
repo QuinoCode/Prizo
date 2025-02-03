@@ -104,11 +104,10 @@ class DetallesProducto extends StatelessWidget {
                   height: screenWidth * 0.6,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.broken_image, size: 100);
+                    return Image.asset('assets/images/placeholder.png');
                   },
                 )
-                    : const Icon(Icons.image_not_supported, size: 100),
-              ),
+                    :  Image.asset('assets/images/placeholder.png'),              ),
               SizedBox(height: screenHeight * 0.01),
 
               // Nombre del producto

@@ -612,11 +612,16 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
               GestureDetector(
                 onTap: () => _navigateToProductInfo(widget.producto),
                 child: widget.producto.foto.startsWith('assets')
-                  ? Image.asset(
-                      'assets/images/placeholder.jpg',
-                      width: MediaQuery.of(context).size.shortestSide * 0.279,
-                      height: MediaQuery.of(context).size.longestSide * 0.128,
-                    )
+                  ? SizedBox(
+                    width: MediaQuery.of(context).size.shortestSide * 0.279,
+                    height: MediaQuery.of(context).size.longestSide * 0.128,
+                    child: Center(
+                      child: Image.asset(
+                          'assets/images/placeholder.png',
+                          width: MediaQuery.of(context).size.shortestSide * 0.140,
+                        ),
+                    ),
+                  )
                   : Image.network(
                       widget.producto.foto,
                       width: MediaQuery.of(context).size.shortestSide * 0.279,
@@ -698,7 +703,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                     ),
                 )
               ),
-              SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.051), 
               SizedBox(
                 child: _showButton
                   ? Container(
