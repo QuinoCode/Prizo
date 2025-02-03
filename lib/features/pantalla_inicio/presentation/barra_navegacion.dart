@@ -25,9 +25,11 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
   ];
 
   void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    if (mounted){
+      setState(() {
+        _currentIndex = index;
+      });
+    }
   }
 
   @override

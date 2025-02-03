@@ -58,22 +58,7 @@ class ListaFavoritosService {
     List<String> BD_nombres = [];
 
     for (Producto producto in BD_productos) {
-      // Verificar si la longitud del nombre es suficiente para los índices usados
-      if (producto.nombre.length >= 17 && producto.nombre[16] == ' ') {
-        // Tomar los primeros 16 caracteres y validar el rango
-        String auxiliar = producto.nombre.substring(0, 16);
-        if (producto.nombre.length > 16) {
-          auxiliar += producto.nombre.substring(16, producto.nombre.length.clamp(16, 17)) + "...";
-        }
-        BD_nombres.add(auxiliar);
-      } else {
-        // Validar rango para nombres cortos
-        String auxiliar = producto.nombre.substring(0, producto.nombre.length.clamp(0, 8));
-        if (producto.nombre.length > 8) {
-          auxiliar += producto.nombre.substring(8, producto.nombre.length.clamp(8, 17)) + "...";
-        }
-        BD_nombres.add(auxiliar);
-      }
+      BD_nombres.add(producto.nombre);
     }
 
     return BD_nombres;
