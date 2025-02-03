@@ -162,6 +162,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
           children: [
             ListTile(
               title: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
@@ -177,10 +178,12 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                     onTap: onNavigate, // Navegar solo cuando se pulse la flecha
                     child: Transform(
                       alignment: Alignment.center,
-                      transform: Matrix4.rotationY(3.1416), // Invierte horizontalmente
+                      transform: Matrix4.rotationY(3.1416) // Invierte horizontalmente
+                        ..translate(0.0, -screenHeight * -0.0045), // Mueve el ícono hacia arriba
                       child: ImageIcon(
                         AssetImage('assets/icons/arrow.png'),
-                        size: screenWidth * 0.0566,
+                        size: screenWidth * 0.0622748,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -243,16 +246,17 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                     ),
                                   ),
                                   SizedBox(height: screenHeight * 0.01),
-                                  esCompra
-                                      ? Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        nombre,
-                                        style: TextStyle(fontSize: screenWidth * 0.04293),
-                                      ),
-                                      SizedBox(height: screenHeight * 0.005),
-                                      GestureDetector(
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      nombre,
+                                      style: TextStyle(fontSize: screenWidth * (esCompra ? 0.04313 : 0.04293)),
+                                    ),
+                                  ),
+                                  if (esCompra)
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: GestureDetector(
                                         onTap: () async {
                                           setState(() {
                                             if (tieneTick) {
@@ -268,12 +272,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                                           height: screenWidth * 0.08,
                                         ),
                                       ),
-                                    ],
-                                  )
-                                      : Text(
-                                    nombre,
-                                    style: TextStyle(fontSize: screenWidth * 0.04293),
-                                  ),
+                                    ),
                                 ],
                               ),
                             ),
