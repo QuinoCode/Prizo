@@ -104,7 +104,11 @@ class DetallesProducto extends StatelessWidget {
                   height: screenWidth * 0.6,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return Image.asset('assets/images/placeholder.png');
+                    return Image.asset(
+                      'assets/images/placeholder.png',
+                      width: screenWidth * 0.6,
+                      height: screenWidth * 0.6,
+                    );
                   },
                 )
                     :  Image.asset('assets/images/placeholder.png'),              ),
