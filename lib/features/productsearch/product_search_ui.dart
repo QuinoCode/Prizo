@@ -199,7 +199,9 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   void _backButtonBhvr() {
     //if has text, empty, else pop
     if (_searchController.text.isNotEmpty){
-      _searchController.text = "";
+      setState ( () {
+        _searchController.text = "";
+      });
     } else {
       Navigator.pop(context, true);
     }
