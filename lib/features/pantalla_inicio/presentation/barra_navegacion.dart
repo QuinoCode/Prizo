@@ -36,10 +36,12 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
   Widget build(BuildContext context) {
     initDB();
 
-    final screenWidth = MediaQuery.of(context).size.width;
-
+    final screenWidth = MediaQuery.of(context).size.shortestSide;
+    final screenHeight = MediaQuery.of(context).size.longestSide;
     final baseWidth = 375.0;
-    final scaleFactor = screenWidth / baseWidth;
+    final baseHeight = 800.0;
+    final scaleFactorWidth = screenWidth / baseWidth;
+    final scaleFactorHeight = screenHeight / baseWidth;
 
     return Scaffold(
       body: Stack(
@@ -48,26 +50,26 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
             child: _screens[_currentIndex],
           ),
           Positioned(
-            bottom: 16 * scaleFactor,
-            left: 16 * scaleFactor,
-            right: 16 * scaleFactor,
+            bottom: 8 * scaleFactorHeight,
+            left: 16 * scaleFactorWidth,
+            right: 16 * scaleFactorWidth,
             child: Container(
-              height: 60 * scaleFactor,
+              height: 27.8 * scaleFactorHeight,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(50 * scaleFactor),
+                borderRadius: BorderRadius.circular(50 * scaleFactorWidth),
                 border: Border.all(
                   color: Color(0xFF95B3FF),
-                  width: 2.8 * scaleFactor,
+                  width: 2.8 * scaleFactorWidth,
                 ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildNavItem(index: 0, iconPath: 'assets/icons/casa_icono.png', iconSize: 26 * scaleFactor),
-                  _buildNavItem(index: 1, iconPath: 'assets/icons/lupa_icono.png', iconSize: 22.5 * scaleFactor),
-                  _buildNavItem(index: 2, iconPath: 'assets/icons/listas_icono.png', iconSize: 24 * scaleFactor),
-                  _buildNavItem(index: 3, iconPath: 'assets/icons/usuario_icono.png', iconSize: 23 * scaleFactor),
+                  _buildNavItem(index: 0, iconPath: 'assets/icons/casa_icono.png', iconSize: 26 * scaleFactorWidth),
+                  _buildNavItem(index: 1, iconPath: 'assets/icons/lupa_icono.png', iconSize: 22.5 * scaleFactorWidth),
+                  _buildNavItem(index: 2, iconPath: 'assets/icons/listas_icono.png', iconSize: 24 * scaleFactorWidth),
+                  _buildNavItem(index: 3, iconPath: 'assets/icons/usuario_icono.png', iconSize: 23 * scaleFactorWidth),
                 ],
               ),
             ),
