@@ -117,8 +117,8 @@ class ListaCompraService {
         resultado.add(nombre + "\n" + " ");
       } else {
         String aux_1 = nombre.substring(0, 13);
-        String aux_2 = (nombre.length > 19) ? (nombre.substring(13, 19) + "...") : nombre.substring(13);
-        resultado.add(aux_1 + "\n" + aux_2.trim());
+        String aux_2 = (nombre.length > 18) ? nombre.substring(13, 18) : nombre.substring(13);
+        resultado.add(aux_1 + "\n" + aux_2.trim() + "...");
       }
     }
 
