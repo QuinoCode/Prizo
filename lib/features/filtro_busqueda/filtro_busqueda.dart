@@ -47,14 +47,16 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
           backgroundColor: Colors.white,
           title: Padding(
             padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-            child: Text('Filtrar', style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.width * 0.0615, fontWeight: FontWeight.w500)),
+            child: Text('Filtrar', style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0966, fontWeight: FontWeight.w500)),
           ),
           centerTitle: true,
           actions: [
             IconButton(
               padding: EdgeInsets.fromLTRB(0, 20, 13, 0),
               color: Color.fromARGB(255,18,18,18),
-              icon: ImageIcon(AssetImage('assets/icons/x.png'),size: MediaQuery.of(context).size.width * 0.07,),
+              icon: ImageIcon(AssetImage('assets/icons/x.png'),size: MediaQuery.of(context).size.shortestSide * 0.07,),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               onPressed: () {
                 Navigator.pop(context, widget.alergenos);
               },
@@ -74,10 +76,10 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height:30),
+            SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.0615),
             Text(
               'Ordenar por:',
-              style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.0923, fontFamily: 'Geist', fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.0923, fontFamily: 'Geist', fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 14),
             SingleChildScrollView(
@@ -138,7 +140,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
-      child: Text(text, style: TextStyle(fontSize: 14, fontFamily: 'Geist', fontWeight: FontWeight.w400)),
+      child: Text(text, style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0*04293, fontFamily: 'Geist', fontWeight: FontWeight.w400)),
     );
   }
 
