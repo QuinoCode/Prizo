@@ -169,9 +169,10 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                     style: TextStyle(
                       fontFamily: 'Geist',
                       fontSize: screenWidth * 0.0966,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(width: screenWidth * 0.048),
+                  SizedBox(width: screenWidth * 0.041),
                   GestureDetector(
                     onTap: onNavigate, // Navegar solo cuando se pulse la flecha
                     child: Transform(
@@ -179,7 +180,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                       transform: Matrix4.rotationY(3.1416), // Invierte horizontalmente
                       child: ImageIcon(
                         AssetImage('assets/icons/arrow.png'),
-                        size: screenWidth * 0.057,
+                        size: screenWidth * 0.0566,
                       ),
                     ),
                   ),
