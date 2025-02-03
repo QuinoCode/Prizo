@@ -126,8 +126,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                         foregroundColor: Color.fromARGB(255,80,79,79),
                         side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
                       ),
-                      child: Text('DIA', 
-                        style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
+                      child: Text('DIA',
+                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
                       ),
                     ),
                   ),
@@ -144,7 +144,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                         side: BorderSide(color: Color(0xFF95B3FF),width: 2),
                       ),
                       child: Text('Consum',
-                        style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
+                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
                       ),
                     ),
                   ),
@@ -161,7 +161,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                         side: BorderSide(color: Color(0xFF95B3FF),width: 2),
                       ),
                       child: Text('Carrefour',
-                        style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
+                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
                       ),
                     ),
                   ),
@@ -174,15 +174,15 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
               padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
               child: Expanded(
                   child: SingleChildScrollView(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _productos.length,
-                        itemBuilder: (context, index) {
-                          final producto = _productos[index];
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0118),
-                            child: Dismissible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _productos.length,
+                      itemBuilder: (context, index) {
+                        final producto = _productos[index];
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0118),
+                          child: Dismissible(
                               key: Key(productoService.generarClave(producto)),
                               direction: DismissDirection.startToEnd,
                               onDismissed: (direction) {
@@ -191,16 +191,16 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                               },
                               background: Container(
                                 //color: Color(0xFF95B3FF),
-                                alignment: Alignment.centerLeft,
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
-                                child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
+                                  alignment: Alignment.centerLeft,
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
+                                  child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
                               ),
                               child: StatefulStoreItem(producto: producto, onAction: () => fetchAndStoreProductos(db))
-                                                    ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
+                    ),
                   )
               ),
             )
@@ -248,7 +248,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-          DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos,),
+            DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos,),
       ),
     );
   }
@@ -286,7 +286,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
           title: Text('¿Eliminar producto?',
             style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w500),),
           content: Text('¿Estás seguro de que deseas eliminar el producto ${producto.nombre}?',
-            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+              style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
@@ -294,7 +294,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 Navigator.of(context).pop();
               },
               child: Text('Cancelar',
-                style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+                  style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
             ),
             TextButton(
               onPressed: () {
@@ -309,7 +309,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
               child: Text('Eliminar',
-                style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+                  style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
             ),
           ],
         );
@@ -426,83 +426,83 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                   ),
                   child: Stack(
                     children: [
-                          Positioned(
-                            top: 0,
-                            bottom: 0,
-                            right: MediaQuery.of(context).size.shortestSide * 0.110,
-                            child: IconButton(
-                              iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
-                              padding: EdgeInsets.zero,
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,  
-                              icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
-                              onPressed: () {
-                                setState(() {
-                                  if (_counter > 0) {
-                                    if(_counter == 1) {
-                                      listaCompraService.DB_quitarProducto(widget.producto);
-                                      listaCompraService.DB_Tick_quitar(widget.producto);
-                                    } else {
-                                      listaCompraService.DB_decreaseCantidad(widget.producto);
-                                    }
-                                    //listaCompraService.DB_decreaseCantidad(widget.producto);
-                                    //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
-                                    _counter--;
-                                  } else {
-                                    listaCompraService.DB_quitarProducto(widget.producto);
-                                    listaCompraService.DB_Tick_quitar(widget.producto);
-                                    //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
-                                    _showButton = true;
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                          Positioned(
-                              left: (MediaQuery.of(context).size.shortestSide * 0.21 - 
-                              (TextPainter(
-                                text: TextSpan(
-                                  text: '$_counter',
-                                  style: TextStyle(
-                                    fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
-                                    fontFamily: 'Geist',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                textDirection: TextDirection.ltr,
-                              )..layout()).width)/2,
-                              bottom: MediaQuery.of(context).size.longestSide * 0.002,
-                              child: Text(
-                                '$_counter',
+                      Positioned(
+                        top: 0,
+                        bottom: 0,
+                        right: MediaQuery.of(context).size.shortestSide * 0.110,
+                        child: IconButton(
+                          iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
+                          padding: EdgeInsets.zero,
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
+                          onPressed: () {
+                            setState(() {
+                              if (_counter > 0) {
+                                if(_counter == 1) {
+                                  listaCompraService.DB_quitarProducto(widget.producto);
+                                  listaCompraService.DB_Tick_quitar(widget.producto);
+                                } else {
+                                  listaCompraService.DB_decreaseCantidad(widget.producto);
+                                }
+                                //listaCompraService.DB_decreaseCantidad(widget.producto);
+                                //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
+                                _counter--;
+                              } else {
+                                listaCompraService.DB_quitarProducto(widget.producto);
+                                listaCompraService.DB_Tick_quitar(widget.producto);
+                                //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
+                                _showButton = true;
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        left: (MediaQuery.of(context).size.shortestSide * 0.21 -
+                            (TextPainter(
+                              text: TextSpan(
+                                text: '$_counter',
                                 style: TextStyle(
                                   fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
-                                  
                                   fontFamily: 'Geist',
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ),
-                          Positioned(
-                            top: 0,
-                            bottom: MediaQuery.of(context).size.longestSide * 0.002,
-                            left: MediaQuery.of(context).size.shortestSide * 0.110,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,  
-                              icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
-                              onPressed: () {
-                                if (_counter < 99) {
-                                  listaCompraService.DB_annadirProducto(widget.producto);
-                                  //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
-                                  setState(() {
-                                    _counter++;
-                                  });
-                                }
-                              },
-                            ),
+                              textDirection: TextDirection.ltr,
+                            )..layout()).width)/2,
+                        bottom: MediaQuery.of(context).size.longestSide * 0.002,
+                        child: Text(
+                          '$_counter',
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+
+                            fontFamily: 'Geist',
+                            fontWeight: FontWeight.w500,
                           ),
-                        ],
+                        ),
+                      ),
+                      Positioned(
+                        top: 0,
+                        bottom: MediaQuery.of(context).size.longestSide * 0.002,
+                        left: MediaQuery.of(context).size.shortestSide * 0.110,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
+                          onPressed: () {
+                            if (_counter < 99) {
+                              listaCompraService.DB_annadirProducto(widget.producto);
+                              //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
+                              setState(() {
+                                _counter++;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
