@@ -37,7 +37,7 @@ class ConsumFinderService implements FinderWrapper{
 
   Future<List<Producto>> _parseProductList(List productsJsonList) async {
     final List<Producto> productList = [];
-/*crear lista de productos */
+    /*crear lista de productos */
     for (var productJson in productsJsonList) {
       final currProduct = productJson["productData"];
       final marca = currProduct["brand"];
@@ -45,9 +45,7 @@ class ConsumFinderService implements FinderWrapper{
       final priceObj = priceMap["prices"];
       final priceVal = priceObj[0]["value"];
       final categoria = productJson["categories"][0]["name"];
-
-
-/*crear producto */
+      /*crear producto */
       final product = Producto(
           id: productJson["ean"] ?? "",
           tienda: "CONSUM",
@@ -55,7 +53,7 @@ class ConsumFinderService implements FinderWrapper{
           precio: priceVal["centAmount"],
           precioMedida: priceVal["centUnitAmount"],
           nombre: ObtencionProductoService.limpiarNombreProducto(currProduct["name"], marca["name"] ?? "-", "Consum"),
-          foto: productJson["media"][0]["url"],
+          foto: productJson["media"].length > 0 ? productJson["media"][0]["url"] : 'assets/images/placeholder.jpg',
           alergenos: [false, false, false],
           categoria: categoria,
           oferta: priceObj.length > 1,
