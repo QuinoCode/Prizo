@@ -6,6 +6,7 @@ import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
 import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 
 class ListaInterfaz extends StatefulWidget {
   ListaInterfaz({super.key});
@@ -120,6 +121,20 @@ class _ListaInterfazState extends State<ListaInterfaz> {
         _isLoading = false;
       });
     }
+  }
+
+  void _navigateToProductInfo(Producto producto) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetallesProducto(
+          producto: producto,
+          listaCompra: listaCompra,
+          listaFavoritos: listaFavoritos,
+        ),
+      ),
+    );
+    setState(() {});
   }
 
   Widget _buildProductList(String title, List<Producto> productos, List<String> nombres, VoidCallback onNavigate, bool esCompra) {
