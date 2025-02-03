@@ -148,7 +148,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
                       'Escanear',
                       style:  TextStyle(
                         fontFamily: 'Geist',
-                        fontSize: MediaQuery.of(context).size.shortestSide * 0.065,
+                        fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
                         fontWeight: FontWeight.w400,
                         color: const Color(0xFF121212),
                       ),

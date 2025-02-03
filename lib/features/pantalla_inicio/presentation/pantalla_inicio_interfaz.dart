@@ -142,6 +142,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
     final String currentDay = DateFormat.EEEE('es_ES').format(DateTime.now());
 
     return Scaffold(
+      appBar: AppBar(backgroundColor:
+    Colors.white,
+      toolbarHeight: MediaQuery.of(context).size.longestSide * 0.002,),
       body: Container(
         color: Colors.white,
         child: SingleChildScrollView(
