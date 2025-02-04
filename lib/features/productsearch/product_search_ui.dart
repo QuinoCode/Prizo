@@ -146,8 +146,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     final navState = Provider.of<PrizoState>(context, listen: false);
     _searchController.text = navState.searchQuery;
     if (navState.searchQuery.isNotEmpty) {
-      Database db = DatabaseOperations.instance.prizoDatabase;
-      DatabaseOperations.instance.registerReciente(db, navState.searchQuery);
+      _registerReciente(navState.searchQuery);
       _searchProducts();
     }
     // Add a listener to check when the text becomes empty
@@ -158,6 +157,15 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
         });
       }
     });
+  }
+
+  void _registerReciente(String query) {
+    try {
+      Database db = DatabaseOperations.instance.prizoDatabase;
+      DatabaseOperations.instance.registerReciente(db, query);
+    } catch (e) {
+      print (e);
+    }
   }
 
   void _toggleTienda(String tienda) {
@@ -338,6 +346,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                             return ElevatedButton(
                               onPressed: () {
                                 _searchController.text = recentElements[index];
+                                _registerReciente(recentElements[index]);
                                 _searchProducts();
                               },
                               style: ElevatedButton.styleFrom(
@@ -443,7 +452,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, MediaQuery.of(context).size.shortestSide * 0.123),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, MediaQuery.of(context).size.shortestSide * 0.140),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -547,7 +556,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                           textInputAction: TextInputAction.search,
                           onSubmitted: (query) {
                             if (_searchController.text != ""){
-                              DatabaseOperations.instance.registerReciente(db, query);
+                              _registerReciente(query);
                             }
                             _searchProducts(); // Llamamos a la función de búsqueda al presionar "Enter"
                           },
@@ -695,10 +704,10 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              '${widget.producto.precio}€',
+                              widget.producto.oferta ? '${widget.producto.precioOferta}' : '${widget.producto.precio}€',
                               style: TextStyle(
                                 fontFamily: 'Geist',
-                                color: Color.fromARGB(255,33,33,33),
+                                color: widget.producto.oferta ? Colors.red : Color.fromARGB(255,33,33,33),
                                 fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -710,7 +719,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                                 '${widget.producto.precioMedida}€/kg',
                                 style: TextStyle(
                                   fontFamily: 'Geist',
-                                  color: Color.fromARGB(255,53,53,53),
+                                  color: widget.producto.oferta ? Colors.red : Color.fromARGB(255,33,33,33),
                                   fontSize: MediaQuery.of(context).size.shortestSide * 0.0322,
                                 ),
                               ),

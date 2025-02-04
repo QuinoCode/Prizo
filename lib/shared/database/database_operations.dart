@@ -391,6 +391,7 @@ class DatabaseOperations {
         [bus.toLowerCase()]);
 
       if (existingResult.isNotEmpty) {
+        await updateReciente(db, bus);
         return;
       }
 
@@ -414,6 +415,17 @@ class DatabaseOperations {
       print('Error registering name: $e');
     }
   }
+
+  Future<void> updateReciente(Database db, String bus) async {
+  try {
+    await db.rawUpdate(
+      'UPDATE Lista_Recientes SET id = ? WHERE busqueda = ?',
+      [DateTime.now().toString(), bus],
+    );
+  } catch (e) {
+    print('Error updating recent item: $e');
+  }
+}
 
   Future<void> deleteFromProductTickTable(Database db, Producto producto) async{
     try{
