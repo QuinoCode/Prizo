@@ -111,67 +111,79 @@ class _ListaInterfazState extends State<ListaInterfaz> {
         final screenHeight = MediaQuery.of(context).size.height;
         final screenWidth = MediaQuery.of(context).size.width;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: screenWidth * 0.0966,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(width: screenWidth * 0.041),
-                  GestureDetector(
-                    onTap: onNavigate,
-                    child: Transform(
-                      alignment: Alignment.center,
-                      transform: Matrix4.rotationY(3.1416)
-                        ..translate(0.0, -screenHeight * -0.0045),
-                      child: ImageIcon(
-                        AssetImage('assets/icons/arrow.png'),
-                        size: screenWidth * 0.0622748,
-                        color: Color(0xFF121212),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (productos.isEmpty || nombres.isEmpty)
-              Align(
-                child: SizedBox(
-                  height: screenHeight * 0.25,
-                  child: Align(
-                  alignment: Alignment.centerLeft,
-                    child: Text(
-                      "    $title no tiene elementos",
+        return SizedBox(
+          height: MediaQuery.of(context).size.longestSide * 0.35,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      title,
                       style: TextStyle(
-                        fontSize: screenWidth * 0.04293,
-                        fontStyle: FontStyle.italic,
-                        color: Color(0xFF504F4F),
+                        fontFamily: 'Geist',
+                        fontSize: screenWidth * 0.0966,
+                        fontWeight: FontWeight.w500,
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                  ),
-                ),
-              )
-            else
-              SizedBox(
-                height: screenHeight * 0.25,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: productos.length,
-                  itemBuilder: (context, index) => _buildProduct(productos[index], nombres[index], esCompra, screenWidth, screenHeight, index, productos.length),
+                    SizedBox(width: screenWidth * 0.041),
+                    GestureDetector(
+                      onTap: onNavigate,
+                      child: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.rotationY(3.1416)
+                          ..translate(0.0, -screenHeight * -0.0045),
+                        child: ImageIcon(
+                          AssetImage('assets/icons/arrow.png'),
+                          size: screenWidth * 0.0622748,
+                          color: Color(0xFF121212),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-          ],
+              if (productos.isEmpty || nombres.isEmpty)
+                Align(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                    esCompra 
+                    ? Image.asset('assets/images/cesta_vacia.png', height: screenHeight * 0.18)
+                    : Image.asset('assets/images/bolsa_de_tela_vacia.png', height: screenHeight * 0.18),
+                    SizedBox(height: screenHeight * 0.030,),
+                      esCompra 
+                      ? Text(
+                          "Tu lista de la compra está vacía",
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.04293,
+                            color: Color(0xFF504F4F),
+                          ),
+                        ) 
+                      : Text(
+                          "Tu lista de favoritos está vacía",
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.04293,
+                            color: Color(0xFF504F4F),
+                          ),
+                        )
+                    ],
+                  ),
+                )
+              else
+                SizedBox(
+                  height: screenHeight * 0.25,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: productos.length,
+                    itemBuilder: (context, index) => _buildProduct(productos[index], nombres[index], esCompra, screenWidth, screenHeight, index, productos.length),
+                  ),
+                ),
+            ],
+          ),
         );
       },
     );

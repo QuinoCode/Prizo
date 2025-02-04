@@ -11,6 +11,7 @@ class FiltroProductosInterfaz extends StatefulWidget {
 
 class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
   List<int> selectedOrders = [];  // Usar una lista para permitir múltiples selecciones
+  bool _precioMedidaApplied = false;
 
   void _toggleAlergeno(int alergenosIndex) {
     setState(() {
@@ -89,7 +90,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
                 children: [
                   _buildOrderButton('Precio', 0),
                   SizedBox(width: 12),
-                  _buildOrderButton('Novedades', 1),
+                  _precioMedidaButton(),
                   SizedBox(width: 12),
                   _buildOrderButton('Más comprados', 2),
                 ],
@@ -111,7 +112,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween, // Spaces between items
                 children: [
-                  _buildFilterButton('Sin Lactosa', 1, hasLactose),
+                  _buildFilterButton('Sin lactosa', 1, hasLactose),
                   SizedBox(width: 12),
                   _buildFilterButton('Sin gluten', 0, hasGluten),
                   SizedBox(width: 12),
@@ -141,6 +142,31 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
       child: Text(text, style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontFamily: 'Geist', fontWeight: FontWeight.w400, color: Color.fromARGB(255, 80, 79, 79))),
+    );
+  }
+  Widget _precioMedidaButton() {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          if (_precioMedidaApplied){ 
+              _precioMedidaApplied = false;
+          }
+          else {
+              _precioMedidaApplied = true;
+          }
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _precioMedidaApplied
+            ? Color(0xFF95B3FF)
+            : Colors.white,
+        side: BorderSide(width: 2, color: Color(0xFF95B3FF)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      ),
+      child: Text("Precio/medida", style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontFamily: 'Geist', fontWeight: FontWeight.w400, color: Color(0xFF504F4F))),
     );
   }
 

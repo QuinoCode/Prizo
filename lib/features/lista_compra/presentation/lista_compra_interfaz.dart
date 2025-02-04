@@ -113,7 +113,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
         centerTitle: true,
         toolbarHeight: MediaQuery.of(context).size.longestSide * 0.092,
         backgroundColor: Colors.white,
-        titleTextStyle: TextStyle(color: Color.fromARGB(255,18,18,18), fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0644, fontWeight: FontWeight.w400),
+        titleTextStyle: TextStyle(color: Color.fromARGB(255,18,18,18), fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0644, fontWeight: FontWeight.w500),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -383,9 +383,9 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                     widget.producto.tienda,
                     style: TextStyle(
                       fontFamily: 'Geist',
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w400,
                       color: Color.fromARGB(255,33,33,33),
-                      fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
+                      fontSize: MediaQuery.of(context).size.shortestSide * 0.0322,
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.023),

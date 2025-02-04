@@ -203,9 +203,15 @@ class DetallesProducto extends StatelessWidget {
                     Expanded(child: SizedBox(),),
 
                     // Botón añadir al carrito
-                    BotonCarrito(
-                      producto: producto,
-                      listaCompraService: listaCompraService,
+                    Column(
+                      children: [
+                        BotonCarrito(
+                          producto: producto,
+                          listaCompraService: listaCompraService,
+                        ),
+                        SizedBox(height: 22)
+                    //TODO: Tweak it with MQuery
+                      ],
                     ),
                   ],
                 ),
@@ -298,7 +304,7 @@ class DetallesProducto extends StatelessWidget {
                                   // Precio del producto
                                   Text(
                                     '${productoRelacionado.precio.toStringAsFixed(2)}€',
-                                    style:  TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322),
+                                    style:  TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               ),

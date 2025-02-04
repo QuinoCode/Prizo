@@ -184,9 +184,10 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     color: Color(0xFFF6F6F6),
                     borderRadius: BorderRadius.circular(width * 0.06),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: width * 0.04),
                   child: Row(
                     children: [
+                      SizedBox(width: 20),
+                      //TODO: Mquery
                       ImageIcon(
                         AssetImage('assets/icons/lupa_icono.png'),
                         size: width * 0.06,
@@ -226,6 +227,8 @@ class _PantallaInicioState extends State<PantallaInicio> {
                           );
                         },
                       ),
+                      SizedBox(width: 10),
+                      //TODO: Mquery
                     ],
                   ),
                 ),
@@ -370,7 +373,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                             height: currentIndex == index ? width * 0.03 : width * 0.02,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: currentIndex == index ? Color(0xFF121212) :Color(0xFF504F4F),
+                              color: currentIndex == index ? Color(0xFF121212) :Color(0xFFD9D9D9),
                             ),
                           ),
                         ),
@@ -512,7 +515,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                         "A $distancia km",
                                         style: TextStyle(
                                           fontFamily: 'Geist',
-                                          fontSize: width * 0.0644,
+                                          fontSize: width * 0.0533,
                                           color: Color(0xFF121212),
                                         ),
                                       ),
@@ -521,7 +524,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                         calleYNumero,
                                         style: TextStyle(
                                           fontFamily: 'Geist',
-                                          fontSize: width * 0.0322,
+                                          fontSize: width * 0.04293,
                                           color: Color(0xFF121212),
                                         ),
                                         overflow: TextOverflow.ellipsis,
