@@ -6,8 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
-import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
-import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 
 class ListaInterfaz extends StatefulWidget {

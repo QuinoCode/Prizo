@@ -15,6 +15,8 @@ import 'package:prizo/shared/application/icon_service.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:prizo/features/lista/lista.dart';
+import 'package:provider/provider.dart';
+import 'package:prizo/main.dart';
 
 
 class ListaFavoritosInterfaz extends StatefulWidget {
@@ -111,7 +113,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
           splashColor: Colors.transparent,
           color: Color.fromARGB(255,18,18,18),
           onPressed: () {
-            Navigator.pop(context, true);
+            Provider.of<PrizoState>(context, listen: false).setIndex(2);
           },
         ),
         surfaceTintColor: Colors.transparent,
