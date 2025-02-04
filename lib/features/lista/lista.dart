@@ -219,7 +219,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                       child: ImageIcon(
                         AssetImage('assets/icons/arrow.png'),
                         size: screenWidth * 0.0622748,
-                        color: Colors.black,
+                        color: Color(0xFF121212),
                       ),
                     ),
                   ),
@@ -234,7 +234,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   style: TextStyle(
                     fontSize: screenWidth * 0.04293,
                     fontStyle: FontStyle.italic,
-                    color: Colors.grey,
+                    color: Color(0xFF504F4F),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -283,7 +283,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                             errorBuilder: (context, error, stackTrace) => Icon(
                               Icons.image,
                               size: screenWidth * 0.1,
-                              color: Colors.grey,
+                              color: Color(0xFF504F4F),
                             ),
                           ),
                         ),
@@ -297,7 +297,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                       alignment: Alignment.center,
                       child: Text(
                         nombre,
-                        style: TextStyle(fontSize: screenWidth * (esCompra ? 0.04313 : 0.04293)),
+                        style: TextStyle(fontSize: screenWidth * 0.04293),
                       ),
                     ),
                   ),
