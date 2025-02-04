@@ -72,8 +72,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
 
   void _decrementarCantidad(Producto producto) {
     setState(() {
-      final currentCantidad =
-          _productoCantidad[productoService.generarClave(producto)] ?? 0;
+      final currentCantidad = _productoCantidad[productoService.generarClave(producto)] ?? 0;
       if (currentCantidad > 1) {
         _productoCantidad[productoService.generarClave(producto)] = currentCantidad - 1;
         listaCompraService.quitarInstancia(listaCompra, producto);
@@ -98,7 +97,8 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
   void didUpdateWidget(ListaFavoritosInterfaz oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget != widget) {
-      _initListas();  // llamar a init otra vez
+      setState (() {
+      }); // llamar a init otra vez
     }
   }
 
@@ -232,7 +232,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                             decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
                             child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
                           ),
-                          child: StatefulStoreItem(producto: producto,)
+                          child: StatefulStoreItem(producto: producto, onReturn: _initListas,)
                         ),
                       ),
                     );
@@ -248,7 +248,8 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
 
 class StatefulStoreItem extends StatefulWidget {
   final Producto producto;
-  const StatefulStoreItem({super.key, required this.producto});
+  final VoidCallback onReturn;
+  const StatefulStoreItem({super.key, required this.producto, required this.onReturn});
 
   @override
   _ProductTileItemState createState() => _ProductTileItemState();
@@ -272,16 +273,17 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     }
   }
 
-  void _navigateToProductInfo(Producto producto) {
+  void _navigateToProductInfo(Producto producto) async{
     ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
     ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
-    Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
             DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos,),
       ),
     );
+    widget.onReturn();
   }
 
   @override

@@ -212,7 +212,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                                 decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
                                 child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
                             ),
-                            child: StatefulStoreItem(producto: producto, onAction: () => fetchAndStoreProductos())
+                            child: StatefulStoreItem(producto: producto, onReturn: () => fetchAndStoreProductos())
                         ),
                       );
                     },
@@ -228,8 +228,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
 
 class StatefulStoreItem extends StatefulWidget {
   final Producto producto;
-  final VoidCallback onAction;
-  const StatefulStoreItem({super.key, required this.producto, required this.onAction});
+  final VoidCallback onReturn;
+  const StatefulStoreItem({super.key, required this.producto, required this.onReturn});
 
   @override
   _ProductTileItemState createState() => _ProductTileItemState();
@@ -256,16 +256,17 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     }
   }
 
-  void _navigateToProductInfo(Producto producto) {
+  void _navigateToProductInfo(Producto producto) async{
     ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
     ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
-    Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
             DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos,),
       ),
     );
+    widget.onReturn();
   }
 
   String shortenText(String nombre){
@@ -320,7 +321,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 setState(() {
                   _showButton = false;
                 });
-                widget.onAction();
+                widget.onReturn();
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
               child: Text('Eliminar',
