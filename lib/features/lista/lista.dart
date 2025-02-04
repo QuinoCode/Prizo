@@ -6,8 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
-import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
-import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 
 class ListaInterfaz extends StatefulWidget {
@@ -62,87 +60,11 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   }
 
   void _navigateToListaFavoritos() async {
-    //Provider.of<PrizoState>(context, listen: false).setIndex(4);
-    //No está implementado
-    // Espera al resultado de la pantalla secundaria
-    bool? changesMade = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ListaFavoritosInterfaz(
-        ),
-      ),
-    );
-
-    // Si hubo cambios, actualiza la interfaz
-    if (changesMade ?? false) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      // Cargar todas las listas y productos en paralelo y asignarlas correctamente
-      final resultados = await Future.wait([
-        listaFavoritosService.generar_ListaFavoritos(),
-        listaCompraService.generar_ListaCompra(),
-        listaFavoritosService.DB_fetchProducts(),
-        listaFavoritosService.DB_generarNombres_JR(),
-        listaCompraService.DB_fetchProducts(),
-        listaCompraService.DB_generarNombres_JR(),
-      ]);
-
-      // Asignar los resultados obtenidos
-      listaFavoritos = resultados[0] as ListaFavoritos;
-      listaCompra = resultados[1] as ListaCompra;
-      productosFavoritos = resultados[2] as List<Producto>;
-      productosFavoritosNombre = resultados[3] as List<String>;
-      productosCompra = resultados[4] as List<Producto>;
-      productosCompraNombre = resultados[5] as List<String>;
-
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    Provider.of<PrizoState>(context, listen: false).setIndex(4);
   }
 
   void _navigateToListaCompra() async {
-    //Provider.of<PrizoState>(context, listen: false).setIndex(4);
-    //No está implementado
-    // Espera al resultado de la pantalla secundaria
-    bool? changesMade = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ListaCompraInterfaz(
-        ),
-      ),
-    );
-
-    // Si hubo cambios, actualiza la interfaz
-    if (changesMade ?? false) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      // Cargar todas las listas y productos en paralelo y asignarlas correctamente
-      final resultados = await Future.wait([
-        listaFavoritosService.generar_ListaFavoritos(),
-        listaCompraService.generar_ListaCompra(),
-        listaFavoritosService.DB_fetchProducts(),
-        listaFavoritosService.DB_generarNombres_JR(),
-        listaCompraService.DB_fetchProducts(),
-        listaCompraService.DB_generarNombres_JR(),
-      ]);
-
-      // Asignar los resultados obtenidos
-      listaFavoritos = resultados[0] as ListaFavoritos;
-      listaCompra = resultados[1] as ListaCompra;
-      productosFavoritos = resultados[2] as List<Producto>;
-      productosFavoritosNombre = resultados[3] as List<String>;
-      productosCompra = resultados[4] as List<Producto>;
-      productosCompraNombre = resultados[5] as List<String>;
-
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    Provider.of<PrizoState>(context, listen: false).setIndex(5);
   }
 
   void _navigateToProductInfo(Producto producto) async {

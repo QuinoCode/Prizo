@@ -9,6 +9,8 @@ import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
+import 'package:provider/provider.dart';
+import 'package:prizo/main.dart';
 
 class ListaCompraInterfaz extends StatefulWidget {
   ListaCompraInterfaz({super.key});
@@ -103,7 +105,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
           color: Color.fromARGB(255,18,18,18),
           splashColor: Colors.transparent,
           onPressed: () {
-            Navigator.pop(context, true);
+            Provider.of<PrizoState>(context, listen: false).setIndex(2);
           },
         ),
         surfaceTintColor: Colors.transparent,
