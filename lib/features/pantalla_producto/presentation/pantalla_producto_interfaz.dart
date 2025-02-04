@@ -552,7 +552,7 @@ class _BotonCarritoState extends State<BotonCarrito> {
           Positioned(
             top: 0,
             bottom: 0,
-            right: MediaQuery.of(context).size.width * 0.095,
+            right: MediaQuery.of(context).size.shortestSide * 0.110,
             child: IconButton(
               iconSize: MediaQuery.of(context).size.width * 0.06,
               padding: EdgeInsets.zero,
@@ -564,22 +564,34 @@ class _BotonCarritoState extends State<BotonCarrito> {
           ),
           // Contador centrado
           Positioned(
-            left: MediaQuery.of(context).size.width * 0.089,
+            left: (MediaQuery.of(context).size.shortestSide * 0.21 - 
+            (TextPainter(
+              text: TextSpan(
+                text: '$_counter',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                  fontFamily: 'Geist',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              textDirection: TextDirection.ltr,
+            )..layout()).width)/2,
             top: MediaQuery.of(context).size.height * 0.004,
-            bottom: 0,
+            bottom: MediaQuery.of(context).size.longestSide * 0.002,
             child: Text(
               '$_counter',
               style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width * 0.0615,
-                fontWeight: FontWeight.w400,
+                fontSize: MediaQuery.of(context).size.width * 0.0644,
+                fontFamily: 'Geist',
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
           // Botón para incrementar
           Positioned(
             top: 0,
-            bottom: MediaQuery.of(context).size.height * 0.001,
-            left: MediaQuery.of(context).size.width * 0.093,
+            bottom: MediaQuery.of(context).size.longestSide * 0.002,
+            left: MediaQuery.of(context).size.shortestSide * 0.110,
             child: IconButton(
               padding: EdgeInsets.zero,
               splashColor: Colors.transparent,
@@ -587,6 +599,7 @@ class _BotonCarritoState extends State<BotonCarrito> {
               icon: Icon(
                 Icons.add,
                 size: MediaQuery.of(context).size.width * 0.06,
+                  color: Color.fromARGB(255, 18, 18, 18)
               ),
               onPressed: _incrementCounter,
             ),

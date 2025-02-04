@@ -117,8 +117,8 @@ class ListaCompraService {
         resultado.add(nombre + "\n" + " ");
       } else {
         String aux_1 = nombre.substring(0, 13);
-        String aux_2 = (nombre.length > 19) ? (nombre.substring(13, 19) + "...") : nombre.substring(13);
-        resultado.add(aux_1 + "\n" + aux_2.trim());
+        String aux_2 = (nombre.length > 18) ? nombre.substring(13, 18) : nombre.substring(13);
+        resultado.add(aux_1 + "\n" + aux_2.trim() + "...");
       }
     }
 
@@ -146,7 +146,7 @@ class ListaCompraService {
 
     return listaCompra;
   }
-  void DB_Tick_annadir(Producto producto) async {
+  Future<void> DB_Tick_annadir(Producto producto) async {
     DatabaseOperations dbOps = DatabaseOperations.instance;
 
     await dbOps.ensureDatabaseInitialized();
@@ -158,14 +158,12 @@ class ListaCompraService {
     if (!exists) {
       // Registra el producto en la tabla de productos tick
       await dbOps.registerIntoProductTickTable(db, producto);
-      print("marcado");
     }
   }
-  void DB_Tick_quitar(Producto producto) async {
+  Future<void> DB_Tick_quitar(Producto producto) async {
     DatabaseOperations dbOps = DatabaseOperations.instance;
 
     await dbOps.ensureDatabaseInitialized();
-
     Database db = dbOps.prizoDatabase;
 
     // Verifica si el producto ya existe en la tabla de productos tick
@@ -173,7 +171,6 @@ class ListaCompraService {
     if (exists) {
       // Borra el producto en la tabla de productos tick
       await dbOps.deleteFromProductTickTable(db, producto);
-      print("borrado de tick");
     }
   }
   Future<bool> DB_Tick_tiene_tick(Producto producto) async {

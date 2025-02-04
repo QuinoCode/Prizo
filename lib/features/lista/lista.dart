@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/main.dart';
+import 'package:provider/provider.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
@@ -60,6 +62,8 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   }
 
   void _navigateToListaFavoritos() async {
+    //Provider.of<PrizoState>(context, listen: false).setIndex(4);
+    //No está implementado
     // Espera al resultado de la pantalla secundaria
     bool? changesMade = await Navigator.push(
       context,
@@ -103,6 +107,8 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   }
 
   void _navigateToListaCompra() async {
+    //Provider.of<PrizoState>(context, listen: false).setIndex(4);
+    //No está implementado
     // Espera al resultado de la pantalla secundaria
     bool? changesMade = await Navigator.push(
       context,
@@ -205,15 +211,15 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   ),
                   SizedBox(width: screenWidth * 0.041),
                   GestureDetector(
-                    onTap: onNavigate, // Navegar solo cuando se pulse la flecha
+                    onTap: onNavigate,
                     child: Transform(
                       alignment: Alignment.center,
-                      transform: Matrix4.rotationY(3.1416) // Invierte horizontalmente
-                        ..translate(0.0, -screenHeight * -0.0045), // Mueve el ícono hacia arriba
+                      transform: Matrix4.rotationY(3.1416)
+                        ..translate(0.0, -screenHeight * -0.0045),
                       child: ImageIcon(
                         AssetImage('assets/icons/arrow.png'),
                         size: screenWidth * 0.0622748,
-                        color: Colors.black,
+                        color: Color(0xFF121212),
                       ),
                     ),
                   ),
@@ -221,117 +227,140 @@ class _ListaInterfazState extends State<ListaInterfaz> {
               ),
             ),
             if (productos.isEmpty || nombres.isEmpty)
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
-                child: Text(
-                  "    $title no tiene elementos",
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.04293,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.grey,
+              Align(
+                child: SizedBox(
+                  height: screenHeight * 0.25,
+                  child: Align(
+                  alignment: Alignment.centerLeft,
+                    child: Text(
+                      "    $title no tiene elementos",
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.04293,
+                        fontStyle: FontStyle.italic,
+                        color: Color(0xFF504F4F),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
               )
             else
               SizedBox(
                 height: screenHeight * 0.25,
-                child: _isLoading
-                    ? Center(child: CircularProgressIndicator()) // Muestra un indicador de carga si _isLoading es true
-                    : ListView.builder(
+                child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: productos.length,
-                  itemBuilder: (context, index) {
-                    final producto = productos[index];
-                    final nombre = nombres[index];
-                    return FutureBuilder<bool>(
-                      future: listaCompraService.DB_Tick_tiene_tick(producto),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator();
-                        }
-                        final tieneTick = snapshot.data ?? false;
-                        final iconPath = tieneTick
-                            ? 'assets/icons/checked_checkbox.png'
-                            : 'assets/icons/empty_checkbox.png';
-                        return Row(
-                          children: [
-                            Container(
-                              width: screenWidth * 0.4,
-                              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: () => _navigateToProductInfo(producto), // Al tocar la imagen, navegar a detalles
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(screenWidth * 0.02),
-                                        child: Image.network(
-                                          producto.foto,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Icon(
-                                              Icons.image,
-                                              size: screenWidth * 0.1,
-                                              color: Colors.grey,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: screenHeight * 0.01),
-                                  GestureDetector(
-                                    onTap: () => _navigateToProductInfo(producto), // Al tocar el nombre, navegar a detalles
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        nombre,
-                                        style: TextStyle(fontSize: screenWidth * (esCompra ? 0.04313 : 0.04293)),
-                                      ),
-                                    ),
-                                  ),
-                                  if (esCompra)
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          setState(() {
-                                            if (tieneTick) {
-                                              listaCompraService.DB_Tick_quitar(producto);
-                                            } else {
-                                              listaCompraService.DB_Tick_annadir(producto);
-                                            }
-                                          });
-                                        },
-                                        child: Image.asset(
-                                          iconPath,
-                                          width: screenWidth * 0.1,
-                                          height: screenWidth * 0.1,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                            if (index != productos.length - 1)
-                              Container(
-                                width: screenWidth * 0.0055,
-                                height: screenHeight * 0.25,
-                                color: Color(0xFF95B3FF),
-                              ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                  itemBuilder: (context, index) => _buildProduct(productos[index], nombres[index], esCompra, screenWidth, screenHeight, index, productos.length),
                 ),
               ),
           ],
         );
       },
     );
+  }
+
+  Widget _buildProduct(Producto producto, String nombre, bool esCompra, double screenWidth, double screenHeight, int index, int total) {
+    return FutureBuilder<bool>(
+      future: listaCompraService.DB_Tick_tiene_tick(producto),
+      builder: (context, snapshot) {
+        final tieneTick = snapshot.data ?? false;
+        final iconPath = tieneTick ? 'assets/icons/checked_checkbox.png' : 'assets/icons/empty_checkbox.png';
+
+        return Row(
+          children: [
+            Container(
+              width: screenWidth * 0.4,
+              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => _navigateToProductInfo(producto),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                        child: SizedBox(
+                          width: screenWidth * 1,
+                          height: screenWidth * 1,
+                          child: Image.network(
+                            producto.foto,
+                            fit: BoxFit.contain, // Puedes probar BoxFit.fill si deseas forzar el tamaño exacto
+                            errorBuilder: (context, error, stackTrace) => Icon(
+                              Icons.image,
+                              size: screenWidth * 0.1,
+                              color: Color(0xFF504F4F),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.01),
+                  GestureDetector(
+                    onTap: () => _navigateToProductInfo(producto),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        nombre,
+                        style: TextStyle(fontSize: screenWidth * 0.04293),
+                      ),
+                    ),
+                  ),
+                  if (esCompra)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Transform.translate(
+                        offset: Offset(-screenWidth * 0.03, 0), // Desplaza el tick a la izquierda
+                        child: GestureDetector(
+                          onTap: () async {
+                            if (tieneTick) {
+                              await listaCompraService.DB_Tick_quitar(producto);
+                            } else {
+                              await listaCompraService.DB_Tick_annadir(producto);
+                            }
+                            setState(() {
+                            });
+                          },
+                          child: Image.asset(
+                            iconPath,
+                            width: screenWidth * 0.106,
+                            height: screenWidth * 0.106,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (!esCompra)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Transform.translate(
+                        offset: Offset(-screenWidth * 0.03, 0), // Desplaza el tick a la izquierda
+                        child: Icon(
+                          Icons.circle,
+                          size: screenWidth * 0.106,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            if (index != total - 1)
+              Container(
+                width: screenWidth * 0.0055,
+                height: screenHeight * (esCompra ? 0.23 : 0.16),
+                color: Color(0xFF95B3FF),
+                transform: esCompra ? Matrix4.identity() : Matrix4.translationValues(0, -screenHeight * 0.02, 0),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant ListaInterfaz oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    initializeData();
   }
 
   @override
