@@ -342,8 +342,9 @@ class _ListaInterfazState extends State<ListaInterfaz> {
             if (index != total - 1)
               Container(
                 width: screenWidth * 0.0055,
-                height: screenHeight * (esCompra ? 0.23 : 0.2),
+                height: screenHeight * (esCompra ? 0.23 : 0.16),
                 color: Color(0xFF95B3FF),
+                transform: esCompra ? Matrix4.identity() : Matrix4.translationValues(0, -screenHeight * 0.02, 0),
               ),
           ],
         );
