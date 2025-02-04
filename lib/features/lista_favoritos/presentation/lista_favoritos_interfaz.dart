@@ -198,8 +198,17 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
             Expanded(
               child: listaFavoritos.productos.isEmpty 
               ? Center(
-                child: Text('Tu lista de favoritos está vacía.',
-                  style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400))
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/images/bolsa_de_tela_vacia.png', height: MediaQuery.of(context).size.longestSide * 0.18),
+                    SizedBox(height: MediaQuery.of(context).size.longestSide * 0.0318 ,),
+                    Text('Tu lista de favoritos está vacía.',
+                      style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+                    SizedBox(height: MediaQuery.of(context).size.longestSide * 0.17 ,),
+                  ],
+                )
               )
               : Padding(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),

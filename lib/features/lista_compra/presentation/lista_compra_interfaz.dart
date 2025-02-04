@@ -184,8 +184,17 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
           Expanded(
             child: _productos.isEmpty
               ? Center(
-                child: Text('Tu lista de la compra está vacía.',
-                  style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+                child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/images/cesta_vacia.png', height: MediaQuery.of(context).size.longestSide * 0.18),
+                  SizedBox(height: MediaQuery.of(context).size.longestSide * 0.0318 ,),
+                    Text('Tu lista de la compra está vacía.',
+                      style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+                  SizedBox(height: MediaQuery.of(context).size.longestSide * 0.17 ,),
+                  ],
+                ),
               ) 
               : Padding(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
