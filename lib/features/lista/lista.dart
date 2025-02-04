@@ -274,13 +274,17 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                       onTap: () => _navigateToProductInfo(producto),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(screenWidth * 0.02),
-                        child: Image.network(
-                          producto.foto,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Icon(
-                            Icons.image,
-                            size: screenWidth * 0.1,
-                            color: Colors.grey,
+                        child: SizedBox(
+                          width: screenWidth * 1,
+                          height: screenWidth * 1,
+                          child: Image.network(
+                            producto.foto,
+                            fit: BoxFit.contain, // Puedes probar BoxFit.fill si deseas forzar el tamaño exacto
+                            errorBuilder: (context, error, stackTrace) => Icon(
+                              Icons.image,
+                              size: screenWidth * 0.1,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
@@ -300,20 +304,35 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   if (esCompra)
                     Align(
                       alignment: Alignment.centerRight,
-                      child: GestureDetector(
-                        onTap: () async {
-                          setState(() {
-                            if (tieneTick) {
-                              listaCompraService.DB_Tick_quitar(producto);
-                            } else {
-                              listaCompraService.DB_Tick_annadir(producto);
-                            }
-                          });
-                        },
-                        child: Image.asset(
-                          iconPath,
-                          width: screenWidth * 0.1,
-                          height: screenWidth * 0.1,
+                      child: Transform.translate(
+                        offset: Offset(-screenWidth * 0.03, 0), // Desplaza el tick a la izquierda
+                        child: GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              if (tieneTick) {
+                                listaCompraService.DB_Tick_quitar(producto);
+                              } else {
+                                listaCompraService.DB_Tick_annadir(producto);
+                              }
+                            });
+                          },
+                          child: Image.asset(
+                            iconPath,
+                            width: screenWidth * 0.106,
+                            height: screenWidth * 0.106,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (!esCompra)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Transform.translate(
+                        offset: Offset(-screenWidth * 0.03, 0), // Desplaza el tick a la izquierda
+                        child: Icon(
+                          Icons.circle,
+                          size: screenWidth * 0.106,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -323,7 +342,7 @@ class _ListaInterfazState extends State<ListaInterfaz> {
             if (index != total - 1)
               Container(
                 width: screenWidth * 0.0055,
-                height: screenHeight * 0.25,
+                height: screenHeight * (esCompra ? 0.23 : 0.2),
                 color: Color(0xFF95B3FF),
               ),
           ],
