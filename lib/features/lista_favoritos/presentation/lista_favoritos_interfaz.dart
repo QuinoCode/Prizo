@@ -82,7 +82,6 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
       }
     });
   }
-
   
   void _initListas() async{
     ListaCompra fetchedListaC = await listaCompraService.generar_ListaCompra();
@@ -91,6 +90,14 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
        listaCompra = fetchedListaC;
        listaFavoritos = fetchedListaF;
     });
+  }
+
+  @override
+  void didUpdateWidget(ListaFavoritosInterfaz oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget != widget) {
+      _initListas();  // llamar a init otra vez
+    }
   }
 
   @override

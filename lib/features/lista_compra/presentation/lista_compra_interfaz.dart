@@ -40,6 +40,14 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
   }
 
   @override
+  void didUpdateWidget(ListaCompraInterfaz oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget != widget) {
+      _initListaCompra();  // llamar a init otra vez
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
     _initListaCompra();
