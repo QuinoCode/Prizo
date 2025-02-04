@@ -308,12 +308,12 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                         offset: Offset(-screenWidth * 0.03, 0), // Desplaza el tick a la izquierda
                         child: GestureDetector(
                           onTap: () async {
+                            if (tieneTick) {
+                              await listaCompraService.DB_Tick_quitar(producto);
+                            } else {
+                              await listaCompraService.DB_Tick_annadir(producto);
+                            }
                             setState(() {
-                              if (tieneTick) {
-                                listaCompraService.DB_Tick_quitar(producto);
-                              } else {
-                                listaCompraService.DB_Tick_annadir(producto);
-                              }
                             });
                           },
                           child: Image.asset(
