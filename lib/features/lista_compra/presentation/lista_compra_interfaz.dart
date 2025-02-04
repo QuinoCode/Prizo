@@ -105,109 +105,112 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
         backgroundColor: Colors.white,
         titleTextStyle: TextStyle(color: Color.fromARGB(255,18,18,18), fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0644, fontWeight: FontWeight.w400),
       ),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Dia button
-                  SizedBox(
-                    height: MediaQuery.of(context).size.longestSide * 0.0379,
-                    width: MediaQuery.of(context).size.shortestSide * 0.169,
-                    child: ElevatedButton(
-                      onPressed: () => _toggleTienda("DIA"),
-                      style: ElevatedButton.styleFrom(
-                        shadowColor: Colors.transparent,
-                        padding: EdgeInsets.zero,
-                        backgroundColor: tiendasSeleccionadas.contains("DIA") ? Color(0xFF95B3FF) : Colors.white,
-                        foregroundColor: Color.fromARGB(255,80,79,79),
-                        side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
-                      ),
-                      child: Text('DIA', 
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Dia button
+                SizedBox(
+                  height: MediaQuery.of(context).size.longestSide * 0.0379,
+                  width: MediaQuery.of(context).size.shortestSide * 0.169,
+                  child: ElevatedButton(
+                    onPressed: () => _toggleTienda("DIA"),
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.transparent,
+                      padding: EdgeInsets.zero,
+                      backgroundColor: tiendasSeleccionadas.contains("DIA") ? Color(0xFF95B3FF) : Colors.white,
+                      foregroundColor: Color.fromARGB(255,80,79,79),
+                      side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
+                    ),
+                    child: Text('DIA',
                         style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
-                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.longestSide * 0.0379,
-                    width: MediaQuery.of(context).size.shortestSide * 0.274,
-                    child: ElevatedButton(
-                      onPressed: () => _toggleTienda("CONSUM"),
-                      style: ElevatedButton.styleFrom(
-                        shadowColor: Colors.transparent,
-                        padding: EdgeInsets.zero,
-                        backgroundColor: tiendasSeleccionadas.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
-                        foregroundColor: Color.fromARGB(255,80,79,79),
-                        side: BorderSide(color: Color(0xFF95B3FF),width: 2),
-                      ),
-                      child: Text('Consum',
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.longestSide * 0.0379,
+                  width: MediaQuery.of(context).size.shortestSide * 0.274,
+                  child: ElevatedButton(
+                    onPressed: () => _toggleTienda("CONSUM"),
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.transparent,
+                      padding: EdgeInsets.zero,
+                      backgroundColor: tiendasSeleccionadas.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
+                      foregroundColor: Color.fromARGB(255,80,79,79),
+                      side: BorderSide(color: Color(0xFF95B3FF),width: 2),
+                    ),
+                    child: Text('Consum',
                         style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
-                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.longestSide * 0.0379,
-                    width: MediaQuery.of(context).size.shortestSide * 0.305,
-                    child: ElevatedButton(
-                      onPressed: () => _toggleTienda("Carrefour"),
-                      style: ElevatedButton.styleFrom(
-                        shadowColor: Colors.transparent,
-                        padding: EdgeInsets.zero,
-                        backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
-                        foregroundColor: Color.fromARGB(255,80,79,79),
-                        side: BorderSide(color: Color(0xFF95B3FF),width: 2),
-                      ),
-                      child: Text('Carrefour',
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.longestSide * 0.0379,
+                  width: MediaQuery.of(context).size.shortestSide * 0.305,
+                  child: ElevatedButton(
+                    onPressed: () => _toggleTienda("Carrefour"),
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.transparent,
+                      padding: EdgeInsets.zero,
+                      backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
+                      foregroundColor: Color.fromARGB(255,80,79,79),
+                      side: BorderSide(color: Color(0xFF95B3FF),width: 2),
+                    ),
+                    child: Text('Carrefour',
                         style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
-                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            SizedBox(height: MediaQuery.of(context).size.longestSide * 0.034),
-            // Scrollable list
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
-              child: Expanded(
-                  child: SingleChildScrollView(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _productos.length,
-                        itemBuilder: (context, index) {
-                          final producto = _productos[index];
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0118),
-                            child: Dismissible(
-                              key: Key(productoService.generarClave(producto)),
-                              direction: DismissDirection.startToEnd,
-                              onDismissed: (direction) {
-                                listaCompraService.quitarProducto(listaCompra, producto);
-                                listaCompraService.DB_quitarProducto(producto);
-                              },
-                              background: Container(
-                                //color: Color(0xFF95B3FF),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.longestSide * 0.034),
+          // Scrollable list
+          Expanded(
+            child: _productos.isEmpty
+              ? Center(
+                child: Text('Tu lista de la compra está vacía.',
+                  style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+              ) 
+              : Padding(
+                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
+                child: SingleChildScrollView(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _productos.length,
+                    itemBuilder: (context, index) {
+                      final producto = _productos[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0118),
+                        child: Dismissible(
+                            key: Key(productoService.generarClave(producto)),
+                            direction: DismissDirection.startToEnd,
+                            onDismissed: (direction) {
+                              listaCompraService.quitarProducto(listaCompra, producto);
+                              listaCompraService.DB_quitarProducto(producto);
+                            },
+                            background: Container(
+                              //color: Color(0xFF95B3FF),
                                 alignment: Alignment.centerLeft,
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
                                 child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
-                              ),
-                              child: StatefulStoreItem(producto: producto, onAction: () => fetchAndStoreProductos())
-                                                    ),
-                          );
-                        },
-                      ),
-                  )
+                            ),
+                            child: StatefulStoreItem(producto: producto, onAction: () => fetchAndStoreProductos())
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
-            )
-          ],
-        ),
+                     )
+        ],
       ),
     );
   }
@@ -250,7 +253,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-          DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos,),
+            DetallesProducto(producto: producto, listaCompra: listaCompra, listaFavoritos: listaFavoritos,),
       ),
     );
   }
@@ -288,7 +291,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
           title: Text('¿Eliminar producto?',
             style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w500),),
           content: Text('¿Estás seguro de que deseas eliminar el producto ${producto.nombre}?',
-            style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+              style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
@@ -296,7 +299,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 Navigator.of(context).pop();
               },
               child: Text('Cancelar',
-                style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+                  style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
             ),
             TextButton(
               onPressed: () {
@@ -311,7 +314,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
               child: Text('Eliminar',
-                style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+                  style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
             ),
           ],
         );
@@ -431,7 +434,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                       Positioned(
                         top: 0,
                         bottom: 0,
-                        right: MediaQuery.of(context).size.shortestSide * 0.09,
+                        right: MediaQuery.of(context).size.shortestSide * 0.110,
                         child: IconButton(
                           iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
                           padding: EdgeInsets.zero,
@@ -440,28 +443,45 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
                           onPressed: () {
                             setState(() {
-                              if (_counter > 1) {
-                                //DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
-                                listaCompraService.DB_decreaseCantidad(widget.producto);
+                              if (_counter > 0) {
+                                if(_counter == 1) {
+                                  listaCompraService.DB_quitarProducto(widget.producto);
+                                  listaCompraService.DB_Tick_quitar(widget.producto);
+                                } else {
+                                  listaCompraService.DB_decreaseCantidad(widget.producto);
+                                }
+                                //listaCompraService.DB_decreaseCantidad(widget.producto);
+                                //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
                                 _counter--;
                               } else {
-                                _ventanaConfirmacion(context, widget.producto);
+                                listaCompraService.DB_quitarProducto(widget.producto);
+                                listaCompraService.DB_Tick_quitar(widget.producto);
+                                //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
+                                _showButton = true;
                               }
                             });
                           },
                         ),
                       ),
                       Positioned(
-                        left: _counter > 9
-                            ? _counter > 19
-                              ? MediaQuery.of(context).size.shortestSide * 0.085
-                              : MediaQuery.of(context).size.shortestSide * (_counter == 11 ? 0.096 : 0.091)
-                            : MediaQuery.of(context).size.shortestSide * (_counter == 1 ? 0.106 : 0.101),
-                        top: MediaQuery.of(context).size.longestSide * (_counter < 10 ? 0.004 : 0.007),
-                        bottom: 0,
-                        child: Text( '$_counter',
+                        left: (MediaQuery.of(context).size.shortestSide * 0.21 -
+                            (TextPainter(
+                              text: TextSpan(
+                                text: '$_counter',
+                                style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                                  fontFamily: 'Geist',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              textDirection: TextDirection.ltr,
+                            )..layout()).width)/2,
+                        bottom: MediaQuery.of(context).size.longestSide * 0.002,
+                        child: Text(
+                          '$_counter',
                           style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.shortestSide * (_counter < 10 ? 0.06 : 0.053),
+                            fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+
                             fontFamily: 'Geist',
                             fontWeight: FontWeight.w500,
                           ),
@@ -469,8 +489,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                       ),
                       Positioned(
                         top: 0,
-                        bottom: MediaQuery.of(context).size.longestSide * 0.001,
-                        left: MediaQuery.of(context).size.shortestSide * 0.115,
+                        bottom: MediaQuery.of(context).size.longestSide * 0.002,
+                        left: MediaQuery.of(context).size.shortestSide * 0.110,
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           splashColor: Colors.transparent,
@@ -478,8 +498,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
                           onPressed: () {
                             if (_counter < 99) {
-                              //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
-                              listaCompraService.DB_increaseCantidad(widget.producto);
+                              listaCompraService.DB_annadirProducto(widget.producto);
+                              //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
                               setState(() {
                                 _counter++;
                               });

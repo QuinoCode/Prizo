@@ -6,6 +6,11 @@ import '/features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
 import '/features/productsearch/product_search_ui.dart';
 import '/features/lista/lista.dart';
 import '/features/perfil/perfil.dart';
+import 'package:prizo/shared/data_entities/models/lista_compra.dart';
+import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
+import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
+import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
+
 
 class BarraNavegacion extends StatefulWidget {
   @override
@@ -24,6 +29,8 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
     ProductSearchScreen(),
     ListaInterfaz(),
     PerfilInterfaz(),
+    //ListaFavoritosInterfaz(),
+    //ListaCompraInterfaz(),
   ];
 
   void _onTabTapped(int index) {

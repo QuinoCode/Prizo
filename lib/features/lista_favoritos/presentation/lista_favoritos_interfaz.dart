@@ -121,78 +121,80 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
         backgroundColor: Colors.white,
         titleTextStyle: TextStyle(color: Color.fromARGB(255,18,18,18), fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0644, fontWeight: FontWeight.w500),
       ),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(18,16,15,16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(0,0,7,0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.longestSide * 0.0379,
-                      width: MediaQuery.of(context).size.shortestSide * 0.169,
-                      child: ElevatedButton(
-                        onPressed: () => _toggleTienda("DIA"),
-                        style: ElevatedButton.styleFrom(
-                          shadowColor: Colors.transparent,
-                          padding: EdgeInsets.zero,
-                          backgroundColor: tiendasSeleccionadas.contains("DIA") ? Color(0xFF95B3FF) : Colors.white,
-                          foregroundColor: Color.fromARGB(255,80,79,79),
-                          side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
-                        ),
-                        child: Text('DIA', 
-                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)
-                        ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Dia button
+                  SizedBox(
+                    height: MediaQuery.of(context).size.longestSide * 0.0379,
+                    width: MediaQuery.of(context).size.shortestSide * 0.169,
+                    child: ElevatedButton(
+                      onPressed: () => _toggleTienda("DIA"),
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Colors.transparent,
+                        padding: EdgeInsets.zero,
+                        backgroundColor: tiendasSeleccionadas.contains("DIA") ? Color(0xFF95B3FF) : Colors.white,
+                        foregroundColor: Color.fromARGB(255,80,79,79),
+                        side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
+                      ),
+                      child: Text('DIA', 
+                        style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
                       ),
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.longestSide * 0.0379,
-                      width: MediaQuery.of(context).size.shortestSide * 0.274,
-                      child: ElevatedButton(
-                        onPressed: () => _toggleTienda("CONSUM"),
-                        style: ElevatedButton.styleFrom(
-                          shadowColor: Colors.transparent,
-                          padding: EdgeInsets.zero,
-                          backgroundColor: tiendasSeleccionadas.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
-                          foregroundColor: Color.fromARGB(255,80,79,79),
-                          side: BorderSide(color: Color(0xFF95B3FF),width: 2),
-                        ),
-                        child: Text('Consum',
-                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)
-                        ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.longestSide * 0.0379,
+                    width: MediaQuery.of(context).size.shortestSide * 0.274,
+                    child: ElevatedButton(
+                      onPressed: () => _toggleTienda("CONSUM"),
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Colors.transparent,
+                        padding: EdgeInsets.zero,
+                        backgroundColor: tiendasSeleccionadas.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
+                        foregroundColor: Color.fromARGB(255,80,79,79),
+                        side: BorderSide(color: Color(0xFF95B3FF),width: 2),
+                      ),
+                      child: Text('Consum',
+                        style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
                       ),
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.longestSide * 0.0379,
-                      width: MediaQuery.of(context).size.shortestSide * 0.305,
-                      child: ElevatedButton(
-                        onPressed: () => _toggleTienda("Carrefour"),
-                        style: ElevatedButton.styleFrom(
-                          shadowColor: Colors.transparent,
-                          padding: EdgeInsets.zero,
-                          backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
-                          foregroundColor: Color.fromARGB(255,80,79,79),
-                          side: BorderSide(color: Color(0xFF95B3FF),width: 2),
-                        ),
-                        child: Text('Carrefour',
-                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)
-                        ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.longestSide * 0.0379,
+                    width: MediaQuery.of(context).size.shortestSide * 0.305,
+                    child: ElevatedButton(
+                      onPressed: () => _toggleTienda("Carrefour"),
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Colors.transparent,
+                        padding: EdgeInsets.zero,
+                        backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
+                        foregroundColor: Color.fromARGB(255,80,79,79),
+                        side: BorderSide(color: Color(0xFF95B3FF),width: 2),
+                      ),
+                      child: Text('Carrefour',
+                        style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: listaFavoritos.productos.isEmpty 
-                ? Center(
-                  child: Text('Tu lista de favoritos está vacía.',
-                    style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400))
-                )
-                : ListView.builder(
+            ),
+            SizedBox(height: MediaQuery.of(context).size.longestSide * 0.034),
+            Expanded(
+              child: listaFavoritos.productos.isEmpty 
+              ? Center(
+                child: Text('Tu lista de favoritos está vacía.',
+                  style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400))
+              )
+              : Padding(
+                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
+                child: ListView.builder(
                   itemCount: listaFavoritos.productos.length,
                   itemBuilder: (context, index) {
                     final producto =
@@ -228,8 +230,8 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                   },
                 ),
               ),
-          ]
-        ),
+            ),
+        ]
       ),
     );
   }
