@@ -30,6 +30,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/Bolsa_de_tela.png
+    - assets/images/bolsa_de_tela_vacia.png
+    - assets/images/cesta_vacia.png
     - assets/icons/casa_icono.png
     - assets/icons/listas_icono.png
     - assets/icons/lupa_icono.png

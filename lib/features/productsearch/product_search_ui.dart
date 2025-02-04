@@ -454,7 +454,10 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       itemCount: _productos.length,
                       itemBuilder: (context, index) {
                         final producto = _productos[index];
-                        return _buildProductTile(context, producto);
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0118),
+                          child: _buildProductTile(context, producto),
+                        );
                       },
                     ),
                     // Display the second list if there are remaining products
@@ -470,7 +473,10 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                         itemCount: _productosRestantes.length,
                         itemBuilder: (context, index) {
                           final producto = _productosRestantes[index];
-                          return _buildProductTile(context, producto);
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0118),
+                            child: _buildProductTile(context, producto),
+                          );
                         },
                       ),
                     ],
@@ -509,22 +515,25 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                         height: MediaQuery.of(context).size.longestSide * 0.0521,
                         child: TextField(
                           controller: _searchController,
-                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w300),
+                          style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w200, color: Color(0xFF504F4F)),
                           decoration: InputDecoration(
                             hintText: ' ',
                             contentPadding: EdgeInsets.symmetric(vertical: 0),
                             filled: true,
                             fillColor: const Color.fromARGB(255, 246, 246, 246), 
-                            prefixIcon: IconButton(
-                              padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.shortestSide*0.057,0,MediaQuery.of(context).size.shortestSide*0.0206,0),
-                              icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
-                              highlightColor: Colors.transparent,  
-                              splashColor: Colors.transparent,
-                              color: Color.fromARGB(255,18,18,18),
-                              onPressed: _backButtonBhvr,
+                            prefixIcon: Padding(
+                              padding: EdgeInsets.only(right: MediaQuery.of(context).size.shortestSide * 0.025),
+                              child: IconButton(
+                                padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.shortestSide*0.057,0,0,0),
+                                icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
+                                highlightColor: Colors.transparent,  
+                                splashColor: Colors.transparent,
+                                color: Color.fromARGB(255,18,18,18),
+                                onPressed: _backButtonBhvr,
+                              ),
                             ),
                             suffixIcon: IconButton(
-                              padding: EdgeInsets.fromLTRB(0,0,MediaQuery.of(context).size.shortestSide*0.057,0),
+                              padding: EdgeInsets.fromLTRB(0,0,MediaQuery.of(context).size.shortestSide*0.054,0),
                               iconSize: MediaQuery.of(context).size.shortestSide * 0.0615,
                               icon: ImageIcon(AssetImage('assets/icons/scanner.png'), ),
                               color: Color.fromARGB(255,18,18,18),
