@@ -88,7 +88,7 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
     required double iconSize,
   }) {
     final navState = Provider.of<PrizoState>(context); // Get the current tab index
-    final isSelected = navState.currentIndex == index;
+    final isSelected = (index == 2 && (navState.currentIndex == 4 || navState.currentIndex == 5)) ? true : navState.currentIndex == index;
     final screenWidth = MediaQuery.of(context).size.width;
     final baseWidth = 375.0;
     final scaleFactor = screenWidth / baseWidth;
