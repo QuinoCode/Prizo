@@ -704,7 +704,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              widget.producto.oferta ? '${widget.producto.precioOferta}' : '${widget.producto.precio}€',
+                              widget.producto.oferta ? '${widget.producto.precioOferta}€' : '${widget.producto.precio}€',
                               style: TextStyle(
                                 fontFamily: 'Geist',
                                 color: widget.producto.oferta ? Colors.red : Color.fromARGB(255,33,33,33),

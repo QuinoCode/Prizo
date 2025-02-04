@@ -208,20 +208,23 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0118),
                         child: Dismissible(
-                            key: Key(productoService.generarClave(producto)),
+                            key: UniqueKey(),
                             direction: DismissDirection.startToEnd,
                             onDismissed: (direction) {
-                              listaCompraService.quitarProducto(listaCompra, producto);
-                              listaCompraService.DB_quitarProducto(producto);
+                              setState (() {
+                                listaCompraService.quitarProducto(listaCompra, producto);
+                                listaCompraService.DB_quitarProducto(producto); 
+                                _productos.removeAt(index);
+                              });
                             },
                             background: Container(
                               //color: Color(0xFF95B3FF),
-                                alignment: Alignment.centerLeft,
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
-                                child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
+                              child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
                             ),
-                            child: StatefulStoreItem(producto: producto, onReturn: () => fetchAndStoreProductos())
+                            child: StatefulStoreItem(producto: producto, onReturn: fetchAndStoreProductos)
                         ),
                       );
                     },
