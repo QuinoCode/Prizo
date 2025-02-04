@@ -464,7 +464,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                       itemBuilder: (context, index) {
                         final producto = _productos[index];
                         return Padding(
-                          padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0118),
+                          padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0218),
                           child: _buildProductTile(context, producto),
                         );
                       },
@@ -632,228 +632,225 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     final ListaCompraService listaCompraService = ListaCompraService();
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => _navigateToProductInfo(widget.producto),
-                child: widget.producto.foto.startsWith('assets')
-                  ? SizedBox(
+        Row(
+          children: [
+            GestureDetector(
+              onTap: () => _navigateToProductInfo(widget.producto),
+              child: widget.producto.foto.startsWith('assets')
+                ? SizedBox(
+                  width: MediaQuery.of(context).size.shortestSide * 0.279,
+                  height: MediaQuery.of(context).size.longestSide * 0.128,
+                  child: Center(
+                    child: Image.asset(
+                        'assets/images/placeholder.png',
+                        width: MediaQuery.of(context).size.shortestSide * 0.140,
+                      ),
+                  ),
+                )
+                : Image.network(
+                    widget.producto.foto,
                     width: MediaQuery.of(context).size.shortestSide * 0.279,
                     height: MediaQuery.of(context).size.longestSide * 0.128,
-                    child: Center(
-                      child: Image.asset(
-                          'assets/images/placeholder.png',
-                          width: MediaQuery.of(context).size.shortestSide * 0.140,
-                        ),
-                    ),
-                  )
-                  : Image.network(
-                      widget.producto.foto,
-                      width: MediaQuery.of(context).size.shortestSide * 0.279,
-                      height: MediaQuery.of(context).size.longestSide * 0.128,
-                    ),
+                  ),
+            ),
+            SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.03), 
+            SizedBox(
+              height: MediaQuery.of(context).size.longestSide * 0.128,
+              child: VerticalDivider(
+                thickness: 1,
+                color: Color.fromARGB(255,175,198,255),
               ),
-              SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.03), 
-              SizedBox(
-                height: MediaQuery.of(context).size.longestSide * 0.128,
-                child: VerticalDivider(
-                  thickness: 1,
-                  color: Color.fromARGB(255,175,198,255),
-                ),
-              ),
-              SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.03), 
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    _navigateToProductInfo(widget.producto);
-                  },
-                  child:
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.shortestSide * 0.283,
-                          child:
-                            Text(
-                              shortenText(widget.producto.nombre, 18, '...'),
-                              maxLines: 2,
-                              style: TextStyle(
-                                    height: 1.2,
-                                    fontFamily: 'Geist',
-                                    color: Color.fromARGB(255,18,18,18),
-                                    fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            )
-                        ),
-                        SizedBox(height: MediaQuery.of(context).size.longestSide * 0.005),
-                        Text(
-                          widget.producto.tienda,
-                          style: TextStyle(
-                                fontFamily: 'Geist',
-                                color: Color.fromARGB(255,33,33,33),
-                                fontSize: MediaQuery.of(context).size.width * 0.0322,
-                              ),
-                        ),
-                        SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.023),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              widget.producto.oferta ? '${widget.producto.precioOferta}€' : '${widget.producto.precio}€',
+            ),
+            SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.03), 
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  _navigateToProductInfo(widget.producto);
+                },
+                child:
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.shortestSide * 0.283,
+                        child:
+                          Text(
+                            shortenText(widget.producto.nombre, 18, '...'),
+                            maxLines: 2,
+                            style: TextStyle(
+                                  height: 1.2,
+                                  fontFamily: 'Geist',
+                                  color: Color.fromARGB(255,18,18,18),
+                                  fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          )
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.longestSide * 0.005),
+                      Text(
+                        widget.producto.tienda,
+                        style: TextStyle(
+                              fontFamily: 'Geist',
+                              color: Color.fromARGB(255,33,33,33),
+                              fontSize: MediaQuery.of(context).size.width * 0.0322,
+                            ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.023),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            widget.producto.oferta ? '${widget.producto.precioOferta}€' : '${widget.producto.precio}€',
+                            style: TextStyle(
+                              fontFamily: 'Geist',
+                              color: widget.producto.oferta ? Colors.red : Color.fromARGB(255,33,33,33),
+                              fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.01),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0,3,0,0),
+                            child: Text(
+                              '${widget.producto.precioMedida}€/kg',
                               style: TextStyle(
                                 fontFamily: 'Geist',
                                 color: widget.producto.oferta ? Colors.red : Color.fromARGB(255,33,33,33),
-                                fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
-                                fontWeight: FontWeight.w400,
+                                fontSize: MediaQuery.of(context).size.shortestSide * 0.0322,
                               ),
-                            ),
-                            SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.01),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0,3,0,0),
-                              child: Text(
-                                '${widget.producto.precioMedida}€/kg',
-                                style: TextStyle(
-                                  fontFamily: 'Geist',
-                                  color: widget.producto.oferta ? Colors.red : Color.fromARGB(255,33,33,33),
-                                  fontSize: MediaQuery.of(context).size.shortestSide * 0.0322,
-                                ),
-                              ),
-                            ),
-                          ]
-                        ),
-                      ],
-                    ),
-                )
-              ),
-              SizedBox(
-                child: _showButton
-                  ? Container(
-                      height: MediaQuery.of(context).size.longestSide * 0.0473,
-                      width: MediaQuery.of(context).size.shortestSide * 0.21,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 149, 179, 252),
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-                      child:
-                      IconButton(
-                        onPressed: () {
-                          DatabaseOperations.instance.existsInListaCompraTable(widget.database, widget.producto).then((exists) {
-                            if (exists) {
-                              DatabaseOperations.instance.fetchCantidadListaCompra(widget.database, widget.producto).then((cantidad) {
-                                setState(() {
-                                  _counter = cantidad;  // Set _counter to the fetched cantidad
-                                  _showButton = false; // Update _showButton only if the product exists in the table
-                                });
-                              });
-                            } else {
-                              //DatabaseOperations.instance.registerIntoProductTable(widget.database, widget.producto).then((_) {});
-                              setState(() {
-                                _showButton = false; // Update _showButton after inserting the product
-                              });
-                            }
-                          });
-                        },
-                        color: Color.fromARGB(255, 80, 79, 79),
-                        icon: ImageIcon(AssetImage('assets/icons/shopping_basket.png'), size: MediaQuery.of(context).size.shortestSide * 0.0615, color: Color.fromARGB(255,18,18,18))
-                      )
-                    )
-                  : Container(
-                      height: MediaQuery.of(context).size.longestSide * 0.0473,
-                      width: MediaQuery.of(context).size.shortestSide * 0.21,
-                      padding: EdgeInsets.zero,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 246, 246, 246),
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 0,
-                            bottom: 0,
-                            right: MediaQuery.of(context).size.shortestSide * 0.110,
-                            child: IconButton(
-                              iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
-                              padding: EdgeInsets.zero,
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,  
-                              icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
-                              onPressed: () {
-                                setState(() {
-                                  if (_counter > 0) {
-                                    if(_counter == 1) {
-                                      listaCompraService.DB_quitarProducto(widget.producto);
-                                      listaCompraService.DB_Tick_quitar(widget.producto);
-                                    } else {
-                                      listaCompraService.DB_decreaseCantidad(widget.producto);
-                                    }
-                                    //listaCompraService.DB_decreaseCantidad(widget.producto);
-                                    //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
-                                    _counter--;
-                                  } else {
-                                    listaCompraService.DB_quitarProducto(widget.producto);
-                                    listaCompraService.DB_Tick_quitar(widget.producto);
-                                    //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
-                                    _showButton = true;
-                                  }
-                                });
-                              },
                             ),
                           ),
-                          Positioned(
-                              left: (MediaQuery.of(context).size.shortestSide * 0.21 - 
-                              (TextPainter(
-                                text: TextSpan(
-                                  text: '$_counter',
-                                  style: TextStyle(
-                                    fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
-                                    fontFamily: 'Geist',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                textDirection: TextDirection.ltr,
-                              )..layout()).width)/2,
-                              bottom: MediaQuery.of(context).size.longestSide * 0.002,
-                              child: Text(
-                                '$_counter',
+                        ]
+                      ),
+                    ],
+                  ),
+              )
+            ),
+            SizedBox(
+              child: _showButton
+                ? Container(
+                    height: MediaQuery.of(context).size.longestSide * 0.0473,
+                    width: MediaQuery.of(context).size.shortestSide * 0.21,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 149, 179, 252),
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                    child:
+                    IconButton(
+                      onPressed: () {
+                        DatabaseOperations.instance.existsInListaCompraTable(widget.database, widget.producto).then((exists) {
+                          if (exists) {
+                            DatabaseOperations.instance.fetchCantidadListaCompra(widget.database, widget.producto).then((cantidad) {
+                              setState(() {
+                                _counter = cantidad;  // Set _counter to the fetched cantidad
+                                _showButton = false; // Update _showButton only if the product exists in the table
+                              });
+                            });
+                          } else {
+                            //DatabaseOperations.instance.registerIntoProductTable(widget.database, widget.producto).then((_) {});
+                            setState(() {
+                              _showButton = false; // Update _showButton after inserting the product
+                            });
+                          }
+                        });
+                      },
+                      color: Color.fromARGB(255, 80, 79, 79),
+                      icon: ImageIcon(AssetImage('assets/icons/shopping_basket.png'), size: MediaQuery.of(context).size.shortestSide * 0.0615, color: Color.fromARGB(255,18,18,18))
+                    )
+                  )
+                : Container(
+                    height: MediaQuery.of(context).size.longestSide * 0.0473,
+                    width: MediaQuery.of(context).size.shortestSide * 0.21,
+                    padding: EdgeInsets.zero,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 246, 246, 246),
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                          bottom: 0,
+                          right: MediaQuery.of(context).size.shortestSide * 0.110,
+                          child: IconButton(
+                            iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
+                            padding: EdgeInsets.zero,
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,  
+                            icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
+                            onPressed: () {
+                              setState(() {
+                                if (_counter > 0) {
+                                  if(_counter == 1) {
+                                    listaCompraService.DB_quitarProducto(widget.producto);
+                                    listaCompraService.DB_Tick_quitar(widget.producto);
+                                  } else {
+                                    listaCompraService.DB_decreaseCantidad(widget.producto);
+                                  }
+                                  //listaCompraService.DB_decreaseCantidad(widget.producto);
+                                  //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
+                                  _counter--;
+                                } else {
+                                  listaCompraService.DB_quitarProducto(widget.producto);
+                                  listaCompraService.DB_Tick_quitar(widget.producto);
+                                  //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
+                                  _showButton = true;
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        Positioned(
+                            left: (MediaQuery.of(context).size.shortestSide * 0.21 - 
+                            (TextPainter(
+                              text: TextSpan(
+                                text: '$_counter',
                                 style: TextStyle(
                                   fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
-                                  
                                   fontFamily: 'Geist',
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ),
-                          Positioned(
-                            top: 0,
+                              textDirection: TextDirection.ltr,
+                            )..layout()).width)/2,
                             bottom: MediaQuery.of(context).size.longestSide * 0.002,
-                            left: MediaQuery.of(context).size.shortestSide * 0.110,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,  
-                              icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
-                              onPressed: () {
-                                if (_counter < 99) {
-                                  listaCompraService.DB_annadirProducto(widget.producto);
-                                  //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
-                                  setState(() {
-                                    _counter++;
-                                  });
-                                }
-                              },
+                            child: Text(
+                              '$_counter',
+                              style: TextStyle(
+                                fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                                
+                                fontFamily: 'Geist',
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        Positioned(
+                          top: 0,
+                          bottom: MediaQuery.of(context).size.longestSide * 0.002,
+                          left: MediaQuery.of(context).size.shortestSide * 0.110,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,  
+                            icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
+                            onPressed: () {
+                              if (_counter < 99) {
+                                listaCompraService.DB_annadirProducto(widget.producto);
+                                //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
+                                setState(() {
+                                  _counter++;
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                )
-            ],
-          ),
+                  ),
+              )
+          ],
         ),
       ]
     );

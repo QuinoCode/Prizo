@@ -142,6 +142,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                     ),
                   ),
                 ),
+                //Consum Button
                 SizedBox(
                   height: MediaQuery.of(context).size.longestSide * 0.0379,
                   width: MediaQuery.of(context).size.shortestSide * 0.274,
@@ -159,6 +160,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                     ),
                   ),
                 ),
+                //Carrefour Button
                 SizedBox(
                   height: MediaQuery.of(context).size.longestSide * 0.0379,
                   width: MediaQuery.of(context).size.shortestSide * 0.305,
@@ -198,37 +200,30 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
               ) 
               : Padding(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
-                child: SingleChildScrollView(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _productos.length,
-                    itemBuilder: (context, index) {
-                      final producto = _productos[index];
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0118),
-                        child: Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.startToEnd,
-                            onDismissed: (direction) {
-                              setState (() {
-                                listaCompraService.quitarProducto(listaCompra, producto);
-                                listaCompraService.DB_quitarProducto(producto); 
-                                _productos.removeAt(index);
-                              });
-                            },
-                            background: Container(
-                              //color: Color(0xFF95B3FF),
+                child: ListView.builder(
+                  itemCount: _productos.length,
+                  itemBuilder: (context, index) {
+                    final producto = _productos[index];
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0218),
+                      child: Dismissible(
+                          key: Key(productoService.generarClave(producto)),
+                          direction: DismissDirection.startToEnd,
+                          onDismissed: (direction) {
+                            listaCompraService.quitarProducto(listaCompra, producto);
+                            listaCompraService.DB_quitarProducto(producto);
+                          },
+                          background: Container(
+                            //color: Color(0xFF95B3FF),
                               alignment: Alignment.centerLeft,
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
                               child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
-                            ),
-                            child: StatefulStoreItem(producto: producto, onReturn: fetchAndStoreProductos)
-                        ),
-                      );
-                    },
-                  ),
+                          ),
+                          child: StatefulStoreItem(producto: producto, onReturn: () => fetchAndStoreProductos())
+                      ),
+                    );
+                  },
                 ),
               ),
                      )
@@ -347,197 +342,191 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
-      child: Row(
-        children: [
-          GestureDetector(
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () => _navigateToProductInfo(widget.producto),
+          child: Image.network(
+            widget.producto.foto,
+            width: MediaQuery.of(context).size.shortestSide * 0.205,
+            height: MediaQuery.of(context).size.shortestSide * 0.205,
+          ),
+        ),
+        SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.007),
+        SizedBox(
+          height: MediaQuery.of(context).size.longestSide * 0.12,
+          child: VerticalDivider(
+            thickness: 1,
+            color: Color.fromARGB(255,175,198,255),
+          ),
+        ),
+        SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.03),
+        Expanded(
+          child: GestureDetector(
             onTap: () => _navigateToProductInfo(widget.producto),
-            child: Image.network(
-              widget.producto.foto,
-              width: MediaQuery.of(context).size.shortestSide * 0.205,
-              height: MediaQuery.of(context).size.shortestSide * 0.205,
-            ),
-          ),
-          SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.007),
-          SizedBox(
-            height: MediaQuery.of(context).size.longestSide * 0.12,
-            child: VerticalDivider(
-              thickness: 1,
-              color: Color.fromARGB(255,175,198,255),
-            ),
-          ),
-          SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.03),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => _navigateToProductInfo(widget.producto),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                      width: MediaQuery.of(context).size.shortestSide * 0.283,
-                      child:
-                      Text(
-                        shortenText(widget.producto.nombre),
-                        maxLines: 2,
-                        style: TextStyle(
-                          height: 1.2,
-                          fontFamily: 'Geist',
-                          color: Color.fromARGB(255,18,18,18),
-                          fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.longestSide * 0.001),
-                  Text(
-                    widget.producto.tienda,
-                    style: TextStyle(
-                      fontFamily: 'Geist',
-                      fontWeight: FontWeight.w400,
-                      color: Color.fromARGB(255,33,33,33),
-                      fontSize: MediaQuery.of(context).size.shortestSide * 0.0322,
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.023),
-                  Text(
-                    '${(widget.producto.precio * _counter).toStringAsFixed(2)}€',
-                    style: TextStyle(
-                      fontFamily: 'Geist',
-                      color: Color.fromARGB(255,33,33,33),
-                      fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.023),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.053),
-          Padding(
-            padding: EdgeInsets.fromLTRB(10,0,0,16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                _showButton
-                    ? IconButton(
-                    padding: EdgeInsets.all(0),
-                    icon: Image.asset('assets/icons/empty_checkbox.png', width: MediaQuery.of(context).size.shortestSide * 0.099, height: MediaQuery.of(context).size.shortestSide * 0.102),
-                    onPressed: () {
-                      setState(() {
-                        _showButton = false;
-                      });
-                      listaCompraService.DB_Tick_annadir(widget.producto);
-                    }
-                )
-                    : IconButton(
-                    padding: EdgeInsets.all(0),
-                    icon: Image.asset('assets/icons/checked_checkbox.png', width: MediaQuery.of(context).size.shortestSide * 0.099, height: MediaQuery.of(context).size.shortestSide * 0.102),
-                    onPressed: () {
-                      setState(() {
-                        _showButton = true;
-                      });
-                      listaCompraService.DB_Tick_quitar(widget.producto);
-                    }
+                SizedBox(
+                    width: MediaQuery.of(context).size.shortestSide * 0.283,
+                    child:
+                    Text(
+                      shortenText(widget.producto.nombre),
+                      maxLines: 2,
+                      style: TextStyle(
+                        height: 1.2,
+                        fontFamily: 'Geist',
+                        color: Color.fromARGB(255,18,18,18),
+                        fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
                 ),
-                SizedBox(height: MediaQuery.of(context).size.longestSide * 0.01),
-                Container(
-                  height: MediaQuery.of(context).size.longestSide * 0.0473,
-                  width: MediaQuery.of(context).size.shortestSide * 0.21,
-                  padding: EdgeInsets.zero,
-                  decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(20)
-                  ),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                        bottom: 0,
-                        right: MediaQuery.of(context).size.shortestSide * 0.110,
-                        child: IconButton(
-                          iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
-                          padding: EdgeInsets.zero,
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
-                          onPressed: () {
-                            setState(() {
-                              if (_counter > 0) {
-                                if(_counter == 1) {
-                                  listaCompraService.DB_quitarProducto(widget.producto);
-                                  listaCompraService.DB_Tick_quitar(widget.producto);
-                                } else {
-                                  listaCompraService.DB_decreaseCantidad(widget.producto);
-                                }
-                                //listaCompraService.DB_decreaseCantidad(widget.producto);
-                                //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
-                                _counter--;
-                              } else {
-                                listaCompraService.DB_quitarProducto(widget.producto);
-                                listaCompraService.DB_Tick_quitar(widget.producto);
-                                //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
-                                _showButton = true;
-                              }
-                            });
-                          },
-                        ),
-                      ),
-                      Positioned(
-                        left: (MediaQuery.of(context).size.shortestSide * 0.21 -
-                            (TextPainter(
-                              text: TextSpan(
-                                text: '$_counter',
-                                style: TextStyle(
-                                  fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
-                                  fontFamily: 'Geist',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              textDirection: TextDirection.ltr,
-                            )..layout()).width)/2,
-                        bottom: MediaQuery.of(context).size.longestSide * 0.002,
-                        child: Text(
-                          '$_counter',
-                          style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
-
-                            fontFamily: 'Geist',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 0,
-                        bottom: MediaQuery.of(context).size.longestSide * 0.002,
-                        left: MediaQuery.of(context).size.shortestSide * 0.110,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
-                          onPressed: () {
-                            if (_counter < 99) {
-                              listaCompraService.DB_annadirProducto(widget.producto);
-                              //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
-                              setState(() {
-                                _counter++;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                    ],
+                SizedBox(height: MediaQuery.of(context).size.longestSide * 0.001),
+                Text(
+                  widget.producto.tienda,
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    fontWeight: FontWeight.w400,
+                    color: Color.fromARGB(255,33,33,33),
+                    fontSize: MediaQuery.of(context).size.shortestSide * 0.0322,
                   ),
                 ),
+                SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.023),
+                Text(
+                  '${(widget.producto.precio * _counter).toStringAsFixed(2)}€',
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    color: Color.fromARGB(255,33,33,33),
+                    fontSize: MediaQuery.of(context).size.shortestSide * 0.04293,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.023),
               ],
             ),
           ),
-        ],
-      ),
+        ),
+        SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.053),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            _showButton
+                ? IconButton(
+                padding: EdgeInsets.zero,
+                icon: Image.asset('assets/icons/empty_checkbox.png', width: MediaQuery.of(context).size.shortestSide * 0.099, height: MediaQuery.of(context).size.shortestSide * 0.102),
+                onPressed: () {
+                  setState(() {
+                    _showButton = false;
+                  });
+                  listaCompraService.DB_Tick_annadir(widget.producto);
+                }
+            )
+                : IconButton(
+                padding: EdgeInsets.zero,
+                icon: Image.asset('assets/icons/checked_checkbox.png', width: MediaQuery.of(context).size.shortestSide * 0.099, height: MediaQuery.of(context).size.shortestSide * 0.102),
+                onPressed: () {
+                  setState(() {
+                    _showButton = true;
+                  });
+                  listaCompraService.DB_Tick_quitar(widget.producto);
+                }
+            ),
+            SizedBox(height: MediaQuery.of(context).size.longestSide * 0.01),
+            Container(
+              height: MediaQuery.of(context).size.longestSide * 0.0473,
+              width: MediaQuery.of(context).size.shortestSide * 0.21,
+              padding: EdgeInsets.zero,
+              decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(20)
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 0,
+                    bottom: 0,
+                    right: MediaQuery.of(context).size.shortestSide * 0.095,
+                    child: IconButton(
+                      iconSize: MediaQuery.of(context).size.shortestSide * 0.06,
+                      padding: EdgeInsets.zero,
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
+                      onPressed: () {
+                        setState(() {
+                          if (_counter > 0) {
+                            if(_counter == 1) {
+                              listaCompraService.DB_quitarProducto(widget.producto);
+                              listaCompraService.DB_Tick_quitar(widget.producto);
+                            } else {
+                              listaCompraService.DB_decreaseCantidad(widget.producto);
+                            }
+                            //listaCompraService.DB_decreaseCantidad(widget.producto);
+                            //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
+                            _counter--;
+                          } else {
+                            listaCompraService.DB_quitarProducto(widget.producto);
+                            listaCompraService.DB_Tick_quitar(widget.producto);
+                            //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
+                            _showButton = true;
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    left: (MediaQuery.of(context).size.shortestSide * 0.238 -
+                        (TextPainter(
+                          text: TextSpan(
+                            text: '$_counter',
+                            style: TextStyle(
+                              fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+                              fontFamily: 'Geist',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          textDirection: TextDirection.ltr,
+                        )..layout()).width)/2,
+                    bottom: MediaQuery.of(context).size.longestSide * 0.002,
+                    child: Text(
+                      '$_counter',
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
+            
+                        fontFamily: 'Geist',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    bottom: MediaQuery.of(context).size.longestSide * 0.002,
+                    left: MediaQuery.of(context).size.shortestSide * 0.125,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
+                      onPressed: () {
+                        if (_counter < 99) {
+                          listaCompraService.DB_annadirProducto(widget.producto);
+                          //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
+                          setState(() {
+                            _counter++;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
