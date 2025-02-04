@@ -11,10 +11,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 
 class ListaCompraInterfaz extends StatefulWidget {
-  final ListaCompra listaCompra;
-
-
-  ListaCompraInterfaz({super.key, required this.listaCompra});
+  ListaCompraInterfaz({super.key});
 
   @override
   _ListaCompraInterfazState createState() => _ListaCompraInterfazState();
@@ -23,22 +20,30 @@ class ListaCompraInterfaz extends StatefulWidget {
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsBindingObserver  {
   List<String> tiendasSeleccionadas = [];
   List<Producto> _productos = [];
-  final ListaCompraService listaCompraService = ListaCompraService();
   final ProductoService productoService = ProductoService();
+  final ListaCompraService listaCompraService = ListaCompraService();
+  ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
 
-  void fetchAndStoreProductos(Database db) {
-    DatabaseOperations.instance.fetchProductsListaCompra(db).then((result) {
-      setState(() {
-        _productos = result;
-      });
+  void fetchAndStoreProductos() async{
+    Database db = DatabaseOperations.instance.prizoDatabase;
+    var result = await DatabaseOperations.instance.fetchProductsListaCompra(db);
+    setState(() {
+      _productos = result;
+    });
+  }
+
+  void _initListaCompra() async{
+    ListaCompra fetchedLista = await listaCompraService.generar_ListaCompra();
+    setState(() {
+       listaCompra = fetchedLista;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    fetchAndStoreProductos(db);
+    _initListaCompra();
+    fetchAndStoreProductos();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -51,15 +56,13 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      Database db = DatabaseOperations.instance.prizoDatabase;
-      fetchAndStoreProductos(db); // Force refresh when returning to the UI
+      fetchAndStoreProductos(); // Force refresh when returning to the UI
     }
   }
 
   void applyFilter() {
     if (tiendasSeleccionadas.isEmpty) {
-      Database db = DatabaseOperations.instance.prizoDatabase;
-      fetchAndStoreProductos(db); // Show all products when no filters are applied.
+      fetchAndStoreProductos(); // Show all products when no filters are applied.
     } else {
       setState(() {
         _productos = _productos
@@ -82,7 +85,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
 
   @override
   Widget build(BuildContext context) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
@@ -186,7 +188,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                               key: Key(productoService.generarClave(producto)),
                               direction: DismissDirection.startToEnd,
                               onDismissed: (direction) {
-                                listaCompraService.quitarProducto(widget.listaCompra, producto);
+                                listaCompraService.quitarProducto(listaCompra, producto);
                                 listaCompraService.DB_quitarProducto(producto);
                               },
                               background: Container(
@@ -196,7 +198,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                                 decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
                                 child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
                               ),
-                              child: StatefulStoreItem(producto: producto, onAction: () => fetchAndStoreProductos(db))
+                              child: StatefulStoreItem(producto: producto, onAction: () => fetchAndStoreProductos())
                                                     ),
                           );
                         },

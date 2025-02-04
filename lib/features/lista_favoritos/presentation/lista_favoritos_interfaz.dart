@@ -18,39 +18,30 @@ import 'package:prizo/features/lista/lista.dart';
 
 
 class ListaFavoritosInterfaz extends StatefulWidget {
-  ListaFavoritos listaFavoritos;
-  final ListaCompra listaCompra;
-  final ListaFavoritos original;
-
-  ListaFavoritosInterfaz({
-    super.key,
-    required this.listaFavoritos,
-    required this.listaCompra,
-    required this.original,
-  });
+  ListaFavoritosInterfaz({super.key});
 
   @override
   _ListaFavoritosInterfazState createState() => _ListaFavoritosInterfazState();
 }
 
 class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
-  final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
-  final ListaCompraService listaCompraService = ListaCompraService();
-  final ProductoService productoService = ProductoService();
-
   Map<String, int> _productoCantidad = {};
   Map<String, bool> _mapaProductoConBotonCarrito = {};
   List<String> tiendasSeleccionadas = [];
-  final IconService iconService = new IconService();
+  final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
+  final ListaCompraService listaCompraService = ListaCompraService();
+  final ProductoService productoService = ProductoService();
+  ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
+  ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
 
   List<Producto> _filtrarProductos() {
-    if (widget.original.productos.isEmpty) {
-      return widget.original.productos;
+    if (listaFavoritos.productos.isEmpty) {
+      return listaFavoritos.productos;
     }
     if (tiendasSeleccionadas.isEmpty) {
-      return widget.original.productos;
+      return listaFavoritos.productos;
     }
-    return widget.original.productos
+    return listaFavoritos.productos
         .where((producto) => tiendasSeleccionadas.contains(producto.tienda))
         .toList();
   }
@@ -62,9 +53,9 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
       } else {
         tiendasSeleccionadas.add(tienda);
       }
-      widget.listaFavoritos = ListaFavoritos(
-        id: widget.original.id,
-        usuario: widget.original.usuario,
+      listaFavoritos = ListaFavoritos(
+        id: listaFavoritos.id,
+        usuario: listaFavoritos.usuario,
         productos: _filtrarProductos(),
       );
     });
@@ -72,9 +63,8 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
 
   void _incrementarCantidad(Producto producto) {
     setState(() {
-      _productoCantidad[productoService.generarClave(producto)] =
-          (_productoCantidad[productoService.generarClave(producto)] ?? 0) + 1;
-      listaCompraService.annadirInstancia(widget.listaCompra, producto);
+      _productoCantidad[productoService.generarClave(producto)] = (_productoCantidad[productoService.generarClave(producto)] ?? 0) + 1;
+      listaCompraService.annadirInstancia(listaCompra, producto);
     });
   }
 
@@ -84,13 +74,29 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
           _productoCantidad[productoService.generarClave(producto)] ?? 0;
       if (currentCantidad > 1) {
         _productoCantidad[productoService.generarClave(producto)] = currentCantidad - 1;
-        listaCompraService.quitarInstancia(widget.listaCompra, producto);
+        listaCompraService.quitarInstancia(listaCompra, producto);
       } else {
         _productoCantidad.remove(productoService.generarClave(producto));
-        listaCompraService.quitarProducto(widget.listaCompra, producto);
         _mapaProductoConBotonCarrito[productoService.generarClave(producto)] = false;
+        listaCompraService.quitarProducto(listaCompra, producto);
       }
     });
+  }
+
+  
+  void _initListas() async{
+    ListaCompra fetchedListaC = await listaCompraService.generar_ListaCompra();
+    ListaFavoritos fetchedListaF = await listaFavoritosService.generar_ListaFavoritos();
+    setState(() {
+       listaCompra = fetchedListaC;
+       listaFavoritos = fetchedListaF;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initListas();
   }
 
   @override
@@ -181,16 +187,16 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                 ),
               ),
               Expanded(
-                child: widget.listaFavoritos.productos.isEmpty 
+                child: listaFavoritos.productos.isEmpty 
                 ? Center(
                   child: Text('Tu lista de favoritos está vacía.',
                     style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400))
                 )
                 : ListView.builder(
-                  itemCount: widget.listaFavoritos.productos.length,
+                  itemCount: listaFavoritos.productos.length,
                   itemBuilder: (context, index) {
                     final producto =
-                    widget.listaFavoritos.productos[index];
+                    listaFavoritos.productos[index];
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(23),
                       child: Padding(
@@ -200,12 +206,12 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                           direction: DismissDirection.startToEnd,
                           onDismissed: (direction) {
                             setState(() {
-                              listaFavoritosService.quitarProducto(widget.listaFavoritos, producto);
+                              listaFavoritosService.quitarProducto(listaFavoritos, producto);
                               listaFavoritosService.DB_quitarProducto(producto);
-                              widget.listaFavoritos = ListaFavoritos(
-                                id: widget.original.id,
-                                usuario: widget.original.usuario,
-                                productos: List.from(widget.listaFavoritos.productos)..remove(producto),
+                              listaFavoritos = ListaFavoritos(
+                                id: listaFavoritos.id,
+                                usuario: listaFavoritos.usuario,
+                                productos: List.from(listaFavoritos.productos)..remove(producto),
                               );
                             });
                           },
