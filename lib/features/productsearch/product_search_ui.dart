@@ -750,8 +750,10 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             });
                           } else {
                             //DatabaseOperations.instance.registerIntoProductTable(widget.database, widget.producto).then((_) {});
+                            listaCompraService.DB_annadirProducto(widget.producto);
                             setState(() {
                               _showButton = false; // Update _showButton after inserting the product
+                              _counter++;
                             });
                           }
                         });
