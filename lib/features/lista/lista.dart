@@ -227,16 +227,21 @@ class _ListaInterfazState extends State<ListaInterfaz> {
               ),
             ),
             if (productos.isEmpty || nombres.isEmpty)
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
-                child: Text(
-                  "    $title no tiene elementos",
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.04293,
-                    fontStyle: FontStyle.italic,
-                    color: Color(0xFF504F4F),
+              Align(
+                child: SizedBox(
+                  height: screenHeight * 0.25,
+                  child: Align(
+                  alignment: Alignment.centerLeft,
+                    child: Text(
+                      "    $title no tiene elementos",
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.04293,
+                        fontStyle: FontStyle.italic,
+                        color: Color(0xFF504F4F),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
               )
             else
