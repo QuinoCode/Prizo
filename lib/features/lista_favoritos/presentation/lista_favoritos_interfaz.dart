@@ -202,7 +202,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(23),
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
+                        padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0218),
                         child: Dismissible(
                           key: Key(productoService.generarClave(producto)),
                           direction: DismissDirection.startToEnd,
