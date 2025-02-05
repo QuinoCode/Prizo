@@ -9,8 +9,9 @@ import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/shared//database/database_operations.dart';
 import 'package:provider/provider.dart';
-import '/features/distancia_tienda/shop_distance.dart';
-import '/features/lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/features/distancia_tienda/shop_distance.dart';
+import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -164,7 +165,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                         style: TextStyle(
                           fontFamily: 'Kanit',
                           fontSize: width * 0.0966,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
@@ -206,7 +207,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                           style: TextStyle(
                             fontFamily: 'Geist',
                             fontSize: width * 0.04293,
-                            fontWeight: FontWeight.normal,
+                            fontWeight: FontWeight.w300,
                             color: Color(0xFF121212),
                           ),
                           onSubmitted: (query) {
@@ -314,7 +315,10 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                             producto.foto,
                                             fit: BoxFit.contain,
                                             errorBuilder: (context, error, stackTrace) =>
-                                                Icon(Icons.image_not_supported),
+                                              Image.asset(
+                                                'assets/images/placeholder.png',
+                                                fit: BoxFit.contain,
+                                              )
                                           ),
                                         ),
                                       ),
@@ -340,8 +344,8 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
                                             // Precio del producto
                                             Text(
-                                              '-$descuentoTexto',
-                                              style: TextStyle(
+                                                '-$descuentoTexto',
+                                                style: TextStyle(
                                                 fontFamily: 'Geist',
                                                 fontSize: width * 0.0966,
                                                 color: Color(0xFF121212),
@@ -387,7 +391,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     style: TextStyle(
                       fontFamily: 'Geist',
                       fontSize: width * 0.04293,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -458,7 +462,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     ),
                   ),
                 )
-                    : Container(
+                    : SizedBox(
                   height: height * 0.24,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -535,7 +539,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                             ),
                             // Barra azul vertical
                             Container(
-                              width: 2.0,
+                              width: MediaQuery.of(context).size.shortestSide * 0.005,
                               height: height * 0.12,
                               color: Color(0xFF95B3FF),
                             ),

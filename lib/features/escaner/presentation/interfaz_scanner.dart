@@ -117,7 +117,7 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
               width: MediaQuery.of(context).size.width * 0.65,
               height: MediaQuery.of(context).size.height * 0.2 ,
               child:  Text(
-                'Coloca el código de barras dentro del recuadro superior',
+                'Coloca el código de barras\ndentro del recuadro superior',
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: TextStyle(
