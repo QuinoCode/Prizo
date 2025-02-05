@@ -182,7 +182,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                       child: Dismissible(
                         key: Key(productoService.generarClave(producto)),
                         direction: DismissDirection.startToEnd,
-                        confirmDismiss: (direction) async{
+                        onDismissed: (direction) {
                           setState(() {
                             listaFavoritosService.quitarProducto(listaFavoritos, producto);
                             listaFavoritos = ListaFavoritos(
@@ -191,7 +191,6 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                               productos: List.from(listaFavoritos.productos)..remove(producto),
                             );
                           });
-                          return true;
                         },
                         background: Container(
                           alignment: Alignment.centerLeft,

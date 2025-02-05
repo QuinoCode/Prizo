@@ -176,13 +176,11 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                       child: Dismissible(
                           key: Key(producto.$1.nombre),
                           direction: DismissDirection.startToEnd,
-                          confirmDismiss: (direction) async{
-                            await Future.delayed(Duration(milliseconds: 200));
+                          onDismissed: (direction) {
                             setState(() {
                               listaCompraService.quitarProducto(producto.$1);
                               listaCompra.productos.removeAt(index);
                             });
-                            return true;
                           },
                           background: AnimatedSize(
                             duration: Duration(milliseconds: 300),
