@@ -1,29 +1,20 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:prizo/main.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:prizo/shared/database/database_operations.dart';
-
-import '../../../shared/data_entities/models/producto.dart';
-import '../../shared/data_entities/models/lista_compra.dart';
-
-import '../../features/obtencion_producto/application/carrefour_finder_service.dart';
-import '../../features/obtencion_producto/application/consum_finder_service.dart';
-import '../../features/obtencion_producto/application/dia_finder_service.dart';
-
-import '../../features/comparacion_productos/application/comparacion_producto.dart';
-
-import '../../features/lista_compra/application/lista_compra_service.dart';
-import '../../features/filtro_busqueda/filtro_busqueda.dart';
-
-import '../../features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
-
-import '../../features/escaner/presentation/interfaz_scanner.dart' as scanner;
+import 'package:prizo/shared/data_entities/models/producto.dart';
+import 'package:prizo/shared/data_entities/models/lista_compra.dart';
+import 'package:prizo/features/obtencion_producto/application/carrefour_finder_service.dart';
+import 'package:prizo/features/obtencion_producto/application/consum_finder_service.dart';
+import 'package:prizo/features/obtencion_producto/application/dia_finder_service.dart';
+import 'package:prizo/features/comparacion_productos/application/comparacion_producto.dart';
+import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
+import 'package:prizo/features/filtro_busqueda/filtro_busqueda.dart';
+import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart' as scanner;
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query, List<String> stores);
@@ -68,8 +59,7 @@ class MultiMarketProductSearcher implements ProductSearcher {
 
       return results; // Return only the results for the selected stores
     } catch (e) {
-      print("Error al buscar productos: $e");
-      return [];
+        return [];
     }
   }
 }
@@ -328,7 +318,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                 height: MediaQuery.of(context).size.longestSide * 0.6,
                 width: MediaQuery.of(context).size.shortestSide,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 3, 0),
+                  padding: EdgeInsets.only(right: MediaQuery.of(context).size.shortestSide * 0.005),
                   child: Wrap(
                     spacing: MediaQuery.of(context).size.shortestSide * 0.0333,
                     runSpacing: MediaQuery.of(context).size.longestSide * 0.009,
@@ -452,7 +442,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, MediaQuery.of(context).size.shortestSide * 0.140),
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.shortestSide * 0.140),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -507,12 +497,14 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   @override
   Widget build(BuildContext context) {
     Database db = DatabaseOperations.instance.prizoDatabase;
+    double screenHeight = MediaQuery.of(context).size.longestSide;
+    double screenWidth = MediaQuery.of(context).size.shortestSide;
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,  
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(18,16,16,16),
+          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.0180, horizontal: screenWidth * 0.039),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -533,7 +525,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                             prefixIcon: Padding(
                               padding: EdgeInsets.only(right: MediaQuery.of(context).size.shortestSide * 0.025),
                               child: IconButton(
-                                padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.shortestSide*0.057,0,0,0),
+                                padding: EdgeInsets.only(left: MediaQuery.of(context).size.shortestSide*0.057),
                                 icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
                                 highlightColor: Colors.transparent,  
                                 splashColor: Colors.transparent,
@@ -542,7 +534,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
                               ),
                             ),
                             suffixIcon: IconButton(
-                              padding: EdgeInsets.fromLTRB(0,0,MediaQuery.of(context).size.shortestSide*0.054,0),
+                              padding: EdgeInsets.only(right: MediaQuery.of(context).size.shortestSide*0.054),
                               iconSize: MediaQuery.of(context).size.shortestSide * 0.0615,
                               icon: ImageIcon(AssetImage('assets/icons/scanner.png'), ),
                               color: Color.fromARGB(255,18,18,18),
