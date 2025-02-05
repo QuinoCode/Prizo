@@ -174,21 +174,26 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0218),
                       child: Dismissible(
-                          key: UniqueKey(),
+                          key: Key(producto.$1.nombre),
                           direction: DismissDirection.startToEnd,
                           confirmDismiss: (direction) async{
+                            await Future.delayed(Duration(milliseconds: 200));
                             setState(() {
                               listaCompraService.quitarProducto(producto.$1);
                               listaCompra.productos.removeAt(index);
                             });
                             return true;
                           },
-                          background: Container(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
-                            child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
-                        ),
+                          background: AnimatedSize(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
+                              child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
+                            ),
+                          ),
                           child: StatefulStoreItem(producto: producto, onReturn: _initListaCompra)
                       ),
                     );
