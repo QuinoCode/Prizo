@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../shared/data_entities/models/producto.dart';
-import '../../lista_compra/application/lista_compra_service.dart';
-import '../../lista_favoritos/application/lista_favoritos_service.dart';
-import '../../../shared/data_entities/models/lista_compra.dart';
-import '../../../shared/data_entities/models/lista_favoritos.dart';
-import '../../pantalla_producto/application/pantalla_producto_service.dart';
-import '../../distancia_tienda/shop_distance.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
+import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
+import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/shared/data_entities/models/lista_compra.dart';
+import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
+import 'package:prizo/features/pantalla_producto/application/pantalla_producto_service.dart';
+import 'package:prizo/features/distancia_tienda/shop_distance.dart';
 
 class DetallesProducto extends StatelessWidget {
   final Producto producto;
@@ -40,8 +40,7 @@ class DetallesProducto extends StatelessWidget {
         leading: IconButton(
           icon: Image.asset(
             'assets/icons/arrow.png',
-            width: 24,
-            height: 24,
+            width: screenWidth * 0.058,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -119,7 +118,7 @@ class DetallesProducto extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                 child: Text(
                   producto.nombre,
-                  style: const TextStyle(fontFamily: 'Geist', fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontFamily: 'Geist', fontSize: screenWidth * 0.0644 , fontWeight: FontWeight.w600),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -130,7 +129,7 @@ class DetallesProducto extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                 child: Text(
                   producto.marca,
-                  style: const TextStyle(fontFamily: 'Geist', fontSize: 17, color: Colors.black),
+                  style: TextStyle(fontFamily: 'Geist', fontSize: screenWidth * 0.04293, color: Color(0xFF121212)),
                 ),
               ),
               SizedBox(height: screenHeight * 0.02),
@@ -282,7 +281,11 @@ class DetallesProducto extends StatelessWidget {
                                     height: screenWidth * 0.25,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(Icons.broken_image, size: 60);
+                                      return Image.asset(
+                                               'assets/images/placeholder.png',
+                                               width: screenWidth* 0.213,
+                                               fit: BoxFit.cover,
+                                             );
                                     },
                                   ),
                                   SizedBox(height: screenHeight * 0.01),
