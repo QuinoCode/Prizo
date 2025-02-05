@@ -209,8 +209,7 @@ class DetallesProducto extends StatelessWidget {
                           producto: producto,
                           listaCompraService: listaCompraService,
                         ),
-                        SizedBox(height: 22)
-                    //TODO: Tweak it with MQuery
+                        SizedBox(height: MediaQuery.of(context).size.longestSide * 0.018)
                       ],
                     ),
                   ],

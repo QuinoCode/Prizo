@@ -186,8 +186,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                   ),
                   child: Row(
                     children: [
-                      SizedBox(width: 20),
-                      //TODO: Mquery
+                      SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.049),
                       ImageIcon(
                         AssetImage('assets/icons/lupa_icono.png'),
                         size: width * 0.06,
@@ -227,8 +226,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                           );
                         },
                       ),
-                      SizedBox(width: 10),
-                      //TODO: Mquery
+                      SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.0245),
                     ],
                   ),
                 ),
