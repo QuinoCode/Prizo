@@ -575,7 +575,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
               SizedBox(height: MediaQuery.of(context).size.longestSide * 0.03), 
               _isSearching //Decide si mostrar recientes o si mostrar resultados de busqueda
                 ? _isLoading
-                  ? const Center( heightFactor: 12, child: CircularProgressIndicator(), )
+                  ? const Center( heightFactor: 12, child: CircularProgressIndicator(color: Color(0xFF95B3FF), ), )
                   : _buildSearchResults()
                 : _buildRecents(),
             ],

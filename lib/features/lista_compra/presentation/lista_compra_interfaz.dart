@@ -25,6 +25,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
   final ProductoService productoService = ProductoService();
   final ListaCompraService listaCompraService = ListaCompraService();
   ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
+  bool _isLoading = true;
 
   void fetchAndStoreProductos() async{
     Database db = DatabaseOperations.instance.prizoDatabase;
@@ -38,6 +39,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
     ListaCompra fetchedLista = await listaCompraService.generar_ListaCompra();
     setState(() {
        listaCompra = fetchedLista;
+      _isLoading = false;
     });
   }
 
@@ -184,7 +186,15 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
           SizedBox(height: MediaQuery.of(context).size.longestSide * 0.034),
           // Scrollable list
           Expanded(
-            child: _productos.isEmpty
+            child: _isLoading 
+            ? Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.longestSide * 0.17),
+              child: SizedBox(
+                  height: MediaQuery.of(context).size.longestSide * 0.264,
+                  child: Center(child: CircularProgressIndicator(color: Color(0xFF95B3FF), ))
+                )
+            )
+            : _productos.isEmpty
               ? Center(
                 child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
