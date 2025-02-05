@@ -8,7 +8,7 @@ import 'package:prizo/features/obtencion_producto/application/finder_wrapper.dar
 import 'package:prizo/shared/data_entities/models/producto.dart';
 
 class EanFinder {
-  final String marketUri = "https://world.openfoodfacts.net/api/v2/product/%q";
+  final String marketUri = "https://world.openfoodfacts.org/api/v2/product/%q.json";
   static int httpTrys = 0;
   final void Function(BuildContext, String) onError;
 

@@ -291,14 +291,18 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
                   children: [
                     Align(
                       alignment: Alignment(-0.9,0.53),
-                      child: BackButton(
-                        size: MediaQuery.of(context).size.width * 0.070,
-                        color: Color(0xFF121212),
-                        strokeWidth: 2.6,
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                      ),
+                      //child: BackButton(
+                      //  size: MediaQuery.of(context).size.width * 0.070,
+                      //  color: Color(0xFF121212),
+                      //  strokeWidth: 2.6,
+                      //  onPressed: (){
+                      //    Navigator.pop(context);
+                      //  },
+                      //),
+                      child: SizedBox(child: Image.asset(
+                        'assets/icons/arrow.png'),
+                        width: MediaQuery.of(context).size.width * 0.070,
+                      )
                     ),
                     Positioned(
                       left: MediaQuery.of(context).size.width *0.145,
