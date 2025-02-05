@@ -19,7 +19,6 @@ class ListaCompraInterfaz extends StatefulWidget {
 
 class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsBindingObserver  {
   List<String> tiendasSeleccionadas = [];
-  List<Producto> _productos = [];
   final ProductoService productoService = ProductoService();
   final ListaCompraService listaCompraService = ListaCompraService();
   ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
@@ -29,14 +28,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
     setState(() {
        listaCompra = fetchedLista;
     });
-  }
-
-  @override
-  void didUpdateWidget(ListaCompraInterfaz oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget != widget) {
-      _initListaCompra();  // llamar a init otra vez
-    }
   }
 
   @override
@@ -159,7 +150,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
             ),
           ),
           SizedBox(height: MediaQuery.of(context).size.longestSide * 0.034),
-          // Scrollable list
           Expanded(
             child: listaCompra.productos.isEmpty
               ? Center(
@@ -186,13 +176,12 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                       child: Dismissible(
                           key: UniqueKey(),
                           direction: DismissDirection.startToEnd,
-                          onDismissed: (direction) {
-                            listaCompraService.quitarProducto(producto.$1);
-                            listaCompra = ListaCompra(
-                              id: listaCompra.id,
-                              usuario: listaCompra.usuario,
-                              productos: List.from(listaCompra.productos)..remove(producto),
-                            );
+                          confirmDismiss: (direction) async{
+                            setState(() {
+                              listaCompraService.quitarProducto(producto.$1);
+                              listaCompra.productos.removeAt(index);
+                            });
+                            return true;
                           },
                           background: Container(
                             alignment: Alignment.centerLeft,
@@ -206,7 +195,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                   },
                 ),
               ),
-                     )
+          )
         ],
       ),
     );
@@ -225,10 +214,12 @@ class StatefulStoreItem extends StatefulWidget {
 class _ProductTileItemState extends State<StatefulStoreItem> {
   ListaCompraService listaCompraService = ListaCompraService();
   bool _showButton = true;
+  int _counter = 1;
 
   @override
   void initState() {
     super.initState();
+    _counter = widget.producto.$2;
   }
 
   void _navigateToProductInfo(Producto producto) async{
@@ -252,7 +243,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
     }
   }
 
-  Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
+  /*Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, /* Evita cerrar el diálogo tocando fuera de él */
@@ -272,25 +263,21 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
             ),
             TextButton(
               onPressed: () {
-                setState(() {
-                  _showButton = false;
-                });
-                widget.onReturn();
+
                 Navigator.of(context).pop(); /* Cerrar el cuadro de diálogo */
               },
               child: Text('Eliminar',
-                  style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
+                style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.0322, fontWeight: FontWeight.w400)),
             ),
           ],
         );
       },
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     Producto producto = widget.producto.$1;
-    int _counter = widget.producto.$2;
     return Row(
       children: [
         GestureDetector(
@@ -415,11 +402,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                       icon: Icon(Icons.remove, color: Color.fromARGB(255, 18, 18, 18),),
                       onPressed: () {
                         setState(() {
-                          if (_counter > 0) {
-                            _showButton = false;
+                          if (_counter > 1) {
                             _counter--;
-                          } else {
-                            _showButton = true;
                           }
                         });
                       },

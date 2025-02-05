@@ -251,7 +251,8 @@ class ListaCompraService {
   }
 
   /** El Producto product debe existir en la lista para invocar este método y quantity mayor a 0 */
-  void setCantidadProducto(ListaCompra list, Producto product, int quantity) {
+  void setCantidadProducto(Producto product, int quantity) async{
+    ListaCompra list = await generar_ListaCompra();
     /* Buscar producto en la lista existente */
     int index = buscarProducto(list, product);
 
