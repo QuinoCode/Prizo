@@ -166,7 +166,7 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
-      child: Text("Precio/medida", style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontFamily: 'Geist', fontWeight: FontWeight.w400, color: Color(0xFF504F4F))),
+      child: Text("Novedades", style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontFamily: 'Geist', fontWeight: FontWeight.w400, color: Color(0xFF504F4F))),
     );
   }
 
