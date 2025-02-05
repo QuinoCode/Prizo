@@ -346,7 +346,18 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
       children: [
         GestureDetector(
           onTap: () => _navigateToProductInfo(widget.producto),
-          child: Image.network(
+          child: widget.producto.foto.startsWith('assets')
+          ? SizedBox(
+            width: MediaQuery.of(context).size.shortestSide * 0.205,
+            height: MediaQuery.of(context).size.shortestSide * 0.205,
+            child: Center(
+              child: Image.asset(
+                  'assets/images/placeholder.png',
+                  width: MediaQuery.of(context).size.shortestSide * 0.140,
+                ),
+            ),
+          )
+          : Image.network(
             widget.producto.foto,
             width: MediaQuery.of(context).size.shortestSide * 0.205,
             height: MediaQuery.of(context).size.shortestSide * 0.205,

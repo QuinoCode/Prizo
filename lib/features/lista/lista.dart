@@ -215,10 +215,9 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                           child: Image.network(
                             producto.foto,
                             fit: BoxFit.contain, // Puedes probar BoxFit.fill si deseas forzar el tamaño exacto
-                            errorBuilder: (context, error, stackTrace) => Icon(
-                              Icons.image,
-                              size: screenWidth * 0.1,
-                              color: Color(0xFF504F4F),
+                            errorBuilder: (context, error, stackTrace) => Image.asset(
+                              'assets/images/placeholder.png',
+                              width: screenWidth * 0.1,
                             ),
                           ),
                         ),
