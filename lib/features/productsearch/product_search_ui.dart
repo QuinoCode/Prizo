@@ -496,7 +496,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
     double screenHeight = MediaQuery.of(context).size.longestSide;
     double screenWidth = MediaQuery.of(context).size.shortestSide;
     return Scaffold(

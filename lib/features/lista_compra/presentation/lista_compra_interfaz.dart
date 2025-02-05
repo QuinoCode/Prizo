@@ -6,8 +6,6 @@ import 'package:prizo/shared/application/producto_service.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
-import 'package:prizo/shared/database/database_operations.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/main.dart';
@@ -25,14 +23,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
   final ProductoService productoService = ProductoService();
   final ListaCompraService listaCompraService = ListaCompraService();
   ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
-
-  void fetchAndStoreProductos() async{
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    var result = await DatabaseOperations.instance.fetchProductsListaCompra(db);
-    setState(() {
-      _productos = result;
-    });
-  }
 
   void _initListaCompra() async{
     ListaCompra fetchedLista = await listaCompraService.generar_ListaCompra();
@@ -53,7 +43,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
   void initState() {
     super.initState();
     _initListaCompra();
-    fetchAndStoreProductos();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -63,23 +52,11 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      fetchAndStoreProductos(); // Force refresh when returning to the UI
-    }
-  }
-
-  void applyFilter() {
+  List<(Producto,int)> _filtrarProductos() {
     if (tiendasSeleccionadas.isEmpty) {
-      fetchAndStoreProductos(); // Show all products when no filters are applied.
-    } else {
-      setState(() {
-        _productos = _productos
-            .where((producto) => tiendasSeleccionadas.contains(producto.tienda))
-            .toList();
-      });
+      return listaCompra.productos;
     }
+    return listaCompra.productos.where((producto) => tiendasSeleccionadas.contains(producto.$1.tienda)).toList();
   }
 
   void _toggleTienda(String tienda) {
@@ -90,7 +67,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
         tiendasSeleccionadas.add(tienda);
       }
     });
-    applyFilter();
+    _filtrarProductos();
   }
 
   @override
@@ -184,7 +161,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
           SizedBox(height: MediaQuery.of(context).size.longestSide * 0.034),
           // Scrollable list
           Expanded(
-            child: _productos.isEmpty
+            child: listaCompra.productos.isEmpty
               ? Center(
                 child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,26 +178,29 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
               : Padding(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
                 child: ListView.builder(
-                  itemCount: _productos.length,
+                  itemCount: listaCompra.productos.length,
                   itemBuilder: (context, index) {
-                    final producto = _productos[index];
+                    final producto = listaCompra.productos[index];
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0218),
                       child: Dismissible(
-                          key: Key(productoService.generarClave(producto)),
+                          key: UniqueKey(),
                           direction: DismissDirection.startToEnd,
                           onDismissed: (direction) {
-                            listaCompraService.quitarProducto(listaCompra, producto);
-                            listaCompraService.DB_quitarProducto(producto);
+                            listaCompraService.quitarProducto(producto.$1);
+                            listaCompra = ListaCompra(
+                              id: listaCompra.id,
+                              usuario: listaCompra.usuario,
+                              productos: List.from(listaCompra.productos)..remove(producto),
+                            );
                           },
                           background: Container(
-                            //color: Color(0xFF95B3FF),
-                              alignment: Alignment.centerLeft,
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
-                              child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
-                          ),
-                          child: StatefulStoreItem(producto: producto, onReturn: () => fetchAndStoreProductos())
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
+                            child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
+                        ),
+                          child: StatefulStoreItem(producto: producto, onReturn: _initListaCompra)
                       ),
                     );
                   },
@@ -234,7 +214,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
 }
 
 class StatefulStoreItem extends StatefulWidget {
-  final Producto producto;
+  final (Producto,int) producto;
   final VoidCallback onReturn;
   const StatefulStoreItem({super.key, required this.producto, required this.onReturn});
 
@@ -245,22 +225,10 @@ class StatefulStoreItem extends StatefulWidget {
 class _ProductTileItemState extends State<StatefulStoreItem> {
   ListaCompraService listaCompraService = ListaCompraService();
   bool _showButton = true;
-  int _counter = 0;
 
   @override
   void initState() {
     super.initState();
-    _cargarContador();
-    _cargarBoton();
-  }
-
-  @override
-  void didUpdateWidget(covariant StatefulStoreItem oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    //recargar los ticks al borrado
-    if (widget.producto != oldWidget.producto) {
-      _cargarBoton();
-    }
   }
 
   void _navigateToProductInfo(Producto producto) async{
@@ -278,29 +246,13 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
 
   String shortenText(String nombre){
     if(nombre.length >= 18){
-      return nombre.substring(0,18) +'...';
+      return '${nombre.substring(0,18)}...';
     } else {
       return nombre;
     }
   }
 
-  Future<void> _cargarContador () async {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    int count = await DatabaseOperations.instance.fetchCantidadListaCompra(db, widget.producto);
-    setState(() {
-      _counter = count;
-    });
-  }
-
-  Future<void> _cargarBoton () async {
-    bool boton = await listaCompraService.DB_Tick_tiene_tick(widget.producto);
-    setState(() {
-      _showButton = !boton;
-    });
-  }
-
   Future<void> _ventanaConfirmacion(BuildContext context, Producto producto) async {
-    Database db = DatabaseOperations.instance.prizoDatabase;
     return showDialog<void>(
       context: context,
       barrierDismissible: false, /* Evita cerrar el diálogo tocando fuera de él */
@@ -313,7 +265,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
-                _counter = await DatabaseOperations.instance.fetchCantidadListaCompra(db, producto);
                 Navigator.of(context).pop();
               },
               child: Text('Cancelar',
@@ -321,10 +272,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
             ),
             TextButton(
               onPressed: () {
-                /* Eliminar el producto completo de la lista */
-                //DatabaseOperations.instance.deleteFromListaCompraTable(db, producto);
-                listaCompraService.DB_quitarProducto(producto);
-                listaCompraService.DB_Tick_quitar(producto);
                 setState(() {
                   _showButton = false;
                 });
@@ -342,11 +289,13 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
 
   @override
   Widget build(BuildContext context) {
+    Producto producto = widget.producto.$1;
+    int _counter = widget.producto.$2;
     return Row(
       children: [
         GestureDetector(
-          onTap: () => _navigateToProductInfo(widget.producto),
-          child: widget.producto.foto.startsWith('assets')
+          onTap: () => _navigateToProductInfo(producto),
+          child: producto.foto.startsWith('assets')
           ? SizedBox(
             width: MediaQuery.of(context).size.shortestSide * 0.205,
             height: MediaQuery.of(context).size.shortestSide * 0.205,
@@ -358,7 +307,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
             ),
           )
           : Image.network(
-            widget.producto.foto,
+            producto.foto,
             width: MediaQuery.of(context).size.shortestSide * 0.205,
             height: MediaQuery.of(context).size.shortestSide * 0.205,
           ),
@@ -374,7 +323,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
         SizedBox(width: MediaQuery.of(context).size.shortestSide * 0.03),
         Expanded(
           child: GestureDetector(
-            onTap: () => _navigateToProductInfo(widget.producto),
+            onTap: () => _navigateToProductInfo(producto),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -383,7 +332,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                     width: MediaQuery.of(context).size.shortestSide * 0.283,
                     child:
                     Text(
-                      shortenText(widget.producto.nombre),
+                      shortenText(producto.nombre),
                       maxLines: 2,
                       style: TextStyle(
                         height: 1.2,
@@ -396,7 +345,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 ),
                 SizedBox(height: MediaQuery.of(context).size.longestSide * 0.001),
                 Text(
-                  widget.producto.tienda,
+                  producto.tienda,
                   style: TextStyle(
                     fontFamily: 'Geist',
                     fontWeight: FontWeight.w400,
@@ -406,7 +355,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 ),
                 SizedBox(height: MediaQuery.of(context).size.shortestSide * 0.023),
                 Text(
-                  '${(widget.producto.precio * _counter).toStringAsFixed(2)}€',
+                  '${(producto.precio * _counter).toStringAsFixed(2)}€',
                   style: TextStyle(
                     fontFamily: 'Geist',
                     color: Color.fromARGB(255,33,33,33),
@@ -432,7 +381,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                   setState(() {
                     _showButton = false;
                   });
-                  listaCompraService.DB_Tick_annadir(widget.producto);
                 }
             )
                 : IconButton(
@@ -442,7 +390,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                   setState(() {
                     _showButton = true;
                   });
-                  listaCompraService.DB_Tick_quitar(widget.producto);
                 }
             ),
             SizedBox(height: MediaQuery.of(context).size.longestSide * 0.01),
@@ -469,19 +416,9 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                       onPressed: () {
                         setState(() {
                           if (_counter > 0) {
-                            if(_counter == 1) {
-                              listaCompraService.DB_quitarProducto(widget.producto);
-                              listaCompraService.DB_Tick_quitar(widget.producto);
-                            } else {
-                              listaCompraService.DB_decreaseCantidad(widget.producto);
-                            }
-                            //listaCompraService.DB_decreaseCantidad(widget.producto);
-                            //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
+                            _showButton = false;
                             _counter--;
                           } else {
-                            listaCompraService.DB_quitarProducto(widget.producto);
-                            listaCompraService.DB_Tick_quitar(widget.producto);
-                            //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
                             _showButton = true;
                           }
                         });
@@ -523,8 +460,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                       icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
                       onPressed: () {
                         if (_counter < 99) {
-                          listaCompraService.DB_annadirProducto(widget.producto);
-                          //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
                           setState(() {
                             _counter++;
                           });

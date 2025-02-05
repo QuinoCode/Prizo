@@ -206,7 +206,8 @@ class ListaCompraService {
     list.productos.add((product, 1));
   }
 
-  void quitarProducto(ListaCompra list, Producto product) {
+  void quitarProducto(Producto product) async{
+    ListaCompra list = await generar_ListaCompra();
     /* Buscar producto en la lista existente */
     int index = buscarProducto(list, product);
 

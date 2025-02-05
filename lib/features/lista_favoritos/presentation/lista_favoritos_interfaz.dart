@@ -1,34 +1,25 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
-import 'package:prizo/features/productsearch/product_search_ui.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/shared/application/producto_service.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
-import 'package:prizo/shared/application/icon_service.dart';
-import 'package:prizo/shared/database/database_operations.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:prizo/features/lista/lista.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/main.dart';
 
 
 class ListaFavoritosInterfaz extends StatefulWidget {
-  ListaFavoritosInterfaz({super.key});
+  const ListaFavoritosInterfaz({super.key});
 
   @override
   _ListaFavoritosInterfazState createState() => _ListaFavoritosInterfazState();
 }
 
 class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
-  Map<String, int> _productoCantidad = {};
-  Map<String, bool> _mapaProductoConBotonCarrito = {};
   List<String> tiendasSeleccionadas = [];
   final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
   final ListaCompraService listaCompraService = ListaCompraService();
@@ -63,27 +54,6 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
     });
   }
 
-  void _incrementarCantidad(Producto producto) {
-    setState(() {
-      _productoCantidad[productoService.generarClave(producto)] = (_productoCantidad[productoService.generarClave(producto)] ?? 0) + 1;
-      listaCompraService.annadirInstancia(listaCompra, producto);
-    });
-  }
-
-  void _decrementarCantidad(Producto producto) {
-    setState(() {
-      final currentCantidad = _productoCantidad[productoService.generarClave(producto)] ?? 0;
-      if (currentCantidad > 1) {
-        _productoCantidad[productoService.generarClave(producto)] = currentCantidad - 1;
-        listaCompraService.quitarInstancia(listaCompra, producto);
-      } else {
-        _productoCantidad.remove(productoService.generarClave(producto));
-        _mapaProductoConBotonCarrito[productoService.generarClave(producto)] = false;
-        listaCompraService.quitarProducto(listaCompra, producto);
-      }
-    });
-  }
-  
   void _initListas() async{
     ListaCompra fetchedListaC = await listaCompraService.generar_ListaCompra();
     ListaFavoritos fetchedListaF = await listaFavoritosService.generar_ListaFavoritos();
@@ -91,15 +61,6 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
        listaCompra = fetchedListaC;
        listaFavoritos = fetchedListaF;
     });
-  }
-
-  @override
-  void didUpdateWidget(ListaFavoritosInterfaz oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget != widget) {
-      setState (() {
-      }); // llamar a init otra vez
-    }
   }
 
   @override
@@ -227,7 +188,6 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                           onDismissed: (direction) {
                             setState(() {
                               listaFavoritosService.quitarProducto(listaFavoritos, producto);
-                              listaFavoritosService.DB_quitarProducto(producto);
                               listaFavoritos = ListaFavoritos(
                                 id: listaFavoritos.id,
                                 usuario: listaFavoritos.usuario,
@@ -276,7 +236,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
 
   String shortenText(String nombre){
     if(nombre.length >= 18){
-      return nombre.substring(0,18) + '...';
+      return '${nombre.substring(0,18)}...';
     } else {
       return nombre;
     }
@@ -297,8 +257,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
 
   @override
   Widget build(BuildContext context) {
-    Database db = DatabaseOperations.instance.prizoDatabase;
-    final ListaCompraService listaCompraService = ListaCompraService();
     return Container(
       decoration: BoxDecoration(
       color: Colors.white,
@@ -410,20 +368,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 ),
                 child:IconButton(
                   onPressed: () {
-                    DatabaseOperations.instance.existsInProductTable(db, widget.producto).then((exists) {
-                      if (exists) {
-                        DatabaseOperations.instance.fetchCantidadListaCompra(db, widget.producto).then((cantidad) {
-                          setState(() {
-                            _counter = cantidad;  // Set _counter to the fetched cantidad
-                            _showButton = false; // Update _showButton only if the product exists in the table
-                          });
-                        });
-                      } else {
-                        DatabaseOperations.instance.registerIntoProductTable(db, widget.producto).then((_) {});
-                        setState(() {
-                          _showButton = false; // Update _showButton after inserting the product
-                        });
-                      }
+                    setState(() {
+                      _showButton = !_showButton;
                     });
                   },
                   color: Color.fromARGB(255, 80, 79, 79),
@@ -453,13 +399,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                         onPressed: () {
                           setState(() {
                             if (_counter > 0) {
-                              //DatabaseOperations.instance.decreaseCantidadListaCompra(db, widget.producto);
-                              listaCompraService.DB_decreaseCantidad(widget.producto);
                               _counter--;
                             } else {
-                              //DatabaseOperations.instance.deleteFromListaCompraTable(db, widget.producto);
-                              listaCompraService.DB_quitarProducto(widget.producto);
-                              listaCompraService.DB_Tick_quitar(widget.producto);
                               _showButton = true;
                             }
                           });
@@ -499,8 +440,6 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                         icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06),
                         onPressed: () {
                           if (_counter < 99) {
-                            //DatabaseOperations.instance.increaseCantidadListaCompra(db, widget.producto);
-                            listaCompraService.DB_increaseCantidad(widget.producto);
                             setState(() {
                               _counter++;
                             });
