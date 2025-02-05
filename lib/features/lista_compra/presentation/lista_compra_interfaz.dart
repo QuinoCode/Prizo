@@ -166,7 +166,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                 ),
               ) 
               : Padding(
-                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
+                padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.shortestSide * 0.0550, 0, MediaQuery.of(context).size.shortestSide * 0.0550, MediaQuery.of(context).size.longestSide * 0.1),
                 child: ListView.builder(
                   itemCount: listaCompra.productos.length,
                   itemBuilder: (context, index) {
