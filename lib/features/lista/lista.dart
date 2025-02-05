@@ -22,12 +22,11 @@ class _ListaInterfazState extends State<ListaInterfaz> {
   List<String> productosCompraNombre = [];
   List<Producto> productosFavoritos = [];
   List<String> productosFavoritosNombre = [];
+  bool _isLoading = true;
   ListaCompra listaCompra = ListaCompra(
       id: '1', usuario: 'usuario_demo', productos: []);
   ListaFavoritos listaFavoritos = ListaFavoritos(
       id: '1', usuario: 'usuario_demo', productos: []);
-
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -146,7 +145,15 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                   ],
                 ),
               ),
-              if (productos.isEmpty || nombres.isEmpty)
+              if (_isLoading) 
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.longestSide * 0.075),
+                  child: SizedBox(
+                      height: MediaQuery.of(context).size.longestSide * 0.094,
+                      child: Center(child: CircularProgressIndicator(color: Color(0xFF95B3FF), ))
+                    )
+                )
+              else if (productos.isEmpty || nombres.isEmpty)
                 Align(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,

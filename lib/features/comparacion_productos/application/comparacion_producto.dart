@@ -47,6 +47,10 @@ List<Producto> combinaTupla(List<(List<Producto>, List<Producto>)> listaTuplas){
 
 //ordena una lista de productos en base a su precio de menor a mayor
 void ordenarProductosPorPrecio(List<Producto> productos) {
-  productos.sort((a, b) => a.precio.compareTo(b.precio));
+  productos.sort((a, b) {
+    double precioA = a.oferta ? a.precioOferta : a.precio;
+    double precioB = b.oferta ? b.precioOferta : b.precio;
+    return precioA.compareTo(precioB);
+  });
 }
 

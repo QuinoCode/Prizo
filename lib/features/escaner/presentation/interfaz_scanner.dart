@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/features/obtencion_producto/application/ean_finder.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
@@ -291,14 +292,18 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
                   children: [
                     Align(
                       alignment: Alignment(-0.9,0.53),
-                      child: BackButton(
-                        size: MediaQuery.of(context).size.width * 0.070,
-                        color: Color(0xFF121212),
-                        strokeWidth: 2.6,
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                      ),
+                      //child: BackButton(
+                      //  size: MediaQuery.of(context).size.width * 0.070,
+                      //  color: Color(0xFF121212),
+                      //  strokeWidth: 2.6,
+                      //  onPressed: (){
+                      //    Navigator.pop(context);
+                      //  },
+                      //),
+                      child: SizedBox(child: Image.asset(
+                        'assets/icons/arrow.png'),
+                        width: MediaQuery.of(context).size.width * 0.070,
+                      )
                     ),
                     Positioned(
                       left: MediaQuery.of(context).size.width *0.145,
@@ -357,8 +362,8 @@ class _ScannerInterfaceState extends State<ScannerInterface> {
             },
             onPanEnd: (_){
               Navigator.of(context).pop();
-              Database db = DatabaseOperations.instance.prizoDatabase;
-              DatabaseOperations.instance.registerIntoListaCompraTable(db, producto);
+              ListaCompraService listaCompraService = ListaCompraService();
+              listaCompraService.DB_annadirProducto(producto);
               setState((){
                 isPressed = false;
               });

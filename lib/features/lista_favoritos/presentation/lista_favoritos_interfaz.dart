@@ -26,6 +26,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
   final ProductoService productoService = ProductoService();
   ListaFavoritos listaFavoritos = ListaFavoritos(id: '1', usuario: 'usuario_demo', productos: []);
   ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
+  bool _isLoading = true;
 
   List<Producto> _filtrarProductos() {
     if (listaFavoritos.productos.isEmpty) {
@@ -60,6 +61,7 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
     setState(() {
        listaCompra = fetchedListaC;
        listaFavoritos = fetchedListaF;
+       _isLoading = false;
     });
   }
 
@@ -157,7 +159,16 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
             ),
             SizedBox(height: MediaQuery.of(context).size.longestSide * 0.034),
             Expanded(
-              child: listaFavoritos.productos.isEmpty 
+              child: 
+            _isLoading 
+            ? Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.longestSide * 0.17),
+              child: SizedBox(
+                  height: MediaQuery.of(context).size.longestSide * 0.264,
+                  child: Center(child: CircularProgressIndicator(color: Color(0xFF95B3FF), ))
+                ),
+            )
+            : listaFavoritos.productos.isEmpty 
               ? Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

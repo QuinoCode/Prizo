@@ -246,7 +246,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     if (cargandoOfertas)
                       SizedBox(
                           height: height * 0.264,
-                          child: Center(child: CircularProgressIndicator())
+                          child: Center(child: CircularProgressIndicator(color: Color(0xFF95B3FF), ))
                       )
                     else if (productosEnOferta.isEmpty)
                       SizedBox(
