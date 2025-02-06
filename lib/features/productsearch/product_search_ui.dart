@@ -249,12 +249,20 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
     try {
       final productos = await searcher.searchProducts(_searchController.text, tiendasSeleccionadas);
       List<List<Producto>> filtradoPorAlergeno = filtrarAlergeno(productos);
+      int orderingWay = Provider.of<PrizoState>(context, listen: false).orderingWay;
+      List<Producto> listaCategoria = [];
+      List<Producto> listaRestante = [];
 
       // Por cada súper separa los productos en dos listas
       List<(List<Producto>, List<Producto>)> listasSeparadas = filtradoPorAlergeno.map((productosSuper) => ordenaPrioridadCategoria(productosSuper)).toList();
 
-      // Combina las primeras listas de cada supermercado y las segundas de cada supermercado entre ellas
-      final (List<Producto> listaCategoria, List<Producto> listaRestante) = combinaListasSupers(listasSeparadas);
+      if (orderingWay == 0) {
+        // Combina las primeras listas de cada supermercado y las segundas de cada supermercado entre ellas
+        (listaCategoria, listaRestante) = combinaListasSupers(listasSeparadas);
+      } else {
+        (listaCategoria, listaRestante) = combinaListasSupersPrecioMedida(listasSeparadas);
+      }
+
       setState(() {
         _productos = listaCategoria;
         _productosRestantes = listaRestante;

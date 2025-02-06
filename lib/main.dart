@@ -68,12 +68,22 @@ class _SplashScreenState extends State<SplashScreen>{
 class PrizoState extends ChangeNotifier {
   int _currentIndex = 0;
   String _searchQuery = "";
+  int orderingWay = 0;
 
   int get currentIndex => _currentIndex;
   String get searchQuery => _searchQuery;
 
   void setIndex(int index, [String? query]) {
     _currentIndex = index;
+    
+    if (query!= null) {
+      _searchQuery = query;
+    }
+
+    notifyListeners(); // Notify UI updates
+  }
+  void setOrderingWay(int newOrderingWay, [String? query]) {
+    orderingWay = newOrderingWay;
     
     if (query!= null) {
       _searchQuery = query;
