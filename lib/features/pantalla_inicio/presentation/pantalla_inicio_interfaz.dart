@@ -252,13 +252,25 @@ class _PantallaInicioState extends State<PantallaInicio> {
                       SizedBox(
                         height: height * 0.264,
                         child: Center(
-                          child: Text(
-                            'No hay productos en oferta en tu lista de favoritos.',
-                            style: TextStyle(
-                              fontFamily: 'Geist',
-                              fontSize: width * 0.04293,
-                              color: Color(0xFF504F4F),
+                          child: Column(
+                            children: [
+                            Padding(
+                              padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.04),
+                              child: Image.asset('assets/images/sin_ofertas.png', height:height * 0.175 ,),
                             ),
+                              Padding(
+                                padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.030),
+                                child: Text(
+                                  'Ninguno de tus favoritos está\nen oferta',
+                                  style: TextStyle(
+                                    fontFamily: 'Geist',
+                                    fontSize: width * 0.04293,
+                                    color: Color(0xFF504F4F),
+                                  ),
+                                textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       )
