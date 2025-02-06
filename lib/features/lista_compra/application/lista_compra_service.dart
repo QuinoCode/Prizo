@@ -1,3 +1,4 @@
+import 'package:prizo/shared/data_entities/DAO/producto_DAO.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/application/producto_service.dart';
@@ -69,6 +70,15 @@ class ListaCompraService {
 
     return await dbOps.fetchCantidadListaCompra(db, producto);
   }
+  Future<int> DB_fetchTick(Producto producto) async {
+    DatabaseOperations dbOps = DatabaseOperations.instance;
+
+    await dbOps.ensureDatabaseInitialized();
+
+    Database db = dbOps.prizoDatabase;
+
+    return await dbOps.fetchTickListaCompra(db, producto);
+  }
   void DB_setCantidad(Producto producto, int nuevaCantidad) async {
     DatabaseOperations dbOps = DatabaseOperations.instance;
 
@@ -129,12 +139,13 @@ class ListaCompraService {
     List<Producto> BD_productos = await DB_fetchProducts();
 
     // Generar tuplas de producto-cantidad
-    List<(Producto, int)> BD_tuplas = [];
+    List<(Producto, int,int)> BD_tuplas = [];
 
     for (Producto producto in BD_productos) {
       // Llamar a DB_fetchCantidad para cada producto
       int cantidad = await DB_fetchCantidad(producto);
-      BD_tuplas.add((producto, cantidad));
+      int tick = await DB_fetchTick(producto);
+      BD_tuplas.add((producto, cantidad, tick));
     }
 
     // Crear y devolver la lista de compra
@@ -189,7 +200,7 @@ class ListaCompraService {
   void annadirProducto(ListaCompra list, Producto product) {
     /* lista vacía */
     if (list.productos.isEmpty) {
-      list.productos.add((product, 1));
+      list.productos.add((product, 1, 0));
       return; /* fin ejecución */
     }
 
@@ -203,7 +214,7 @@ class ListaCompraService {
     }
 
     /* El producto no existía en la lista */
-    list.productos.add((product, 1));
+    list.productos.add((product, 1, 0));
   }
 
   void quitarProducto(Producto product) async{
@@ -272,7 +283,7 @@ class ListaCompraService {
         newQuantity = quantity;
       }
     }
-    list.productos[index] = (product /* se mete para obtener oferta actualizada */, newQuantity);
+    list.productos[index] = (product /* se mete para obtener oferta actualizada */, newQuantity, 0);
   }
 
   /** Si el producto no existe, devuelve 0.0 */

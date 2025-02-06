@@ -147,6 +147,7 @@ class DatabaseOperations {
 		    lista_id TEXT, 
 		    producto_id TEXT, 
 		    cantidad INTEGER,
+        tick INTEGER,
 		    PRIMARY KEY (lista_id, producto_id),
 		    FOREIGN KEY (lista_id) REFERENCES Lista_Compra(id) ON DELETE CASCADE,
 		    FOREIGN KEY (producto_id) REFERENCES Producto(id) ON DELETE CASCADE
@@ -476,6 +477,27 @@ class DatabaseOperations {
           [producto.id]
         );
         return result.first['cantidad'] as int;
+      }
+    } catch (e) {
+      print('Error increasing cantidad: $e');
+    }
+    return 0;
+  }
+  Future<int> fetchTickListaCompra(Database db, Producto producto) async {
+    try {
+      var exists = await existsInListaCompraTable(db, producto);
+      if (!exists) {
+        await registerIntoListaCompraTable(db, producto);
+      } else {
+        var result = await db.rawQuery(
+          '''
+          SELECT cantidad 
+          FROM Lista_Compra_Producto 
+          WHERE producto_id = ?
+          ''',
+          [producto.id]
+        );
+        return result.first['tick'] as int;
       }
     } catch (e) {
       print('Error increasing cantidad: $e');

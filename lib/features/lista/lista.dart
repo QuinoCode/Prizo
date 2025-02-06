@@ -53,9 +53,11 @@ class _ListaInterfazState extends State<ListaInterfaz> {
     productosCompra = resultados[4] as List<Producto>;
     productosCompraNombre = resultados[5] as List<String>;
 
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted){ 
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _navigateToListaFavoritos() async {

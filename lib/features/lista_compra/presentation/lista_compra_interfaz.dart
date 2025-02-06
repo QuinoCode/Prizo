@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:prizo/shared//database/database_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
 import 'package:prizo/shared/application/producto_service.dart';
@@ -7,6 +8,7 @@ import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
+import 'package:prizo/shared/data_entities/DAO/lista_compra_DAO.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/main.dart';
 
@@ -17,7 +19,7 @@ class ListaCompraInterfaz extends StatefulWidget {
   _ListaCompraInterfazState createState() => _ListaCompraInterfazState();
 }
 
-class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsBindingObserver  {
+class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsBindingObserver {
   List<String> tiendasSeleccionadas = [];
   final ProductoService productoService = ProductoService();
   final ListaCompraService listaCompraService = ListaCompraService();
@@ -29,7 +31,6 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
        listaCompra = fetchedLista;
     });
   }
-
   @override
   void initState() {
     super.initState();
@@ -42,8 +43,24 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
-
-  List<(Producto,int)> _filtrarProductos() {
+  void updateTheList(int counter, Producto producto, int tickStatus){
+    for (var i = 0; i < listaCompra.productos.length; i++) {
+        if (listaCompra.productos[i].$1 == producto) {
+          // Update the second integer by incrementing it
+          listaCompra.productos[i] = (listaCompra.productos[i].$1, counter, tickStatus);
+        }
+    }
+    ListaCompra list = listaCompra;
+    print(list);
+    
+  }
+  Future<void> saveChangesIfDirty(bool isDirty, ListaCompra providedList) async {
+    ListaCompraDAO dao = ListaCompraDAO(DatabaseOperations.instance.prizoDatabase);
+    if (isDirty) {
+      await dao.insertListaCompra(listaCompra); // Call your existing saveData method
+    }
+  }
+  List<(Producto, int, int)> _filtrarProductos() {
     if (tiendasSeleccionadas.isEmpty) {
       return listaCompra.productos;
     }
@@ -62,6 +79,16 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+      // Access _isDirty from PrizoState (if it's global)
+      final prizoState = Provider.of<PrizoState>(context, listen: false);
+      if (prizoState.isDirty) {
+        await saveChangesIfDirty(prizoState.isDirty, listaCompra);
+      }
+    }
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -72,7 +99,8 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
           icon: ImageIcon(AssetImage('assets/icons/arrow.png')),
           color: Color.fromARGB(255,18,18,18),
           splashColor: Colors.transparent,
-          onPressed: () {
+          onPressed: () async {
+            await saveChangesIfDirty(Provider.of<PrizoState>(context, listen: false).isDirty, listaCompra);
             Provider.of<PrizoState>(context, listen: false).setIndex(2);
           },
         ),
@@ -178,6 +206,9 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                           direction: DismissDirection.startToEnd,
                           onDismissed: (direction) {
                             setState(() {
+                              bool thing = Provider.of<PrizoState>(context, listen: false).isDirty;
+                              Provider.of<PrizoState>(context, listen: false).isDirty = true;
+                              bool thingAfter = Provider.of<PrizoState>(context, listen: false).isDirty;
                               listaCompraService.quitarProducto(producto.$1);
                               listaCompra.productos.removeAt(index);
                             });
@@ -192,7 +223,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                               child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
                             ),
                           ),
-                          child: StatefulStoreItem(producto: producto, onReturn: _initListaCompra)
+                          child: StatefulStoreItem(producto: producto, onUpdate: updateTheList, onReturn: _initListaCompra,)
                       ),
                     );
                   },
@@ -206,9 +237,11 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
 }
 
 class StatefulStoreItem extends StatefulWidget {
-  final (Producto,int) producto;
+  (Producto,int,int) producto;
   final VoidCallback onReturn;
-  const StatefulStoreItem({super.key, required this.producto, required this.onReturn});
+  final Function(int,Producto,int) onUpdate;
+
+  StatefulStoreItem({super.key, required this.producto, required this.onUpdate, required this.onReturn});
 
   @override
   _ProductTileItemState createState() => _ProductTileItemState();
@@ -223,6 +256,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
   void initState() {
     super.initState();
     _counter = widget.producto.$2;
+    _showButton = widget.producto.$3 == 0;
   }
 
   void _navigateToProductInfo(Producto producto) async{
@@ -281,6 +315,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
   @override
   Widget build(BuildContext context) {
     Producto producto = widget.producto.$1;
+
     return Row(
       children: [
         GestureDetector(
@@ -369,7 +404,13 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 icon: Image.asset('assets/icons/empty_checkbox.png', width: MediaQuery.of(context).size.shortestSide * 0.099, height: MediaQuery.of(context).size.shortestSide * 0.102),
                 onPressed: () {
                   setState(() {
+                    Provider.of<PrizoState>(context, listen: false).isDirty = true;
                     _showButton = false;
+                    int tick;
+                    if (_showButton){
+                    tick = 0;
+                    } else { tick = 1;}
+                  widget.onUpdate(_counter, producto,tick);
                   });
                 }
             )
@@ -378,7 +419,14 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 icon: Image.asset('assets/icons/checked_checkbox.png', width: MediaQuery.of(context).size.shortestSide * 0.099, height: MediaQuery.of(context).size.shortestSide * 0.102),
                 onPressed: () {
                   setState(() {
+                  widget.producto = (widget.producto.$1, widget.producto.$2, widget.producto.$3);
+                    Provider.of<PrizoState>(context, listen: false).isDirty = true;
                     _showButton = true;
+                    int tick;
+                    if (_showButton){
+                    tick = 0;
+                    } else { tick = 1;}
+                    widget.onUpdate(_counter, producto,tick);
                   });
                 }
             ),
@@ -407,6 +455,13 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                         setState(() {
                           if (_counter > 1) {
                             _counter--;
+                            int tick;
+                            if (_showButton){
+                            tick = 0;
+                            } else { tick = 1;}
+
+                            widget.onUpdate(_counter, producto, tick);
+                            Provider.of<PrizoState>(context, listen: false).isDirty = true;
                           }
                         });
                       },
@@ -439,16 +494,23 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                   Positioned(
                     top: 0,
                     bottom: MediaQuery.of(context).size.longestSide * 0.002,
-                    left: MediaQuery.of(context).size.shortestSide * 0.125,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
-                      onPressed: () {
-                        if (_counter < 99) {
-                          setState(() {
-                            _counter++;
+                      left: MediaQuery.of(context).size.shortestSide * 0.125,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                          icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
+                        onPressed: () {
+                          if (_counter < 99) {
+                            setState(() {
+                              _counter++;
+                              int tick;
+                              if (_showButton){
+                              tick = 0;
+                              } else { tick = 1;}
+
+                              widget.onUpdate(_counter, producto, tick);
+                            Provider.of<PrizoState>(context, listen: false).isDirty = true;
                           });
                         }
                       },

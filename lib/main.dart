@@ -68,6 +68,7 @@ class _SplashScreenState extends State<SplashScreen>{
 class PrizoState extends ChangeNotifier {
   int _currentIndex = 0;
   String _searchQuery = "";
+  bool isDirty = false;
 
   int get currentIndex => _currentIndex;
   String get searchQuery => _searchQuery;

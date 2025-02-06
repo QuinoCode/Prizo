@@ -21,17 +21,18 @@ class ListaCompraDAO {
           );
 
           //Insert the products in the database just in case they're not present yet
-          for (var producto_cantidad in listaCompra.productos){
-                  await productoDAO.insertProducto(producto_cantidad.$1);
+          for (var producto_cantidad_tick in listaCompra.productos){
+                  await productoDAO.insertProducto(producto_cantidad_tick.$1);
           }
           //Insert the products into the list
-          for (var producto_cantidad in listaCompra.productos){
+          for (var producto_cantidad_tick in listaCompra.productos){
                   await _database.insert(
                           'Lista_Compra_Producto',
                           {
                                   "lista_id": listaCompra.id, 
-                                  "producto_id": producto_cantidad.$1.id, 
-                                  "cantidad": producto_cantidad.$2,
+                                  "producto_id": producto_cantidad_tick.$1.id, 
+                                  "cantidad": producto_cantidad_tick.$2,
+                                  "tick": producto_cantidad_tick.$3,
                           },
                           conflictAlgorithm: ConflictAlgorithm.replace
                   );
