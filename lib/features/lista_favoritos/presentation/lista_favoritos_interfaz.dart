@@ -222,38 +222,35 @@ class _ListaFavoritosInterfazState extends State<ListaFavoritosInterfaz> {
                 )
               )
               : Padding(
-                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide * 0.0550),
+                padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.shortestSide * 0.0550, 0, MediaQuery.of(context).size.shortestSide * 0.0550, MediaQuery.of(context).size.longestSide * 0.1),
                 child: ListView.builder(
                   itemCount: listaFavoritos.productos.length,
                   itemBuilder: (context, index) {
                     final producto =
                     listaFavoritos.productos[index];
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(23),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0218),
-                        child: Dismissible(
-                          key: Key(productoService.generarClave(producto)),
-                          direction: DismissDirection.startToEnd,
-                          onDismissed: (direction) {
-                            setState(() {
-                              listaFavoritosService.quitarProducto(listaFavoritos, producto);
-                              listaFavoritosService.DB_quitarProducto(producto);
-                              listaFavoritos = ListaFavoritos(
-                                id: listaFavoritos.id,
-                                usuario: listaFavoritos.usuario,
-                                productos: List.from(listaFavoritos.productos)..remove(producto),
-                              );
-                            });
-                          },
-                          background: Container(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
-                            child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
-                          ),
-                          child: StatefulStoreItem(producto: producto, onReturn: _initListas,)
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0218),
+                      child: Dismissible(
+                        key: Key(productoService.generarClave(producto)),
+                        direction: DismissDirection.startToEnd,
+                        onDismissed: (direction) {
+                          setState(() {
+                            listaFavoritosService.quitarProducto(listaFavoritos, producto);
+                            listaFavoritosService.DB_quitarProducto(producto);
+                            listaFavoritos = ListaFavoritos(
+                              id: listaFavoritos.id,
+                              usuario: listaFavoritos.usuario,
+                              productos: List.from(listaFavoritos.productos)..remove(producto),
+                            );
+                          });
+                        },
+                        background: Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(color: Color(0xFF95B3FF), borderRadius: BorderRadius.circular(23)),
+                          child: ImageIcon(AssetImage('assets/icons/basura.png'), size: MediaQuery.of(context).size.shortestSide * 0.0872)
                         ),
+                        child: StatefulStoreItem(producto: producto, onReturn: _initListas,)
                       ),
                     );
                   },
