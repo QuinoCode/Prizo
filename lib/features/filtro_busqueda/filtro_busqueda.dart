@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:prizo/main.dart';
+import 'package:provider/provider.dart';
 
 class FiltroProductosInterfaz extends StatefulWidget {
   List<int> alergenos;
@@ -145,8 +147,12 @@ class _FiltroProductosInterfazState extends State<FiltroProductosInterfaz> {
     );
   }
   Widget _precioMedidaButton() {
+    int orderingWay = Provider.of<PrizoState>(context, listen: false).orderingWay;
     return ElevatedButton(
       onPressed: () {
+        orderingWay == 0
+        ? Provider.of<PrizoState>(context, listen: false).setOrderingWay(1) 
+        : Provider.of<PrizoState>(context, listen: false).setOrderingWay(0);
         setState(() {
           if (_precioMedidaApplied){ 
               _precioMedidaApplied = false;
