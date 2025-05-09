@@ -1,0 +1,82 @@
+name: prizo
+description: "Una aplicación para comparar supermercados y comprar siempre al mejor precio!"
+publish_to: 'none'
+version: 0.3.0
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.0.0
+  intl: ^0.18.0
+  http: ^1.2.2
+  html: ^0.15.0
+  json_annotation: ^4.7.0
+  diacritic: ^0.1.0
+  sqflite: ^2.4.1
+  path: ^1.9.0
+  mobile_scanner: ^6.0.2
+  location: ^6.0.2
+  map_launcher: ^3.5.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  test: ^1.25.7
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/Bolsa_de_tela.png
+    - assets/images/bolsa_de_tela_vacia.png
+    - assets/images/sin_ofertas.png
+    - assets/images/cesta_vacia.png
+    - assets/icons/casa_icono.png
+    - assets/icons/listas_icono.png
+    - assets/icons/lupa_icono.png
+    - assets/icons/usuario_icono.png
+    - assets/images/logo_dia.png
+    - assets/images/logo_consum.png
+    - assets/images/logo_carrefour.png
+    - assets/fonts/
+    - assets/icons/cesta_icono.png
+    - assets/icons/corazon_icono.png
+    - assets/icons/corazonnegro_icono.png
+    - assets/icons/escaner_icono.png
+    - assets/gifs/dancing_rat.gif
+    - assets/gifs/splash_screen_animation.gif
+    - assets/icons/filter.png
+    - assets/icons/shopping_basket.png
+    - assets/icons/scanner.png
+    - assets/icons/arrow.png
+    - assets/icons/empty_checkbox.png
+    - assets/icons/checked_checkbox.png
+    - assets/icons/x.png
+    - assets/icons/basura.png
+    - assets/icons/mapa_icono.png
+    - assets/images/placeholder.png
+    - assets/images/perfil_falso.png
+
+  fonts:
+    - family: Kanit
+      fonts:
+        - asset: assets/fonts/Kanit-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Kanit-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Kanit-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Kanit-SemiBold.ttf
+          weight: 600
+    - family: Geist
+      fonts:
+        - asset: assets/fonts/Geist-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Geist-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Geist-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Geist-VariableFont_wght.ttf
+

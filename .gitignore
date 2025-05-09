@@ -1,0 +1,75 @@
+# Flutter/Dart specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+build/
+android/app/build/
+**/android/.cxx/
+*.lock
+.pub/
+.idea/
+.melody/
+.flutter/
+# User-specific files
+*.swp
+*.swo
+*.swn
+*.orig
+*.bak
+
+# VSCode specific
+.vscode/
+.history/
+*.code-workspace
+
+# Android Studio specific
+.idea/
+.idea/workspace.xml
+*.iml
+.gradle/
+local.properties
+.DS_Store
+android/local.properties
+prizo.iml
+
+# Android specific
+# Built application files
+*.apk
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle files
+.gradle/
+build/
+
+# Kotlin specific
+*.kotlin_metadata/
+**/build/
+
+# IntelliJ related
+*.iml
+.idea/modules.xml
+.idea/*.iml
+.idea/workspace.xml
+.idea/libraries/
+.idea/.name
+.idea/vcs.xml
+.idea/.idea-gitignore
+.idea/misc.xml
+
+# OS-specific
+.DS_Store
+Thumbs.db
