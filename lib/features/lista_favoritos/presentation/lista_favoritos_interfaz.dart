@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
-import 'package:prizo/features/productsearch/product_search_ui.dart';
+import 'package:prizo/features/product_search/product_search_ui.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
