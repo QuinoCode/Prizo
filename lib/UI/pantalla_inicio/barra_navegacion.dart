@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:prizo/main.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:provider/provider.dart';
-import '/features/pantalla_inicio/presentation/pantalla_inicio_interfaz.dart';
-import '../../product_search/product_search_ui.dart';
-import '/features/lista/lista.dart';
-import '../../user/perfil.dart';
+import 'package:prizo/UI/pantalla_inicio/pantalla_inicio_interfaz.dart';
+import 'package:prizo/features/product_search/presentation/product_search_ui.dart';
+import 'package:prizo/UI/lista/lista.dart';
+import 'package:prizo/features/user/perfil.dart';
 import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
 import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 

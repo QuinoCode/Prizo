@@ -4,8 +4,8 @@ import 'package:prizo/features/lista_compra/application/lista_compra_service.dar
 import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
-import 'package:prizo/features/pantalla_producto/application/pantalla_producto_service.dart';
-import 'package:prizo/features/distancia_tienda/shop_distance.dart';
+import 'package:prizo/features/informacion_producto/pantalla_producto/application/pantalla_producto_service.dart';
+import 'package:prizo/features/informacion_supermercado/distancia_tienda/application/shop_distance.dart';
 
 class DetallesProducto extends StatelessWidget {
   final Producto producto;

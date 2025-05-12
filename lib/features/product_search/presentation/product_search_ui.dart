@@ -10,11 +10,11 @@ import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/features/product_search/product_search_carrefour/application/carrefour_finder_service.dart';
 import 'package:prizo/features/product_search/product_search_consum/application/consum_finder_service.dart';
 import 'package:prizo/features/product_search/product_search_DIA/application/dia_finder_service.dart';
-import 'package:prizo/features/comparacion_productos/application/comparacion_producto.dart';
+import 'package:prizo/features/product_search/comparacion_productos/application/comparacion_producto.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
-import 'package:prizo/features/filtro_busqueda/filtro_busqueda.dart';
-import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
-import 'package:prizo/features/escaner/presentation/interfaz_scanner.dart' as scanner;
+import 'package:prizo/features/product_search/filtro_busqueda/filtro_busqueda.dart';
+import 'package:prizo/features/informacion_producto/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import 'package:prizo/features/product_search/escaner/presentation/interfaz_scanner.dart' as scanner;
 
 abstract class ProductSearcher {
   Future<List<List<Producto>>> searchProducts(String query, List<String> stores);

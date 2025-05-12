@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
-import 'package:prizo/features/product_search/obtencion_producto/application/ean_finder.dart';
+import 'package:prizo/features/product_search/application/ean_finder.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/database/database_operations.dart';

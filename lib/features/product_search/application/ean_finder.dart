@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:prizo/features/product_search/product_search_carrefour/application/carrefour_finder_service.dart';
 import 'package:prizo/features/product_search/product_search_consum/application/consum_finder_service.dart';
 import 'package:prizo/features/product_search/product_search_DIA/application/dia_finder_service.dart';
-import 'package:prizo/features/product_search/obtencion_producto/application/finder_wrapper.dart';
+import 'package:prizo/features/product_search/application/finder_wrapper.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 
 class EanFinder {

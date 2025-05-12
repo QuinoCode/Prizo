@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:prizo/features/product_search/obtencion_producto/application/finder_wrapper.dart';
+import 'package:prizo/features/product_search/application/finder_wrapper.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
-import 'package:prizo/features/product_search/obtencion_producto/domain/response_api_carrefour_data_model.dart';
-import '../../obtencion_producto/application/obtencion_producto_service.dart';
+import 'package:prizo/features/product_search/product_search_carrefour/domain/response_api_carrefour_data_model.dart';
+import 'package:prizo/features/product_search/application/obtencion_producto_service.dart';
 
 class CarrefourFinderService implements FinderWrapper{
   static int sessionCounter = 0;

@@ -1,8 +1,8 @@
-import '../../../shared/data_entities/models/producto.dart';
-import '../../product_search/product_search_consum/application/consum_finder_service.dart';
-import '../../product_search/product_search_DIA/application/dia_finder_service.dart';
-import '../../comparacion_productos/application/comparacion_producto.dart';
-import '../../product_search/product_search_carrefour/application/carrefour_finder_service.dart';
+import 'package:prizo/shared/data_entities/models/producto.dart';
+import 'package:prizo/features/product_search/product_search_consum/application/consum_finder_service.dart';
+import 'package:prizo/features/product_search/product_search_DIA/application/dia_finder_service.dart';
+import 'package:prizo/features/product_search/comparacion_productos/application/comparacion_producto.dart';
+import 'package:prizo/features/product_search/product_search_carrefour/application/carrefour_finder_service.dart';
 import 'package:flutter/material.dart';
 
 

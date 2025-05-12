@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'features/pantalla_inicio/presentation/barra_navegacion.dart';
+import 'package:prizo/UI/pantalla_inicio/barra_navegacion.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:prizo/shared//database/database_operations.dart';
 import 'package:flutter/services.dart';

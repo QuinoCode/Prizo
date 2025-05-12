@@ -1,10 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api
-
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:prizo/features/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
-import 'package:prizo/features/product_search/product_search_ui.dart';
+import 'package:prizo/features/informacion_producto/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import 'package:prizo/features/product_search/presentation/product_search_ui.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
@@ -14,7 +13,7 @@ import 'package:prizo/features/lista_favoritos/application/lista_favoritos_servi
 import 'package:prizo/shared/application/icon_service.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:prizo/features/lista/lista.dart';
+import 'package:prizo/UI/lista/lista.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/main.dart';
 
