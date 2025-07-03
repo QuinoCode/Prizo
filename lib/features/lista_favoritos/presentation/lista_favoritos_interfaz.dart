@@ -13,7 +13,7 @@ import 'package:prizo/features/lista_favoritos/application/lista_favoritos_servi
 import 'package:prizo/shared/application/icon_service.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:prizo/UI/lista/lista.dart';
+import 'package:prizo/shared/UI/lista/lista.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/main.dart';
 

@@ -493,7 +493,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
                       final String direccionCompleta = supermercado["address"]?["label"] ?? "Dirección no disponible";
 
-                      final direccionCorregida = utf8.decode(latin1.encode(direccionCompleta));
+                      final direccionCorregida = direccionCompleta;
 
                       final List<String> partesDireccion = direccionCorregida.split(',');
 
