@@ -3,6 +3,7 @@ import 'package:prizo/features/product_search/product_search_consum/application/
 import 'package:prizo/features/product_search/product_search_DIA/application/dia_finder_service.dart';
 import 'package:prizo/features/product_search/comparacion_productos/application/comparacion_producto.dart';
 import 'package:prizo/features/product_search/product_search_carrefour/application/carrefour_finder_service.dart';
+import 'package:prizo/features/product_search/product_search_mercadona/application/mercadona_finder_service.dart';
 import 'package:flutter/material.dart';
 
 
@@ -10,14 +11,16 @@ class PantallaProductoService {
   final ConsumFinderService consumService = ConsumFinderService();
   final DiaFinderService diaService = DiaFinderService();
   final CarrefourFinderService carrefourService = CarrefourFinderService();
+  final MercadonaFinderService mercadonaService = MercadonaFinderService();
 
   Future<List<Producto>> obtenerProductosSimilares(String query, Producto productoActual) async {
     try {
       final consumProductsFuture = consumService.getProductList(query);
       final diaProductsFuture = diaService.getProductList(query);
       final carrefourProductsFuture = carrefourService.getProductList(query);
-      final results = await Future.wait([consumProductsFuture, diaProductsFuture, carrefourProductsFuture]);
-      List<Producto> listaCombinada = results[0] + results[1] + results[2];
+      final mercadonaProductsFuture = mercadonaService.getProductList(query);
+      final results = await Future.wait([consumProductsFuture, diaProductsFuture, carrefourProductsFuture, mercadonaProductsFuture]);
+      List<Producto> listaCombinada = results[0] + results[1] + results[2] + results[3];
       listaCombinada.removeWhere((producto) => producto.id == productoActual.id);
       ordenarProductosPorPrecio(listaCombinada);
       return listaCombinada;

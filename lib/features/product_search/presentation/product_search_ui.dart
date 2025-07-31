@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:prizo/features/product_search/product_search_mercadona/application/mercadona_finder_service.dart';
 import 'package:prizo/main.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +25,13 @@ class MultiMarketProductSearcher implements ProductSearcher {
   final ConsumFinderService consumService;
   final DiaFinderService diaService;
   final CarrefourFinderService carrefourService;
+  final MercadonaFinderService mercadonaService;
 
   MultiMarketProductSearcher({
     required this.consumService,
     required this.diaService,
     required this.carrefourService,
+    required this.mercadonaService,
   });
 
   //make the get products list use stores for a return, remove override
@@ -37,13 +40,14 @@ class MultiMarketProductSearcher implements ProductSearcher {
     try {
       // Default to all stores if none are selected
       if (stores.isEmpty) {
-        stores = ["Consum", "Dia", "Carrefour"];
+        stores = ["Consum", "Dia", "Carrefour", "Mercadona"];
       }
 
       // Initialize all futures
       final consumProductsFuture = consumService.getProductList(query);
       final diaProductsFuture = diaService.getProductList(query);
       final carrefourProductsFuture = carrefourService.getProductList(query);
+      final mercadonaProductsFuture = mercadonaService.getProductList(query);
 
       // Selectively await the futures based on the stores
       List<List<Producto>> results = [];
@@ -55,6 +59,9 @@ class MultiMarketProductSearcher implements ProductSearcher {
       }
       if (stores.contains("Carrefour")) {
         results.add(await carrefourProductsFuture);
+      }
+      if (stores.contains("Mercadona")) {
+        results.add(await mercadonaProductsFuture);
       }
 
       return results; // Return only the results for the selected stores
@@ -101,6 +108,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
   final ConsumFinderService consumService = ConsumFinderService();
   final DiaFinderService diaService = DiaFinderService();
   final CarrefourFinderService carrefourService = CarrefourFinderService();
+  final MercadonaFinderService mercadonaService = MercadonaFinderService();
   final TextEditingController _searchController = TextEditingController();
   List<Producto> _productos = [];
   List<Producto> _productosRestantes = [];
@@ -244,6 +252,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
       consumService: consumService,
       diaService: diaService,
       carrefourService: carrefourService,
+      mercadonaService: mercadonaService,
     );
 
     try {

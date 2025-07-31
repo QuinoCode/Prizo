@@ -1,6 +1,7 @@
 import 'package:prizo/features/product_search/product_search_carrefour/application/carrefour_finder_service.dart';
 import 'package:prizo/features/product_search/product_search_consum/application/consum_finder_service.dart';
 import 'package:prizo/features/product_search/product_search_DIA/application/dia_finder_service.dart';
+import 'package:prizo/features/product_search/product_search_mercadona/application/mercadona_finder_service.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 
 abstract class FinderWrapper {
@@ -15,6 +16,8 @@ abstract class FinderWrapper {
         return DiaFinderService();
       case "consum":
         return ConsumFinderService();
+      case "mercadona":
+        return MercadonaFinderService();
       default:
         throw ArgumentError("Finder type not declared / wrong: $type");
     }

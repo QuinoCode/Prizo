@@ -3,6 +3,7 @@ class Producto
   final String id;
   final String nombre;
   final String foto;
+  final String picture_back;
   final List<bool> alergenos;
   //
   //Explicación campo alérgenos
@@ -24,6 +25,7 @@ class Producto
     required this.id,
     required this.nombre,
     this.foto = "",
+    this.picture_back = "",
     required this.alergenos,
     required this.precio,
     required this.precioMedida,
@@ -36,7 +38,7 @@ class Producto
 
   @override
   String toString() {
-    return 'Producto{id: $id, nombre: $nombre, precio: $precio, imagen: $foto, marca: $marca, glutenFree: ${alergenos[0]}, lactoseFree: ${alergenos[1]}, nutsFree: ${alergenos[2]}}';
+    return 'Producto{id: $id, nombre: $nombre, precio: $precio, imagen: $foto, picture_back: $picture_back marca: $marca, glutenFree: ${alergenos[0]}, lactoseFree: ${alergenos[1]}, nutsFree: ${alergenos[2]}}';
   }
 
   //fromMap is a type of constructor that will create a Producto when provided with a map (which is quite useful since it's what comes from select querys in sqlite(our database model))
@@ -45,6 +47,7 @@ class Producto
       id: map['id'],
       nombre: map['nombre'],
       foto: map['foto'],
+      picture_back: map['picture_back'],
       alergenos: map['alergenos'],
       precio: map['precio'],
       precioMedida: map['precioMedida'],
@@ -62,6 +65,7 @@ class Producto
       "id": id,
       "nombre": nombre,
       "foto": foto,
+      "picture_back": picture_back,
       "alergenos": '${alergenos[0] ? 1 : 0}, ${alergenos[1] ? 1 : 0}, ${alergenos[2] ? 1 : 0}',
       "precio": precio,
       "precioMedida": precioMedida,
