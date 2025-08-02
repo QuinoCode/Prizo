@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prizo/shared/UI/components/current_item_indicator.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
@@ -7,14 +8,10 @@ import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/features/informacion_producto/pantalla_producto/application/pantalla_producto_service.dart';
 import 'package:prizo/features/informacion_supermercado/distancia_tienda/application/shop_distance.dart';
 
-class DetallesProducto extends StatelessWidget {
+class DetallesProducto extends StatefulWidget {
   final Producto producto;
-  final ListaCompraService listaCompraService = ListaCompraService();
-  final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
   final ListaCompra listaCompra;
   final ListaFavoritos listaFavoritos;
-  final PantallaProductoService pantallaProductoService = PantallaProductoService();
-  final ShopDistance shopDistance = ShopDistance();
 
   DetallesProducto({
     Key? key,
@@ -24,13 +21,30 @@ class DetallesProducto extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<DetallesProducto> createState() => _DetallesProductoState();
+}
+
+class _DetallesProductoState extends State<DetallesProducto> {
+  final ListaCompraService listaCompraService = ListaCompraService();
+
+  final ListaFavoritosService listaFavoritosService = ListaFavoritosService();
+
+  final PantallaProductoService pantallaProductoService = PantallaProductoService();
+
+  final ShopDistance shopDistance = ShopDistance();
+
+  int currentIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     // Obtener tamaño de pantalla
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    final imageUrl = producto.foto;
-    final precioMedida = producto.precioMedida > 0 ? '${producto.precioMedida.toStringAsFixed(2)}€/kg' : '';
+    final imageUrl = widget.producto.foto;
+    final imageList = [widget.producto.foto, widget.producto.picture_back];
+    final precioMedida = widget.producto.precioMedida > 0 ? '${widget.producto.precioMedida.toStringAsFixed(2)}€/kg' : '';
+    final PageController _pageController = PageController();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -62,7 +76,7 @@ class DetallesProducto extends StatelessWidget {
                     child: SizedBox(
                       width: screenWidth * 0.2,
                       height: screenWidth * 0.2,
-                      child: pantallaProductoService.obtenerLogoSupermercado(producto),
+                      child: pantallaProductoService.obtenerLogoSupermercado(widget.producto),
                     ),
                   ),
                   Row(
@@ -71,7 +85,7 @@ class DetallesProducto extends StatelessWidget {
                       BotonDistancia(
                         onTap: () async {
                           try {
-                            shopDistance.launchMapQuery(producto.tienda);
+                            shopDistance.launchMapQuery(widget.producto.tienda);
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Error al mostrar el mapa')),
@@ -83,8 +97,8 @@ class DetallesProducto extends StatelessWidget {
 
                       // Botón de favoritos
                       BotonFavoritos(
-                        producto: producto,
-                        listaFavoritos: listaFavoritos,
+                        producto: widget.producto,
+                        listaFavoritos: widget.listaFavoritos,
                         listaFavoritosService: listaFavoritosService,
                       ),
                       SizedBox(width: screenWidth * 0.05),
@@ -97,27 +111,51 @@ class DetallesProducto extends StatelessWidget {
               // Imagen del producto
               Center(
                 child: imageUrl.isNotEmpty
-                    ? Image.network(
-                  imageUrl,
-                  width: screenWidth * 0.6,
-                  height: screenWidth * 0.6,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.asset(
-                      'assets/images/placeholder.png',
+                    ? SizedBox(
                       width: screenWidth * 0.6,
                       height: screenWidth * 0.6,
-                    );
-                  },
-                )
-                    :  Image.asset('assets/images/placeholder.png'),              ),
+                      child: PageView.builder(
+                         controller: _pageController,
+                         itemCount: widget.producto.picture_back != "" ? 2 : 1,
+                         onPageChanged: (index) {
+                           setState(() {
+                             currentIndex = index;
+                           });
+                         },
+                         itemBuilder: (context, index){
+                         String picture = imageList[index];
+                         return Image.network(
+                           picture,
+                           width: screenWidth * 0.6,
+                           height: screenWidth * 0.6,
+                           fit: BoxFit.cover,
+                           errorBuilder: (context, error, stackTrace) {
+                             return Image.asset(
+                               'assets/images/placeholder.png',
+                               width: screenWidth * 0.6,
+                               height: screenWidth * 0.6,
+                             );
+                           },
+                         );
+                         },
+                        ),
+                    )
+                    :  Image.asset('assets/images/placeholder.png')
+              ),
+              CurrentItemIndicator(
+                items: widget.producto.picture_back != "" ? [widget.producto.foto, widget.producto.picture_back] : [widget.producto.foto],
+                currentIndex: currentIndex,
+                screenWidth: screenWidth,
+                screenHeight: screenHeight
+              ),
+
               SizedBox(height: screenHeight * 0.01),
 
               // Nombre del producto
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                 child: Text(
-                  producto.nombre,
+                  widget.producto.nombre,
                   style: TextStyle(fontFamily: 'Geist', fontSize: screenWidth * 0.0644 , fontWeight: FontWeight.w600),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -128,7 +166,7 @@ class DetallesProducto extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                 child: Text(
-                  producto.marca,
+                  widget.producto.marca,
                   style: TextStyle(fontFamily: 'Geist', fontSize: screenWidth * 0.04293, color: Color(0xFF121212)),
                 ),
               ),
@@ -140,12 +178,12 @@ class DetallesProducto extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (producto.oferta)
+                    if (widget.producto.oferta)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '${producto.precioOferta.toStringAsFixed(2)}€',
+                            '${widget.producto.precioOferta.toStringAsFixed(2)}€',
                             style: TextStyle(
                               fontFamily: 'Geist',
                               fontSize: MediaQuery.of(context).size.shortestSide * 0.0966,
@@ -167,7 +205,7 @@ class DetallesProducto extends StatelessWidget {
                         children: [
                         //Precio normal
                           Text(
-                            '${producto.precio.toStringAsFixed(2)}€',
+                            '${widget.producto.precio.toStringAsFixed(2)}€',
                             style: TextStyle(
                               fontFamily: 'Geist',
                               fontSize: MediaQuery.of(context).size.shortestSide * 0.0966,
@@ -183,12 +221,12 @@ class DetallesProducto extends StatelessWidget {
                         ],
                       ),
                     SizedBox(width: MediaQuery.of(context).size.width * 0.040,),
-                    if (producto.oferta)
+                    if (widget.producto.oferta)
                       //Precio normal tachado
                       Column(
                         children: [
                           Text(
-                            '${producto.precio.toStringAsFixed(2)}€',
+                            '${widget.producto.precio.toStringAsFixed(2)}€',
                             style: TextStyle(
                               fontFamily: 'Geist',
                               fontSize: MediaQuery.of(context).size.shortestSide * 0.0644,
@@ -205,7 +243,7 @@ class DetallesProducto extends StatelessWidget {
                     Column(
                       children: [
                         BotonCarrito(
-                          producto: producto,
+                          producto: widget.producto,
                           listaCompraService: listaCompraService,
                         ),
                         SizedBox(height: MediaQuery.of(context).size.longestSide * 0.018)
@@ -233,7 +271,7 @@ class DetallesProducto extends StatelessWidget {
               // FutureBuilder para mostrar productos relacionados
               FutureBuilder<List<Producto>>(
                 future: pantallaProductoService.obtenerProductosSimilares(
-                    PantallaProductoService.limpiarNombreProducto(producto.nombre), producto),
+                    PantallaProductoService.limpiarNombreProducto(widget.producto.nombre), widget.producto),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -257,8 +295,8 @@ class DetallesProducto extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => DetallesProducto(
                                     producto: productoRelacionado,
-                                    listaCompra: listaCompra,
-                                    listaFavoritos: listaFavoritos,
+                                    listaCompra: widget.listaCompra,
+                                    listaFavoritos: widget.listaFavoritos,
                                   ),
                                 ),
                               );

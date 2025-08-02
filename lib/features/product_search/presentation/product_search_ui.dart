@@ -420,6 +420,23 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> with SingleTi
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.longestSide * 0.0379,
+                width: MediaQuery.of(context).size.shortestSide * 0.169,
+                child: ElevatedButton(
+                  onPressed: () => _toggleTienda("Mercadona"),
+                  style: ElevatedButton.styleFrom(
+                    shadowColor: Colors.transparent,
+                    padding: EdgeInsets.zero,
+                    backgroundColor: tiendasSeleccionadas.contains("Mercadona") ? Color(0xFF95B3FF) : Colors.white,
+                    foregroundColor: Color.fromARGB(255,80,79,79),
+                    side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
+                  ),
+                  child: Text('Mercadona', 
+                    style: TextStyle(fontFamily: 'Geist', fontSize: MediaQuery.of(context).size.shortestSide * 0.04293, fontWeight: FontWeight.w400)
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.longestSide * 0.0379,
                 width: MediaQuery.of(context).size.shortestSide * 0.274,
                 child: ElevatedButton(
                   onPressed: () => _toggleTienda("Consum"),

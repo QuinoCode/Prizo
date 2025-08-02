@@ -40,6 +40,7 @@ flutter:
     - assets/images/logo_dia.png
     - assets/images/logo_consum.png
     - assets/images/logo_carrefour.png
+    - assets/images/logo_mercadona.png
     - assets/fonts/
     - assets/icons/cesta_icono.png
     - assets/icons/corazon_icono.png

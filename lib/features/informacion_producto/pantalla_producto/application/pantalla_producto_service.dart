@@ -59,13 +59,15 @@ class PantallaProductoService {
   Image obtenerLogoSupermercado(Producto producto) {
     switch (producto.tienda.toLowerCase()) {
       case 'dia':
-        return Image.asset('assets/images/logo_dia.png', width: 40, height: 40);
+        return Image.asset('assets/images/logo_dia.png');
       case 'consum':
-        return Image.asset('assets/images/logo_consum.png', width: 40, height: 40);
+        return Image.asset('assets/images/logo_consum.png');
       case 'carrefour':
-        return Image.asset('assets/images/logo_carrefour.png', width: 40, height: 40);
+        return Image.asset('assets/images/logo_carrefour.png');
+      case 'mercadona':
+        return Image.asset('assets/images/logo_mercadona.png');
       default:
-        return Image.asset('assets/images/default.png', width: 40, height: 40);
+        return Image.asset('assets/images/default.png');
     }
   }
 }

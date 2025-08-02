@@ -77,7 +77,7 @@ class MercadonaFinderService implements FinderWrapper{
         category: database_product["category"],
         subcategory: database_product["subcategory"],
         offer: database_product["offer"] == 1,
-        offer_price: database_product["offer_price"] ?? 1.00,
+        offer_price: ((database_product["offer_price"] is String) ? parsePrecioMedida(database_product["offer_price"]) : database_product["offer_price"]) ?? 1.00,
         offer_price_measure: 1.00,//database_product["offer_price_measure"],
         contains_gluten: database_product["contains_gluten"],
         contains_milk: database_product["contains_milk"],

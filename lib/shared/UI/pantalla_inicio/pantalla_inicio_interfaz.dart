@@ -11,6 +11,7 @@ import 'package:prizo/shared//database/database_operations.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/features/informacion_supermercado/distancia_tienda/application/shop_distance.dart';
 import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/shared/UI/components/current_item_indicator.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -376,22 +377,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                         ),
                       ),
                     SizedBox(height: height * 0.02),
-                    if (productosEnOferta.isNotEmpty)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          productosEnOferta.length,
-                              (index) => Container(
-                            margin: EdgeInsets.symmetric(horizontal: width * 0.01),
-                            width: currentIndex == index ? width * 0.03 : width * 0.02,
-                            height: currentIndex == index ? width * 0.03 : width * 0.02,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: currentIndex == index ? Color(0xFF121212) :Color(0xFFD9D9D9),
-                            ),
-                          ),
-                        ),
-                      ),
+                    CurrentItemIndicator(items: productosEnOferta, currentIndex: currentIndex, screenWidth: width, screenHeight: height)
                   ],
                 ),
                 SizedBox(height: height * 0.03),
