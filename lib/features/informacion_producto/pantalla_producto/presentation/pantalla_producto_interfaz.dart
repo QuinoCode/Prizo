@@ -142,6 +142,7 @@ class _DetallesProductoState extends State<DetallesProducto> {
                     )
                     :  Image.asset('assets/images/placeholder.png')
               ),
+              SizedBox(height: screenHeight * 0.015),
               CurrentItemIndicator(
                 items: widget.producto.picture_back != "" ? [widget.producto.foto, widget.producto.picture_back] : [widget.producto.foto],
                 currentIndex: currentIndex,
