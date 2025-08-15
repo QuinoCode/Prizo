@@ -57,6 +57,10 @@ flutter:
     - assets/icons/x.png
     - assets/icons/basura.png
     - assets/icons/mapa_icono.png
+    - assets/icons/password_toggle_eye.png
+    - assets/icons/google_icon.png
+    - assets/icons/facebook_icon.png
+    - assets/icons/apple_icon.png
     - assets/images/placeholder.png
     - assets/images/perfil_falso.png
 

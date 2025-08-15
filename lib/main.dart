@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:prizo/features/user/login/presentation/login_interface.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/shared/UI/pantalla_inicio/barra_navegacion.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -31,7 +32,8 @@ class Prizo extends StatelessWidget {
         title: 'Prizo App',
         initialRoute: '/',
         routes: {
-          '/': (context) => SplashScreen(),
+          //'/': (context) => SplashScreen(),
+          '/': (context) => LoginInterface(),
           '/home': (context) => BarraNavegacion()
         },
       ),
