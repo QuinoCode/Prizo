@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:prizo/features/user/login/presentation/login_interface.dart';
 import 'package:provider/provider.dart';
-import 'package:prizo/shared/UI/pantalla_inicio/barra_navegacion.dart';
+//import 'package:prizo/shared/UI/pantalla_inicio/barra_navegacion.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:prizo/shared//database/database_operations.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +17,10 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // Transparent status bar
     statusBarIconBrightness: Brightness.dark, // Adjust icon color (optional)
+  ));
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.transparent, // bottom nav bar color
+    systemNavigationBarIconBrightness: Brightness.dark, // icons color
   ));
 }
 
@@ -32,9 +36,9 @@ class Prizo extends StatelessWidget {
         title: 'Prizo App',
         initialRoute: '/',
         routes: {
-          //'/': (context) => SplashScreen(),
-          '/': (context) => LoginInterface(),
-          '/home': (context) => BarraNavegacion()
+          '/': (context) => SplashScreen(),
+          //'/': (context) => BarraNavegacion(),
+          '/home': (context) => LoginInterface()
         },
       ),
     );

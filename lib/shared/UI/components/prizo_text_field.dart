@@ -6,9 +6,11 @@ class PrizoEmailTextField  extends StatelessWidget {
   It accepts a Header type (from 1 to 4) and adjusts the size and weigth of the font according to this number
   it also accepts a fontFamily (Geist if not specified) and a color (Black if not specified)
   */
+  final void Function(String) onChanged;
 
   const PrizoEmailTextField({
     super.key,
+    required this.onChanged,
   });
 
   @override
@@ -16,6 +18,7 @@ class PrizoEmailTextField  extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return TextField(
+              onChanged: onChanged,
               decoration: InputDecoration(
                 hintText: 'Correo electrónico', // placeholder
                 hintStyle: TextStyle(
@@ -41,8 +44,13 @@ class PrizoPassTextField  extends StatefulWidget {
   It accepts a Header type (from 1 to 4) and adjusts the size and weigth of the font according to this number
   it also accepts a fontFamily (Geist if not specified) and a color (Black if not specified)
   */
+  final Future<void> Function(String) onEnter;
+  final void Function(String) onChanged;
+
   const PrizoPassTextField({
     super.key,
+    required this.onEnter,
+    required this.onChanged
   });
 
   @override
@@ -57,7 +65,11 @@ class _PrizoPassTextFieldState extends State<PrizoPassTextField> {
     double width = MediaQuery.of(context).size.width;
 
     return TextField(
-              obscureText: _obscureText, // hides password
+              obscureText: _obscureText,
+              onChanged: widget.onChanged,
+              onSubmitted: (password) async {
+                await widget.onEnter(password);
+              },
               decoration: InputDecoration(
                 hintText: 'Contraseña',
                 hintStyle: TextStyle(
