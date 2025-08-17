@@ -36,6 +36,7 @@ flutter:
     - assets/icons/casa_icono.png
     - assets/icons/listas_icono.png
     - assets/icons/lupa_icono.png
+    - assets/icons/pantry_icon.png
     - assets/icons/usuario_icono.png
     - assets/images/logo_dia.png
     - assets/images/logo_consum.png

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:prizo/features/user/register/presentation/pantry_interface.dart';
 import 'package:prizo/main.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/shared/UI/pantalla_inicio/pantalla_inicio_interfaz.dart';
 import 'package:prizo/features/product_search/presentation/product_search_ui.dart';
 import 'package:prizo/shared/UI/lista/lista.dart';
-import 'package:prizo/features/user/perfil.dart';
 import 'package:prizo/features/lista_compra/presentation/lista_compra_interfaz.dart';
 import 'package:prizo/features/lista_favoritos/presentation/lista_favoritos_interfaz.dart';
 
@@ -26,7 +26,7 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
     PantallaInicio(),
     ProductSearchScreen(),
     ListaInterfaz(),
-    PerfilInterfaz(),
+    PantryListInterface(),
     ListaFavoritosInterfaz(),
     ListaCompraInterfaz(),
   ];
@@ -72,7 +72,7 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
                   _buildNavItem(index: 0, iconPath: 'assets/icons/casa_icono.png', iconSize: 26 * scaleFactorWidth),
                   _buildNavItem(index: 1, iconPath: 'assets/icons/lupa_icono.png', iconSize: 22.5 * scaleFactorWidth),
                   _buildNavItem(index: 2, iconPath: 'assets/icons/listas_icono.png', iconSize: 24 * scaleFactorWidth),
-                  _buildNavItem(index: 3, iconPath: 'assets/icons/usuario_icono.png', iconSize: 23 * scaleFactorWidth),
+                  _buildNavItem(index: 3, iconPath: 'assets/icons/pantry_icon.png', iconSize: 23 * scaleFactorWidth),
                 ],
               ),
             ),

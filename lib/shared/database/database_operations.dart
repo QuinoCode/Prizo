@@ -57,10 +57,10 @@ class DatabaseOperations {
   //Builds the database creating the different tables
   Future<void> createTablesFromScratch(Database db) async {
     await createProductTable(db);
-    await createProductTickTable(db);
     await createListaCompraTables(db);
     await createListaFavoritosTables(db);
     await createListaRecientesTables(db);
+    await createPantryListTables(db);
     await insertListaCompra(db);
     await insertListaFavoritos(db);
   }
@@ -79,6 +79,7 @@ class DatabaseOperations {
       //Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
     );
   }
+
   Future<void> createProductTable(Database db) async {
     await db.execute(
         """
@@ -101,39 +102,7 @@ class DatabaseOperations {
       //Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
     );
   }
-  Future<void> createProductTickTable(Database db) async {
-    await db.execute(
-        """
-			CREATE TABLE ProductoTick(
-				id TEXT PRIMARY KEY,
-				nombre TEXT, 
-				foto TEXT, 
-				picture_back TEXT, 
-				alergenos TEXT, 
-				precio REAL, 
-				precioMedida REAL, 
-				tienda TEXT, 
-				marca TEXT, 
-				categoria TEXT, 
-				oferta INTEGER, 
-				precioOferta REAL 
-			)
-			"""
-      //Sqlite no soporta booleanos así que oferta tiene que ser un integer con valor 0 o 1
-      //Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
-    );
-  }
-  Future<void> createListaCompraActual(Database db) async {
-    await db.execute(
-        """
-			CREATE TABLE Lista_Compra_Actual(
-				id TEXT PRIMARY KEY
-			)
-			"""
-      //Sqlite no soporta booleanos así que oferta tiene que ser un integer con valor 0 o 1
-      //Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
-    );
-  }
+
   Future<void> createListaCompraTables(Database db) async {
     await db.execute(
         """
@@ -155,18 +124,17 @@ class DatabaseOperations {
 		)
 		"""
     );
-  }
-  Future<void> createListaFavoritosActual(Database db) async {
+
     await db.execute(
         """
-			CREATE TABLE Lista_Favoritos_Actual(
-				id TEXT PRIMARY KEY
+			CREATE TABLE ShoppingListTick(
+				id TEXT PRIMARY KEY,
+				name TEXT
 			)
 			"""
-      //Sqlite no soporta booleanos así que oferta tiene que ser un integer con valor 0 o 1
-      //Alergenos es un TEXT porque SQLITE no soporta listas, hay que pasar los booleanos como csv '0,1,1'
     );
   }
+
   Future<void> createListaFavoritosTables(Database db) async {
     await db.execute(
         """
@@ -188,6 +156,38 @@ class DatabaseOperations {
 		"""
     );
   }
+
+  Future<void> createPantryListTables(Database db) async {
+    await db.execute(
+        """
+			CREATE TABLE Pantry_List(
+				id TEXT PRIMARY KEY, 
+				user TEXT
+			)
+			"""
+    );
+    await db.execute(
+        """
+		CREATE TABLE Pantry_List_Product (
+		    list_id TEXT, 
+		    product_id TEXT, 
+		    amount INTEGER,
+		    PRIMARY KEY (list_id, product_id),
+		    FOREIGN KEY (list_id) REFERENCES Pantry_List(id) ON DELETE CASCADE,
+		    FOREIGN KEY (product_id) REFERENCES Producto(id) ON DELETE CASCADE
+		)
+		"""
+    );
+    await db.execute(
+        """
+			CREATE TABLE Pantry_List_Tick(
+				id TEXT PRIMARY KEY,
+				name TEXT
+			)
+			"""
+    );
+  }
+
   Future<void> createListaRecientesTables(Database db) async {
     await db.execute(
         """
@@ -247,6 +247,40 @@ class DatabaseOperations {
     }
     return result;
   }
+  Future<List<Producto>> fetchProductsFromPantryList(Database db) async{
+    List<Producto> result = [];
+    var listaQuery = await db.rawQuery('SELECT id FROM Pantry_List LIMIT 1');
+    if (listaQuery.isNotEmpty) {
+      var listaId = listaQuery.first['id'];
+      var listaProducts = await db.rawQuery('SELECT producto_id from Pantry_List_Product WHERE list_id = ?',[listaId]);
+      for (int i = 0; i < listaProducts.length; i++){
+        var product = await db.rawQuery('SELECT * FROM Producto WHERE id = ?', [listaProducts[i]['product_id']]);
+        var toAdd = product.first;
+        result.add(
+            new Producto(
+                id: toAdd['id'].toString(),
+                nombre: toAdd['nombre'] as String,
+                alergenos:(toAdd['alergenos'] != null)
+                    ? (toAdd['alergenos'] as String)
+                    .split(',')
+                    .map((e) => e.toLowerCase() == 'true')
+                    .toList()
+                    : [],
+                categoria: toAdd['categoria'] as String,
+                marca: toAdd['marca'] as String,
+                oferta: (toAdd['oferta'] as int) == 1,
+                precio: toAdd['precio'] as double,
+                precioMedida: toAdd['precioMedida'] as double,
+                precioOferta: toAdd['precioOferta'] as double,
+                tienda: toAdd['tienda'] as String,
+                foto: toAdd['foto'] as String
+            )
+        );
+      }
+    }
+    return result;
+  }
+
   Future<List<Producto>> fetchProductsListaFavoritos(Database db) async{
     List<Producto> result = [];
     var listaQuery = await db.rawQuery('SELECT id FROM Lista_Favoritos LIMIT 1');
@@ -294,21 +328,45 @@ class DatabaseOperations {
     }
     return false;
   }
-  Future<bool> existsInProductTickTable(Database db, Producto producto) async{
+  Future<bool> existsInShoppingListTickTable(Database db, Producto product) async{
     // Perform the query to check if there are any rows in the table
-    var result = await db.rawQuery('SELECT * FROM ProductoTick WHERE nombre = ?', [producto.nombre]);
+    var result = await db.rawQuery('SELECT * FROM ShoppingListTick WHERE name = ?', [product.nombre]);
 
     if (result.isNotEmpty) {
-      return true;  // Item exists
+      return true;  
     }
     return false;
   }
+
+  Future<bool> existsInPantryListTickTable(Database db, Producto product) async{
+    // Perform the query to check if there are any rows in the table
+    var result = await db.rawQuery('SELECT * FROM Pantry_List_Tick WHERE name = ?', [product.nombre]);
+
+    if (result.isNotEmpty) {
+      return true;  
+    }
+    return false;
+  }
+
   Future<bool> existsInListaCompraTable(Database db, Producto producto) async{
     // Perform the query to check if there are any rows in the table
     try {
       var result = await db.rawQuery('SELECT * FROM Lista_Compra_Producto WHERE producto_id = ?', [producto.id]);
       if (result.isNotEmpty) {
         return true;  // Item exists
+      }
+    } on Exception catch (e) {
+      print (e);
+    }
+    return false;
+  }
+
+  Future<bool> existsInPantryListTable(Database db, Producto producto) async{
+    // Perform the query to check if there are any rows in the table
+    try {
+      var result = await db.rawQuery('SELECT * FROM Pantry_List_Compra_Producto WHERE product_id = ?', [producto.id]);
+      if (result.isNotEmpty) {
+        return true;
       }
     } on Exception catch (e) {
       print (e);
@@ -335,9 +393,12 @@ class DatabaseOperations {
       print(e);
     }
   }
-  Future<void> registerIntoProductTickTable(Database db, Producto producto) async{
-    try{
-      await db.insert("ProductoTick", producto.toMap());
+  Future<void> registerIntoProductTickTable(Database db, Producto product) async {
+    try {
+      await db.rawInsert(
+        'INSERT INTO ShoppingListTick (id, name) VALUES (?, ?)',
+        [product.id, product.nombre],
+      );
     } catch (e) {
       print(e);
     }
@@ -362,6 +423,24 @@ class DatabaseOperations {
       print(e);
     }
   }
+  Future<void> insertIntoPantryListTable(Database db, Producto product) async{
+    try{
+      var result = await db.rawQuery('SELECT id FROM Pantry_List LIMIT 1');
+
+      if (result.isNotEmpty) {
+        // Extract the id value
+        var listaId = result.first['id']; 
+
+        await db.rawInsert(
+            'INSERT INTO Pantry_List_Product(list_id, product_id, amount) VALUES(?, ?, ?)',
+            [listaId, product.id, 1]  
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> registerIntoListaFavoritosTable(Database db, Producto producto) async{
     try{
       // Query to get the id from Lista_Compra
@@ -429,11 +508,11 @@ class DatabaseOperations {
   }
 }
 
-  Future<void> deleteFromProductTickTable(Database db, Producto producto) async{
+  Future<void> deleteFromShoppingListTickTable(Database db, Producto producto) async{
     try{
       // Usar parámetros en lugar de concatenación directa
       await db.rawDelete(
-        'DELETE FROM ProductoTick WHERE id = ?',
+        'DELETE FROM ShoppingListTick WHERE id = ?',
         [producto.id], // Pasas el parámetro aquí como una lista
       );
     } catch (e) {
@@ -445,6 +524,27 @@ class DatabaseOperations {
       // Usar parámetros en lugar de concatenación directa
       await db.rawDelete(
         'DELETE FROM Lista_Compra_Producto WHERE producto_id = ?',
+        [producto.id], // Pasas el parámetro aquí como una lista
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+  Future<void> deleteFromPantryListTable(Database db, Producto producto) async{
+    try{
+      await db.rawDelete(
+        'DELETE FROM Pantry_List_Product WHERE product_id = ?',
+        [producto.id],
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+  Future<void> deleteFromPantryListTickTable(Database db, Producto producto) async{
+    try{
+      // Usar parámetros en lugar de concatenación directa
+      await db.rawDelete(
+        'DELETE FROM Pantry_List_Tick WHERE id = ?',
         [producto.id], // Pasas el parámetro aquí como una lista
       );
     } catch (e) {
@@ -484,6 +584,29 @@ class DatabaseOperations {
     }
     return 0;
   }
+
+  Future<int> fetchAmountPantryList(Database db, Producto product) async {
+    try {
+      var exists = await existsInPantryListTable(db, product);
+      if (!exists) {
+        await insertIntoPantryListTable(db, product);
+      } else {
+        var result = await db.rawQuery(
+          '''
+          SELECT cantidad 
+          FROM Pantry_List_Compra_Producto 
+          WHERE producto_id = ?
+          ''',
+          [product.id]
+        );
+        return result.first['cantidad'] as int;
+      }
+    } catch (e) {
+      print('Error increasing cantidad: $e');
+    }
+    return 0;
+  }
+
   Future<void> increaseCantidadListaCompra(Database db, Producto producto) async {
     try {
       var exists = await existsInListaCompraTable(db, producto);
@@ -523,6 +646,47 @@ class DatabaseOperations {
       print('Error decreasing cantidad: $e');
     }
   }
+
+  Future<void> increasePantryList(Database db, Producto product) async {
+    try {
+      var exists = await existsInPantryListTable(db, product);
+      if (!exists) {
+        await insertIntoPantryListTable(db, product);
+      } else {
+        await db.rawUpdate(
+            '''
+          UPDATE Pantry_List_Product
+          SET amount = amount + 1 
+          WHERE product_id = ?
+          ''',
+            [product.id]
+        );
+      }
+    } catch (e) {
+      print('Error increasing cantidad: $e');
+    }
+  }
+
+  Future<void> decreasePantryList(Database db, Producto product) async {
+    try {
+      int count = await fetchAmountPantryList(db, product);
+      if (count > 0) {
+        await db.rawUpdate(
+            '''
+          UPDATE Pantry_List_Product
+          SET amount = amount - 1 
+          WHERE product_id = ?
+          ''',
+            [product.id]
+        );
+      } else if (count == 0) {
+        deleteFromListaCompraTable(db, product);
+      }
+    } catch (e) {
+      print('Error decreasing cantidad: $e');
+    }
+  }
+
   Future<void> setCantidadListaCompra(Database db, Producto producto, int nuevaCantidad) async {
     try {
       if (nuevaCantidad > 0) {
@@ -538,6 +702,26 @@ class DatabaseOperations {
       } else {
         // Si la cantidad es 0 o menos, elimina el producto de la lista de compra
         await deleteFromListaCompraTable(db, producto);
+      }
+    } catch (e) {
+      print('Error al actualizar la cantidad: $e');
+    }
+  }
+  Future<void> setAmountPantryList(Database db, Producto product, int newAmount) async {
+    try {
+      if (newAmount > 0) {
+        // Si la cantidad es mayor a 0, actualiza la cantidad del producto
+        await db.rawUpdate(
+          '''
+        UPDATE Pantry_List_Product
+        SET amount = ? 
+        WHERE product_id = ?
+        ''',
+          [newAmount, product.id],
+        );
+      } else {
+        // Si la cantidad es 0 o menos, elimina el producto de la lista de compra
+        await deleteFromPantryListTable(db, product);
       }
     } catch (e) {
       print('Error al actualizar la cantidad: $e');

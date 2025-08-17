@@ -1,12 +1,12 @@
-import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/DAO/producto_DAO.dart';
+import 'package:prizo/shared/data_entities/models/pantry_list.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ListaCompraDAO {
+class PantryListDAO {
   final Database _database;
   late ProductoDAO productoDAO;
 
-  ListaCompraDAO(this._database){
+  PantryListDAO(this._database){
      productoDAO = ProductoDAO(_database);
   }
 
@@ -21,17 +21,17 @@ class ListaCompraDAO {
           );
 
           //Insert the products in the database just in case they're not present yet
-          for (var produnctAmount in pantryList.productos){
-                  await productoDAO.insertProducto(produnctAmount.$1);
+          for (var producto_cantidad in pantryList.productos){
+                  await productoDAO.insertProducto(producto_cantidad.$1);
           }
           //Insert the products into the list
-          for (var productAmount in pantryList.productos){
+          for (var producto_cantidad in pantryList.productos){
                   await _database.insert(
                           'Pantry_List_Product',
                           {
                                   "lista_id": pantryList.id, 
-                                  "producto_id": productAmount.$1.id, 
-                                  "cantidad": productAmount.$2,
+                                  "producto_id": producto_cantidad.$1.id, 
+                                  "cantidad": producto_cantidad.$2,
                           },
                           conflictAlgorithm: ConflictAlgorithm.replace
                   );

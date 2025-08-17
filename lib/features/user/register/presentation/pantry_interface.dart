@@ -1,59 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/features/informacion_producto/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import 'package:prizo/features/pantry/pantry_logic.dart';
 import 'package:prizo/shared/application/producto_service.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
+import 'package:prizo/shared/data_entities/models/pantry_list.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/database/database_operations.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/main.dart';
 
-class ListaCompraInterfaz extends StatefulWidget {
-  ListaCompraInterfaz({super.key});
+class PantryListInterface extends StatefulWidget {
+  PantryListInterface({super.key});
 
   @override
-  _ListaCompraInterfazState createState() => _ListaCompraInterfazState();
+  _PantryListInterfaceState createState() => _PantryListInterfaceState();
 }
 
-class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsBindingObserver  {
-  List<String> tiendasSeleccionadas = [];
-  List<Producto> _productos = [];
+class _PantryListInterfaceState extends State<PantryListInterface> with WidgetsBindingObserver  {
+  List<String> selectedStores = [];
+  List<Producto> _products = [];
   final ProductoService productoService = ProductoService();
-  final ListaCompraService listaCompraService = ListaCompraService();
-  ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
+  late final PantryLogic pantryService;
+  PantryList pantryList = PantryList(id: '1', user: 'usuario_demo', products: []);
   bool _isLoading = true;
 
-  void fetchAndStoreProductos() async{
+
+  Future<void> fetchAndStoreProductos() async{
     Database db = DatabaseOperations.instance.prizoDatabase;
-    var result = await DatabaseOperations.instance.fetchProductsListaCompra(db);
+    var result = await DatabaseOperations.instance.fetchProductsFromPantryList(db);
     setState(() {
-      _productos = result;
+      _products = result;
     });
   }
 
-  void _initListaCompra() async{
-    ListaCompra fetchedLista = await listaCompraService.generar_ListaCompra();
+  Future<void> _initPantryList() async{
+    PantryList fetchedLista = await pantryService.generatePantryList();
     setState(() {
-       listaCompra = fetchedLista;
+       pantryList = fetchedLista;
       _isLoading = false;
     });
   }
 
   @override
-  void didUpdateWidget(ListaCompraInterfaz oldWidget) {
+  void didUpdateWidget(PantryListInterface oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget != widget) {
-      _initListaCompra();  // llamar a init otra vez
+      _initPantryList();  // llamar a init otra vez
     }
   }
 
+  Future<void> _setup() async {
+    pantryService = await PantryLogic.instance();
+    await fetchAndStoreProductos();
+    await _initPantryList();                          // load pantry list
+    if (!mounted) return;
+    setState(() => _isLoading = false);}
+
+
   @override
-  void initState() {
+  void initState()  {
     super.initState();
-    _initListaCompra();
+    _initPantryList();
     fetchAndStoreProductos();
+    _setup();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -71,23 +82,23 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
   }
 
   void applyFilter() {
-    if (tiendasSeleccionadas.isEmpty) {
+    if (selectedStores.isEmpty) {
       fetchAndStoreProductos(); // Show all products when no filters are applied.
     } else {
       setState(() {
-        _productos = _productos
-            .where((producto) => tiendasSeleccionadas.contains(producto.tienda))
+        _products = _products
+            .where((producto) => selectedStores.contains(producto.tienda))
             .toList();
       });
     }
   }
 
-  void _toggleTienda(String tienda) {
+  void _toggleStore(String store) {
     setState(() {
-      if (tiendasSeleccionadas.contains(tienda)) {
-        tiendasSeleccionadas.remove(tienda);
+      if (selectedStores.contains(store)) {
+        selectedStores.remove(store);
       } else {
-        tiendasSeleccionadas.add(tienda);
+        selectedStores.add(store);
       }
     });
     applyFilter();
@@ -95,6 +106,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) return const Center(child: CircularProgressIndicator());
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
@@ -109,7 +121,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
           },
         ),
         surfaceTintColor: Colors.transparent,
-        title: Text('Lista de compra'),
+        title: Text('Despensa'),
         centerTitle: true,
         toolbarHeight: MediaQuery.of(context).size.longestSide * 0.092,
         backgroundColor: Colors.white,
@@ -129,11 +141,11 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                   height: MediaQuery.of(context).size.longestSide * 0.0379,
                   width: MediaQuery.of(context).size.shortestSide * 0.169,
                   child: ElevatedButton(
-                    onPressed: () => _toggleTienda("DIA"),
+                    onPressed: () => _toggleStore("DIA"),
                     style: ElevatedButton.styleFrom(
                       shadowColor: Colors.transparent,
                       padding: EdgeInsets.zero,
-                      backgroundColor: tiendasSeleccionadas.contains("DIA") ? Color(0xFF95B3FF) : Colors.white,
+                      backgroundColor: selectedStores.contains("DIA") ? Color(0xFF95B3FF) : Colors.white,
                       foregroundColor: Color.fromARGB(255,80,79,79),
                       side: BorderSide(color: Color.fromARGB(255,149,179,255),width: 2),
                     ),
@@ -147,11 +159,11 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                   height: MediaQuery.of(context).size.longestSide * 0.0379,
                   width: MediaQuery.of(context).size.shortestSide * 0.274,
                   child: ElevatedButton(
-                    onPressed: () => _toggleTienda("CONSUM"),
+                    onPressed: () => _toggleStore("CONSUM"),
                     style: ElevatedButton.styleFrom(
                       shadowColor: Colors.transparent,
                       padding: EdgeInsets.zero,
-                      backgroundColor: tiendasSeleccionadas.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
+                      backgroundColor: selectedStores.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
                       foregroundColor: Color.fromARGB(255,80,79,79),
                       side: BorderSide(color: Color(0xFF95B3FF),width: 2),
                     ),
@@ -165,11 +177,11 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                   height: MediaQuery.of(context).size.longestSide * 0.0379,
                   width: MediaQuery.of(context).size.shortestSide * 0.305,
                   child: ElevatedButton(
-                    onPressed: () => _toggleTienda("Carrefour"),
+                    onPressed: () => _toggleStore("Carrefour"),
                     style: ElevatedButton.styleFrom(
                       shadowColor: Colors.transparent,
                       padding: EdgeInsets.zero,
-                      backgroundColor: tiendasSeleccionadas.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
+                      backgroundColor: selectedStores.contains("Carrefour") ? Color(0xFF95B3FF) : Colors.white,
                       foregroundColor: Color.fromARGB(255,80,79,79),
                       side: BorderSide(color: Color(0xFF95B3FF),width: 2),
                     ),
@@ -192,7 +204,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                   child: Center(child: CircularProgressIndicator(color: Color(0xFF95B3FF), ))
                 )
             )
-            : _productos.isEmpty
+            : _products.isEmpty
               ? Center(
                 child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -209,9 +221,9 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
               : Padding(
                 padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.shortestSide * 0.0550, 0, MediaQuery.of(context).size.shortestSide * 0.0550, MediaQuery.of(context).size.longestSide * 0.1),
                 child: ListView.builder(
-                  itemCount: _productos.length,
+                  itemCount: _products.length,
                   itemBuilder: (context, index) {
-                    final producto = _productos[index];
+                    final producto = _products[index];
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.longestSide * 0.0218),
                       child: Dismissible(
@@ -219,9 +231,9 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                           direction: DismissDirection.startToEnd,
                           onDismissed: (direction) {
                           setState(() {
-                            listaCompraService.quitarProducto(listaCompra, producto);
-                            listaCompraService.DB_quitarProducto(producto);
-                            _productos.removeAt(index);
+                            pantryService.removeProduct(pantryList, producto);
+                            pantryService.dbRemoveProductFromPantry(producto);
+                            _products.removeAt(index);
                           });
                           },
                           background: Container(
@@ -254,15 +266,16 @@ class StatefulStoreItem extends StatefulWidget {
 }
 
 class _ProductTileItemState extends State<StatefulStoreItem> {
-  ListaCompraService listaCompraService = ListaCompraService();
+  late final PantryLogic pantryLogic;
   bool _showButton = true;
   int _counter = 0;
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
     _cargarContador();
     _cargarBoton();
+    pantryLogic  = await PantryLogic.instance();
   }
 
   @override
@@ -297,14 +310,14 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
 
   Future<void> _cargarContador () async {
     Database db = DatabaseOperations.instance.prizoDatabase;
-    int count = await DatabaseOperations.instance.fetchCantidadListaCompra(db, widget.producto);
+    int count = await DatabaseOperations.instance.fetchAmountPantryList(db, widget.producto);
     setState(() {
       _counter = count;
     });
   }
 
   Future<void> _cargarBoton () async {
-    bool boton = await listaCompraService.DB_Tick_tiene_tick(widget.producto);
+    bool boton = await pantryLogic.dbHasTickPantryo(widget.producto);
     setState(() {
       _showButton = !boton;
     });
@@ -334,8 +347,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
               onPressed: () {
                 /* Eliminar el producto completo de la lista */
                 //DatabaseOperations.instance.deleteFromListaCompraTable(db, producto);
-                listaCompraService.DB_quitarProducto(producto);
-                listaCompraService.DB_Tick_quitar(producto);
+                pantryLogic.dbRemoveProductFromPantry(producto);
+                pantryLogic.dbTickRemove(producto);
                 setState(() {
                   _showButton = false;
                 });
@@ -443,7 +456,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                   setState(() {
                     _showButton = false;
                   });
-                  listaCompraService.DB_Tick_annadir(widget.producto);
+                  pantryLogic.dbAddTick(widget.producto);
                 }
             )
                 : IconButton(
@@ -453,7 +466,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                   setState(() {
                     _showButton = true;
                   });
-                  listaCompraService.DB_Tick_quitar(widget.producto);
+                  pantryLogic.dbTickRemove(widget.producto);
                 }
             ),
             SizedBox(height: MediaQuery.of(context).size.longestSide * 0.01),
@@ -481,17 +494,17 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                         setState(() {
                           if (_counter > 0) {
                             if(_counter == 1) {
-                              listaCompraService.DB_quitarProducto(widget.producto);
-                              listaCompraService.DB_Tick_quitar(widget.producto);
+                              pantryLogic.dbRemoveProductFromPantry(widget.producto);
+                              pantryLogic.dbTickRemove(widget.producto);
                             } else {
-                              listaCompraService.DB_decreaseCantidad(widget.producto);
+                              pantryLogic.dbDecreaseProductAmountInPantry(widget.producto);
                             }
                             //listaCompraService.DB_decreaseCantidad(widget.producto);
                             //DatabaseOperations.instance.decreaseCantidadListaCompra(widget.database, widget.producto);
                             _counter--;
                           } else {
-                            listaCompraService.DB_quitarProducto(widget.producto);
-                            listaCompraService.DB_Tick_quitar(widget.producto);
+                            pantryLogic.dbRemoveProductFromPantry(widget.producto);
+                            pantryLogic.dbTickRemove(widget.producto);
                             //DatabaseOperations.instance.deleteFromListaCompraTable(widget.database, widget.producto);
                             _showButton = true;
                           }
@@ -534,7 +547,7 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                       icon: Icon(Icons.add, size: MediaQuery.of(context).size.shortestSide * 0.06, color: Color.fromARGB(255, 18, 18, 18),),
                       onPressed: () {
                         if (_counter < 99) {
-                          listaCompraService.DB_annadirProducto(widget.producto);
+                          pantryLogic.dbAddProduct(widget.producto);
                           //DatabaseOperations.instance.increaseCantidadListaCompra(widget.database, widget.producto);
                           setState(() {
                             _counter++;

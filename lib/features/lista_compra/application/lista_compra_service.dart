@@ -154,7 +154,7 @@ class ListaCompraService {
     Database db = dbOps.prizoDatabase;
 
     // Verifica si el producto ya existe en la tabla de productos tick
-    bool exists = await dbOps.existsInProductTickTable(db, producto);
+    bool exists = await dbOps.existsInShoppingListTickTable(db, producto);
     if (!exists) {
       // Registra el producto en la tabla de productos tick
       await dbOps.registerIntoProductTickTable(db, producto);
@@ -167,10 +167,10 @@ class ListaCompraService {
     Database db = dbOps.prizoDatabase;
 
     // Verifica si el producto ya existe en la tabla de productos tick
-    bool exists = await dbOps.existsInProductTickTable(db, producto);
+    bool exists = await dbOps.existsInShoppingListTickTable(db, producto);
     if (exists) {
       // Borra el producto en la tabla de productos tick
-      await dbOps.deleteFromProductTickTable(db, producto);
+      await dbOps.deleteFromShoppingListTickTable(db, producto);
     }
   }
   Future<bool> DB_Tick_tiene_tick(Producto producto) async {
@@ -180,7 +180,7 @@ class ListaCompraService {
 
     Database db = dbOps.prizoDatabase;
 
-    return dbOps.existsInProductTickTable(db, producto);
+    return dbOps.existsInShoppingListTickTable(db, producto);
   }
 
   final int LIMITE = 99;
