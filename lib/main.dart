@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:prizo/features/user/login/presentation/login_interface.dart';
+import 'package:prizo/features/user/register/presentation/register_interface.dart';
 import 'package:provider/provider.dart';
 //import 'package:prizo/shared/UI/pantalla_inicio/barra_navegacion.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -32,12 +33,11 @@ class Prizo extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => PrizoState(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: false, // Opcional, para quitar la etiqueta de debug
+        debugShowCheckedModeBanner: false, 
         title: 'Prizo App',
         initialRoute: '/',
         routes: {
           '/': (context) => SplashScreen(),
-          //'/': (context) => BarraNavegacion(),
           '/home': (context) => LoginInterface()
         },
       ),

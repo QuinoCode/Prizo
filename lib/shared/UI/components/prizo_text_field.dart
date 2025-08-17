@@ -46,11 +46,13 @@ class PrizoPassTextField  extends StatefulWidget {
   */
   final Future<void> Function(String) onEnter;
   final void Function(String) onChanged;
+  final String fieldText;
 
   const PrizoPassTextField({
     super.key,
     required this.onEnter,
-    required this.onChanged
+    required this.onChanged,
+    this.fieldText = 'Contraseña'
   });
 
   @override
@@ -71,7 +73,7 @@ class _PrizoPassTextFieldState extends State<PrizoPassTextField> {
                 await widget.onEnter(password);
               },
               decoration: InputDecoration(
-                hintText: 'Contraseña',
+                hintText: widget.fieldText,
                 hintStyle: TextStyle(
                   fontSize: width * 0.04293,
                   fontWeight: FontWeight.w400,
