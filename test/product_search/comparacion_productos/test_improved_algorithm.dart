@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:prizo/features/product_search/comparacion_productos/application/comparacion_producto.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
-import 'package:prizo/features/comparacion_productos/application/comparacion_producto.dart';
 import 'package:prizo/features/product_search/product_search_DIA/application/dia_finder_service.dart';
 import 'package:prizo/features/product_search/product_search_carrefour/application/carrefour_finder_service.dart';
 import 'package:prizo/features/product_search/product_search_consum/application/consum_finder_service.dart';

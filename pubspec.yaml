@@ -55,6 +55,7 @@ flutter:
     - assets/icons/arrow.png
     - assets/icons/empty_checkbox.png
     - assets/icons/checked_checkbox.png
+    - assets/icons/checked_checkbox_shopping.png
     - assets/icons/x.png
     - assets/icons/basura.png
     - assets/icons/mapa_icono.png

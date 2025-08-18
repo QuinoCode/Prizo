@@ -21,7 +21,6 @@ class PantryLogic {
     return _instance!;
   }
 
-  // Async factory
   static Future<PantryLogic> init() async {
     final dbOps = DatabaseOperations.instance;
     await dbOps.ensureDatabaseInitialized();
@@ -29,37 +28,38 @@ class PantryLogic {
     return PantryLogic._(db: db, dbOps: dbOps);
   }
 	
-  void dbAddProduct(Producto producto) async {
+  Future<void> dbAddProduct(Producto producto, [int amount = 1]) async {
     bool exists = await dbOps.existsInProductTable(db, producto);
     String nombre = producto.nombre;
     if (exists) {
       // Verifica si el producto ya está en la lista de compra
-      bool existsInListaCompra = await dbOps.existsInPantryListTable(db, producto);
-      if (!existsInListaCompra) {
+      bool existsInPantryList = await dbOps.existsInPantryListTable(db, producto);
+      if (!existsInPantryList) {
         await dbOps.insertIntoPantryListTable(db, producto);
+        await dbIncreaseProductAmountInPantry(producto, amount-1);
         print("$nombre - added to the pantry");
       } else {
-        dbIncreaseProductAmountInPantry(producto);
+        await dbIncreaseProductAmountInPantry(producto, amount);
         print("$nombre - already existed in the pantry");
       }
     } else {
       // Registra el producto en la tabla de productos y luego en la lista de compra
       await dbOps.registerIntoProductTable(db, producto);
-      await dbOps.registerIntoListaCompraTable(db, producto);
+      await dbOps.insertIntoPantryListTable(db, producto);
       print("$nombre - added for the first time to the product list");
       print("$nombre - added to the pantry list");
     }
   }
 
-  void dbRemoveProductFromPantry(Producto producto) async {
+  Future<void> dbRemoveProductFromPantry(Producto producto) async {
     await dbOps.deleteFromPantryListTable(db, producto);
   }
 
-  void dbIncreaseProductAmountInPantry(Producto producto) async {
-    await dbOps.increasePantryList(db, producto);
+  Future<void> dbIncreaseProductAmountInPantry(Producto producto, amount) async {
+    await dbOps.increasePantryList(db, producto, amount);
   }
 
-  void dbDecreaseProductAmountInPantry(Producto producto) async {
+  Future<void> dbDecreaseProductAmountInPantry(Producto producto) async {
     await dbOps.decreasePantryList(db, producto);
   }
 
@@ -67,7 +67,7 @@ class PantryLogic {
     return await dbOps.fetchAmountPantryList(db, producto);
   }
 
-  void dbSetAmountOfProductInPantry(Producto product, int newAmount) async {
+  Future<void> dbSetAmountOfProductInPantry(Producto product, int newAmount) async {
 
     await dbOps.setAmountPantryList(db, product, newAmount);
   }
@@ -120,11 +120,13 @@ class PantryLogic {
     return listaCompra;
   }
 
-  Future<void> dbAddTick(Producto producto) async {
-    bool exists = await dbOps.existsInPantryListTable(db, producto);
+  Future<void> dbAddTick(Producto product) async {
+    bool exists = await dbOps.existsInPantryListTable(db, product);
     if (!exists) {
-      await dbOps.registerIntoProductTickTable(db, producto);
+      print("going here");
+      await dbOps.insertIntoPantryListTable(db, product);
     }
+    await dbOps.insertIntoPantryListTickTable(db, product);
   }
 
   Future<void> dbTickRemove(Producto producto) async {
@@ -135,9 +137,9 @@ class PantryLogic {
     }
   }
 
-  Future<bool> dbHasTickPantryo(Producto producto) async {
+  Future<bool> dbHasTickPantry(Producto producto) async {
 
-    return dbOps.existsInShoppingListTickTable(db, producto);
+    return dbOps.existsInPantryListTickTable(db, producto);
   }
 
   final int LIMITE = 99;

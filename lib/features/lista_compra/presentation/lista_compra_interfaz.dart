@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/features/informacion_producto/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import 'package:prizo/features/pantry/pantry_logic.dart';
 import 'package:prizo/shared/application/producto_service.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
@@ -22,6 +23,7 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
   List<Producto> _productos = [];
   final ProductoService productoService = ProductoService();
   final ListaCompraService listaCompraService = ListaCompraService();
+  late final PantryLogic pantryLogic;
   ListaCompra listaCompra = ListaCompra(id: '1', usuario: 'usuario_demo', productos: []);
   bool _isLoading = true;
 
@@ -35,8 +37,10 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
 
   void _initListaCompra() async{
     ListaCompra fetchedLista = await listaCompraService.generar_ListaCompra();
+    PantryLogic awaitedPantryLogic = await PantryLogic.instance();
     setState(() {
-       listaCompra = fetchedLista;
+      listaCompra = fetchedLista;
+      pantryLogic = awaitedPantryLogic;
       _isLoading = false;
     });
   }
@@ -147,11 +151,11 @@ class _ListaCompraInterfazState extends State<ListaCompraInterfaz> with WidgetsB
                   height: MediaQuery.of(context).size.longestSide * 0.0379,
                   width: MediaQuery.of(context).size.shortestSide * 0.274,
                   child: ElevatedButton(
-                    onPressed: () => _toggleTienda("CONSUM"),
+                    onPressed: () => _toggleTienda("Consum"),
                     style: ElevatedButton.styleFrom(
                       shadowColor: Colors.transparent,
                       padding: EdgeInsets.zero,
-                      backgroundColor: tiendasSeleccionadas.contains("CONSUM") ? Color(0xFF95B3FF) : Colors.white,
+                      backgroundColor: tiendasSeleccionadas.contains("Consum") ? Color(0xFF95B3FF) : Colors.white,
                       foregroundColor: Color.fromARGB(255,80,79,79),
                       side: BorderSide(color: Color(0xFF95B3FF),width: 2),
                     ),
@@ -439,11 +443,14 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                 ? IconButton(
                 padding: EdgeInsets.zero,
                 icon: Image.asset('assets/icons/empty_checkbox.png', width: MediaQuery.of(context).size.shortestSide * 0.099, height: MediaQuery.of(context).size.shortestSide * 0.102),
-                onPressed: () {
+                onPressed: () async {
                   setState(() {
                     _showButton = false;
                   });
                   listaCompraService.DB_Tick_annadir(widget.producto);
+                  PantryLogic pantryLogic = await PantryLogic.instance();
+                  pantryLogic.dbAddProduct(widget.producto, _counter);
+
                 }
             )
                 : IconButton(
@@ -483,6 +490,8 @@ class _ProductTileItemState extends State<StatefulStoreItem> {
                             if(_counter == 1) {
                               listaCompraService.DB_quitarProducto(widget.producto);
                               listaCompraService.DB_Tick_quitar(widget.producto);
+                              _counter = 0;
+                              widget.onReturn();
                             } else {
                               listaCompraService.DB_decreaseCantidad(widget.producto);
                             }

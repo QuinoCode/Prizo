@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prizo/features/comparacion_productos/application/comparacion_producto.dart';  // Import the file with the function
+import 'package:prizo/features/product_search/comparacion_productos/application/comparacion_producto.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';  // Import the file with the function
 
 void main() {

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:prizo/features/lista_compra/application/lista_compra_service.dart';
 import 'package:prizo/features/lista_favoritos/application/lista_favoritos_service.dart';
+import 'package:prizo/features/pantry/pantry_logic.dart';
 import 'package:prizo/main.dart';
+import 'package:prizo/shared/database/database_operations.dart';
 import 'package:provider/provider.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
 import 'package:prizo/shared/data_entities/models/lista_compra.dart';
 import 'package:prizo/shared/data_entities/models/lista_favoritos.dart';
 import 'package:prizo/features/informacion_producto/pantalla_producto/presentation/pantalla_producto_interfaz.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class ListaInterfaz extends StatefulWidget {
   ListaInterfaz({super.key});
@@ -202,6 +205,9 @@ class _ListaInterfazState extends State<ListaInterfaz> {
       builder: (context, snapshot) {
         final tieneTick = snapshot.data ?? false;
         final iconPath = tieneTick ? 'assets/icons/checked_checkbox.png' : 'assets/icons/empty_checkbox.png';
+        Database db = DatabaseOperations.instance.prizoDatabase;
+        DatabaseOperations dbOps = DatabaseOperations.instance;
+        Future<int> productAmount =  dbOps.fetchCantidadListaCompra(db, producto);
 
         return Row(
           children: [
@@ -253,6 +259,8 @@ class _ListaInterfazState extends State<ListaInterfaz> {
                               await listaCompraService.DB_Tick_quitar(producto);
                             } else {
                               await listaCompraService.DB_Tick_annadir(producto);
+                              PantryLogic pantryLogic = await PantryLogic.instance();
+                              pantryLogic.dbAddProduct(producto, await productAmount);
                             }
                             setState(() {
                             });

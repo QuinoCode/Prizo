@@ -1,4 +1,4 @@
-import 'package:prizo/features/pantalla_producto/application/pantalla_producto_service.dart';
+import 'package:prizo/features/informacion_producto/pantalla_producto/application/pantalla_producto_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

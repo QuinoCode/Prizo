@@ -7,7 +7,7 @@ void main() async {
   group('Mercadona_Finder Integration Test', () {
     test('should fetch products and map them correctly', () async {
       MercadonaFinderService finder = MercadonaFinderService();
-      String query = "Pasta";
+      String query = "ruffles";
       List<Producto> result = await finder.getProductList(query);
       print("Printeando a mi madre" + result.toString());
       for (Producto product in result) {

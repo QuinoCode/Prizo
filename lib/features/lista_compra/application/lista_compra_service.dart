@@ -157,7 +157,7 @@ class ListaCompraService {
     bool exists = await dbOps.existsInShoppingListTickTable(db, producto);
     if (!exists) {
       // Registra el producto en la tabla de productos tick
-      await dbOps.registerIntoProductTickTable(db, producto);
+      await dbOps.registerIntoShoppingListTickTable(db, producto);
     }
   }
   Future<void> DB_Tick_quitar(Producto producto) async {

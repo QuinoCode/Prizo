@@ -63,6 +63,8 @@ class DatabaseOperations {
     await createPantryListTables(db);
     await insertListaCompra(db);
     await insertListaFavoritos(db);
+    await insertPantryList(db);
+
   }
 
   Future<void> createFiltroTable(Database db) async {
@@ -213,6 +215,13 @@ class DatabaseOperations {
       print(e);
     }
   }
+  Future<void> insertPantryList(Database db,) async{
+    try{
+      await db.rawInsert('INSERT INTO Pantry_List(id, user) VALUES("lista3","Juan")');
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<List<Producto>> fetchProductsListaCompra(Database db) async{
     List<Producto> result = [];
@@ -252,7 +261,7 @@ class DatabaseOperations {
     var listaQuery = await db.rawQuery('SELECT id FROM Pantry_List LIMIT 1');
     if (listaQuery.isNotEmpty) {
       var listaId = listaQuery.first['id'];
-      var listaProducts = await db.rawQuery('SELECT producto_id from Pantry_List_Product WHERE list_id = ?',[listaId]);
+      var listaProducts = await db.rawQuery('SELECT product_id from Pantry_List_Product WHERE list_id = ?',[listaId]);
       for (int i = 0; i < listaProducts.length; i++){
         var product = await db.rawQuery('SELECT * FROM Producto WHERE id = ?', [listaProducts[i]['product_id']]);
         var toAdd = product.first;
@@ -348,6 +357,17 @@ class DatabaseOperations {
     return false;
   }
 
+  Future<void> insertIntoPantryListTickTable(Database db, Producto product) async {
+    try {
+      await db.rawInsert(
+        'INSERT INTO Pantry_List_Tick (id, name) VALUES (?, ?)',
+        [product.id, product.nombre],
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<bool> existsInListaCompraTable(Database db, Producto producto) async{
     // Perform the query to check if there are any rows in the table
     try {
@@ -362,9 +382,8 @@ class DatabaseOperations {
   }
 
   Future<bool> existsInPantryListTable(Database db, Producto producto) async{
-    // Perform the query to check if there are any rows in the table
     try {
-      var result = await db.rawQuery('SELECT * FROM Pantry_List_Compra_Producto WHERE product_id = ?', [producto.id]);
+      var result = await db.rawQuery('SELECT * FROM Pantry_List_Product WHERE product_id = ?', [producto.id]);
       if (result.isNotEmpty) {
         return true;
       }
@@ -393,7 +412,7 @@ class DatabaseOperations {
       print(e);
     }
   }
-  Future<void> registerIntoProductTickTable(Database db, Producto product) async {
+  Future<void> registerIntoShoppingListTickTable(Database db, Producto product) async {
     try {
       await db.rawInsert(
         'INSERT INTO ShoppingListTick (id, name) VALUES (?, ?)',
@@ -430,6 +449,7 @@ class DatabaseOperations {
       if (result.isNotEmpty) {
         // Extract the id value
         var listaId = result.first['id']; 
+        print("Has it been inserted? ${result.first['name']}");
 
         await db.rawInsert(
             'INSERT INTO Pantry_List_Product(list_id, product_id, amount) VALUES(?, ?, ?)',
@@ -593,13 +613,13 @@ class DatabaseOperations {
       } else {
         var result = await db.rawQuery(
           '''
-          SELECT cantidad 
-          FROM Pantry_List_Compra_Producto 
-          WHERE producto_id = ?
+          SELECT amount 
+          FROM Pantry_List_Product 
+          WHERE product_id = ?
           ''',
           [product.id]
         );
-        return result.first['cantidad'] as int;
+        return result.first['amount'] as int;
       }
     } catch (e) {
       print('Error increasing cantidad: $e');
@@ -647,7 +667,7 @@ class DatabaseOperations {
     }
   }
 
-  Future<void> increasePantryList(Database db, Producto product) async {
+  Future<void> increasePantryList(Database db, Producto product, amount) async {
     try {
       var exists = await existsInPantryListTable(db, product);
       if (!exists) {
@@ -656,10 +676,10 @@ class DatabaseOperations {
         await db.rawUpdate(
             '''
           UPDATE Pantry_List_Product
-          SET amount = amount + 1 
+          SET amount = amount + ? 
           WHERE product_id = ?
           ''',
-            [product.id]
+            [amount, product.id]
         );
       }
     } catch (e) {

@@ -12,7 +12,7 @@ class PantryListDAO {
 
 
 
-  Future<void> insertListaCompra(PantryList pantryList) async {
+  Future<void> insertPantryList(PantryList pantryList) async {
           //Insert the empty List in the database
           await _database.insert(
                   'Pantry_List',
@@ -21,11 +21,11 @@ class PantryListDAO {
           );
 
           //Insert the products in the database just in case they're not present yet
-          for (var producto_cantidad in pantryList.productos){
+          for (var producto_cantidad in pantryList.products){
                   await productoDAO.insertProducto(producto_cantidad.$1);
           }
           //Insert the products into the list
-          for (var producto_cantidad in pantryList.productos){
+          for (var producto_cantidad in pantryList.products){
                   await _database.insert(
                           'Pantry_List_Product',
                           {

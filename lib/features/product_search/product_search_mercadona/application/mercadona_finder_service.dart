@@ -82,7 +82,7 @@ class MercadonaFinderService implements FinderWrapper{
         contains_gluten: database_product["contains_gluten"],
         contains_milk: database_product["contains_milk"],
         contains_nuts: database_product["contains_nuts"],
-        kcalories: database_product["kcalories"],
+        kcalories: (database_product["kcalories"] as num).round(),
         fat: database_product["fat"],
         saturated_fat: database_product["saturated_fat"],
         carbohydrates: database_product["carbohydrates"],

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:prizo/features/product_search/application/ean_finder.dart';
 import 'package:prizo/shared/data_entities/models/producto.dart';
-import 'package:prizo/features/product_search/obtencion_producto/application/ean_finder.dart';
 
 void main() async {
 

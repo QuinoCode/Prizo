@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prizo/features/distancia_tienda/shop_distance.dart';
+import 'package:prizo/features/informacion_supermercado/distancia_tienda/application/shop_distance.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

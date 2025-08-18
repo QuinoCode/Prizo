@@ -15,6 +15,7 @@ Producto? obtenerProductoMasBarato(List<Producto> productos) {
 //la cabeza de la lista y el segundo elemento de la tupla son el resto
 (List<Producto>, List<Producto>) ordenaPrioridadCategoria(List<Producto> productos){
   List<Producto> listaCategoriaCabeza = [];
+  if (productos.isEmpty) {return ([], []);}
   String categoriaCabeza = productos[0].categoria;
   for (int i = 0; i < productos.length; i++) {
     if (productos[i].categoria == categoriaCabeza ) {

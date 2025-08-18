@@ -12,33 +12,33 @@ class ListaCompraDAO {
 
 
 
-  Future<void> insertListaCompra(PantryList pantryList) async {
+  Future<void> insertListaCompra(ListaCompra listaCompra) async {
           //Insert the empty List in the database
           await _database.insert(
-                  'Pantry_List',
-                  pantryList.toMap(),
+                  'Lista_Compra',
+                  listaCompra.toMap(),
                   conflictAlgorithm: ConflictAlgorithm.replace
           );
 
           //Insert the products in the database just in case they're not present yet
-          for (var produnctAmount in pantryList.productos){
-                  await productoDAO.insertProducto(produnctAmount.$1);
+          for (var producto_cantidad in listaCompra.productos){
+                  await productoDAO.insertProducto(producto_cantidad.$1);
           }
           //Insert the products into the list
-          for (var productAmount in pantryList.productos){
+          for (var producto_cantidad in listaCompra.productos){
                   await _database.insert(
-                          'Pantry_List_Product',
+                          'Lista_Compra_Producto',
                           {
-                                  "lista_id": pantryList.id, 
-                                  "producto_id": productAmount.$1.id, 
-                                  "cantidad": productAmount.$2,
+                                  "lista_id": listaCompra.id, 
+                                  "producto_id": producto_cantidad.$1.id, 
+                                  "cantidad": producto_cantidad.$2,
                           },
                           conflictAlgorithm: ConflictAlgorithm.replace
                   );
           }
   }
 
-  Future<void> deletePantryList(PantryList pantryList) async {
+  Future<void> deleteListaCompra(ListaCompra listaCompra) async {
     throw UnimplementedError();
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prizo/features/pantry/pantry_logic.dart';
 import 'package:prizo/features/user/register/presentation/pantry_interface.dart';
 import 'package:prizo/main.dart';
 import 'package:prizo/shared/database/database_operations.dart';
@@ -17,19 +18,23 @@ class BarraNavegacion extends StatefulWidget {
 
 class _BarraNavegacionState extends State<BarraNavegacion> {
   int _currentIndex = 0;
+  PantryLogic? _pantryLogic;
 
   void initDB() async {
     await DatabaseOperations.instance.openOrCreateDB();
   }
 
-  final List<Widget> _screens = [
-    PantallaInicio(),
-    ProductSearchScreen(),
-    ListaInterfaz(),
-    PantryListInterface(),
-    ListaFavoritosInterfaz(),
-    ListaCompraInterfaz(),
-  ];
+  @override
+  void initState(){
+    super.initState();
+    _loadPantryLogic();
+  }
+   Future<void> _loadPantryLogic() async {
+    final logic = await PantryLogic.instance();
+    if (!mounted) return;
+    setState(() => _pantryLogic = logic);
+  }
+
 
   void _onTabTapped(int index) {
     Provider.of<PrizoState>(context, listen: false).setIndex(index);
@@ -37,6 +42,17 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _screens = [
+      PantallaInicio(),
+      ProductSearchScreen(),
+      ListaInterfaz(),
+      _pantryLogic == null 
+      ? const Center(child: CircularProgressIndicator(),)
+      : PantryListInterface(pantryLogic: _pantryLogic!,)
+      ,
+      ListaFavoritosInterfaz(),
+      ListaCompraInterfaz(),
+    ];
     initDB();
     final navState = Provider.of<PrizoState>(context);
 
