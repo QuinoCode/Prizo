@@ -68,8 +68,8 @@ class MercadonaFinderService implements FinderWrapper{
       DatabaseProduct producto = DatabaseProduct(
         id_product: database_product["id_product"].toString(),
         name: ObtencionProductoService.limpiarNombreProducto(database_product["name"], database_product["brand"] ?? "Hacendado", "Mercadona"),
-        price: parsePrecioMedida(database_product["price"]),
-        price_measure: parsePrecioMedida(database_product["price_measure"]),
+        price: parsePrice(database_product["price"]),
+        price_measure: parsePriceMeasure(database_product["price_measure"]),
         supermarket: database_product["supermarket"],
         brand: database_product["brand"] ?? "Hacendado",
         picture_front: database_product["picture_front"],
@@ -77,7 +77,7 @@ class MercadonaFinderService implements FinderWrapper{
         category: database_product["category"],
         subcategory: database_product["subcategory"],
         offer: database_product["offer"] == 1,
-        offer_price: ((database_product["offer_price"] is String) ? parsePrecioMedida(database_product["offer_price"]) : database_product["offer_price"]) ?? 1.00,
+        offer_price: ((database_product["offer_price"] is String) ? parsePrice(database_product["offer_price"]) : database_product["offer_price"]) ?? 1.00,
         offer_price_measure: 1.00,//database_product["offer_price_measure"],
         contains_gluten: database_product["contains_gluten"],
         contains_milk: database_product["contains_milk"],
@@ -117,14 +117,13 @@ class MercadonaFinderService implements FinderWrapper{
     return productos;
   }
 
-  double parsePrecioMedida(String pricePerUnitText){
+  double parsePrice(String pricePerUnitText){
     if (pricePerUnitText == "") return -1.0;
     String splittedPrice = pricePerUnitText.split(' ')[0];
     String doubleFormattedPrice = splittedPrice.replaceAll(",", ".");
     String withoutEuroCharacter = doubleFormattedPrice.replaceAll("€", "");
     print("Double to be parsed: {" + withoutEuroCharacter + "}");
-    //TODO: Remove la guarrada
-    if (withoutEuroCharacter == "") return 1.00;
+    if (withoutEuroCharacter == "") return -1.00;
     return double.parse(withoutEuroCharacter);
   }
 
@@ -135,6 +134,51 @@ class MercadonaFinderService implements FinderWrapper{
     if (database_product.contains_nuts == 0) result[2] = false;
     return result;
   }
+  double parsePriceMeasure(String text) {
+  // Regex: captures the numeric part and the unit (handles cases like "100 g" too)
+  final regex = RegExp(r'([\d.,]+)\s*€/([^\s]+(?:\s?[a-zA-Z]+)?)');
+  final match = regex.firstMatch(text);
+
+  if (match == null) return -1.00;
+
+  // Extract price string and unit
+  String priceStr = match.group(1)!;
+  String unit = match.group(2)!.toLowerCase().replaceAll(" ", "");
+
+  // Convert string like "3,45" or "450,00" to double
+  double price = double.parse(
+      priceStr.replaceAll(".", "").replaceAll(",", ".")
+  );
+
+  double normalized;
+
+  // Normalize depending on unit
+  if (unit == "kg") {
+    normalized = price;
+  } else if (unit == "g") {
+    normalized = price * 1000;
+  } else if (unit.endsWith("g") && unit != "kg") {
+    // handles 100g, 250g, 500g, etc.
+    final grams = double.tryParse(unit.replaceAll("g", "")) ?? 0;
+    if (grams > 0) {
+      normalized = price * (1000 / grams);
+    } else {
+      throw Exception("Unknown gram unit: $unit");
+    }
+  } else if (unit == "mg") {
+    normalized = price * 1000000;
+  } else if (unit == "l") {
+    normalized = price; // treating liters as kilograms
+  } else if (unit == "ml") {
+    normalized = price * 1000;
+  } else {
+    throw Exception("Unknown unit: $unit");
+  }
+
+  // Always return with two decimals
+  return double.parse(normalized.toStringAsFixed(2));
+}
+
 
   String putQueryInMarketUri(String url, String query) {
     return url.replaceFirst("%q", query);
