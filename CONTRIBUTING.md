@@ -36,7 +36,7 @@ All PRs must target the `develop` branch. Follow these branch naming and usage r
 ### 3. PR Approval Rules 
 - ✅ Required: 1 maintainer approval
 
-- ✅ Tests passing (CI must be green)
+- ✅ All existing tests must pass. Contributors are responsible for running the test suite locally before opening a PR.
 
 - ✅ No merge conflicts with develop
 
